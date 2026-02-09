@@ -1,0 +1,742 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Maria Santos",
+      "email": "maria.santos@email.com",
+      "type": "buyer",
+      "location": {
+        "lat": 14.5995,
+        "lng": 120.9842,
+        "address": "Quezon City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 60,
+        "shelf_life_weight": 40,
+        "max_radius_km": 30,
+        "min_freshness_percent": 50,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-15T08:30:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Carlos Reyes",
+      "email": "carlos.reyes@email.com",
+      "type": "buyer",
+      "location": {
+        "lat": 14.5547,
+        "lng": 121.0244,
+        "address": "Makati City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 70,
+        "shelf_life_weight": 30,
+        "max_radius_km": 20,
+        "min_freshness_percent": 60,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-18T10:15:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Ana Garcia",
+      "email": "ana.garcia@email.com",
+      "type": "buyer",
+      "location": {
+        "lat": 14.5794,
+        "lng": 121.0359,
+        "address": "Mandaluyong City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 40,
+        "shelf_life_weight": 60,
+        "max_radius_km": 50,
+        "min_freshness_percent": 70,
+        "display_mode": "filter_sort"
+      },
+      "created_at": "2025-01-20T14:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Roberto Cruz",
+      "email": "roberto.cruz@email.com",
+      "type": "buyer",
+      "location": {
+        "lat": 14.676,
+        "lng": 120.9626,
+        "address": "Caloocan City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 50,
+        "shelf_life_weight": 50,
+        "max_radius_km": 40,
+        "min_freshness_percent": null,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-22T09:00:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Sofia Mendoza",
+      "email": "sofia.mendoza@email.com",
+      "type": "buyer",
+      "location": {
+        "lat": 14.409,
+        "lng": 121.0185,
+        "address": "Parañaque City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 80,
+        "shelf_life_weight": 20,
+        "max_radius_km": 15,
+        "min_freshness_percent": 40,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-25T11:30:00Z"
+    },
+    {
+      "id": 6,
+      "name": "Juan's Fresh Market",
+      "email": "juan.market@email.com",
+      "type": "seller",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 50,
+        "shelf_life_weight": 50,
+        "max_radius_km": 50,
+        "min_freshness_percent": null,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-10T10:00:00Z"
+    },
+    {
+      "id": 7,
+      "name": "Tindahan ni Aling Nena",
+      "email": "nena.store@email.com",
+      "type": "seller",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 50,
+        "shelf_life_weight": 50,
+        "max_radius_km": 50,
+        "min_freshness_percent": null,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-12T08:00:00Z"
+    },
+    {
+      "id": 8,
+      "name": "Manila Bay Groceries",
+      "email": "manilabaygroceries@email.com",
+      "type": "seller",
+      "location": {
+        "lat": 14.5833,
+        "lng": 120.9794,
+        "address": "Manila City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 50,
+        "shelf_life_weight": 50,
+        "max_radius_km": 50,
+        "min_freshness_percent": null,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-08T07:00:00Z"
+    },
+    {
+      "id": 9,
+      "name": "Linda's Dairy Corner",
+      "email": "linda.dairy@email.com",
+      "type": "both",
+      "location": {
+        "lat": 14.6507,
+        "lng": 120.9721,
+        "address": "Valenzuela City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 55,
+        "shelf_life_weight": 45,
+        "max_radius_km": 35,
+        "min_freshness_percent": 50,
+        "display_mode": "ranking"
+      },
+      "created_at": "2025-01-14T09:30:00Z"
+    },
+    {
+      "id": 10,
+      "name": "Pedro's Produce Hub",
+      "email": "pedro.produce@email.com",
+      "type": "both",
+      "location": {
+        "lat": 14.5243,
+        "lng": 120.9832,
+        "address": "Las Piñas City, Metro Manila"
+      },
+      "preferences": {
+        "proximity_weight": 45,
+        "shelf_life_weight": 55,
+        "max_radius_km": 45,
+        "min_freshness_percent": 60,
+        "display_mode": "filter_sort"
+      },
+      "created_at": "2025-01-16T13:00:00Z"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "seller_id": 6,
+      "product_type_id": 33,
+      "days_already_used": 1,
+      "listed_date": "2025-01-29T06:00:00Z",
+      "price": 85,
+      "quantity": 3,
+      "unit": "containers",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Fresh yogurt, opened yesterday",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "seller_id": 6,
+      "product_type_id": 21,
+      "days_already_used": 5,
+      "listed_date": "2025-01-28T07:00:00Z",
+      "price": 180,
+      "quantity": 2,
+      "unit": "dozen",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Farm fresh eggs",
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "seller_id": 6,
+      "product_type_id": 2,
+      "days_already_used": 2,
+      "listed_date": "2025-01-28T08:00:00Z",
+      "price": 95,
+      "quantity": 2,
+      "unit": "liters",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Cultured buttermilk",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "seller_id": 6,
+      "product_type_id": 9,
+      "days_already_used": 3,
+      "listed_date": "2025-01-27T09:00:00Z",
+      "price": 150,
+      "quantity": 4,
+      "unit": "containers",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Low-fat cottage cheese",
+      "status": "active"
+    },
+    {
+      "id": 5,
+      "seller_id": 6,
+      "product_type_id": 24,
+      "days_already_used": 1,
+      "listed_date": "2025-01-29T10:00:00Z",
+      "price": 120,
+      "quantity": 2,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Holiday eggnog",
+      "status": "active"
+    },
+    {
+      "id": 6,
+      "seller_id": 6,
+      "product_type_id": 10,
+      "days_already_used": 7,
+      "listed_date": "2025-01-26T11:00:00Z",
+      "price": 130,
+      "quantity": 5,
+      "unit": "blocks",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Philadelphia-style cream cheese",
+      "status": "active"
+    },
+    {
+      "id": 7,
+      "seller_id": 6,
+      "product_type_id": 25,
+      "days_already_used": 0,
+      "listed_date": "2025-01-30T06:00:00Z",
+      "price": 80,
+      "quantity": 4,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Just opened today - kefir fermented milk",
+      "status": "active"
+    },
+    {
+      "id": 8,
+      "seller_id": 6,
+      "product_type_id": 5,
+      "days_already_used": 10,
+      "listed_date": "2025-01-25T12:00:00Z",
+      "price": 250,
+      "quantity": 2,
+      "unit": "kg",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Sharp cheddar cheese",
+      "status": "active"
+    },
+    {
+      "id": 9,
+      "seller_id": 6,
+      "product_type_id": 8,
+      "days_already_used": 5,
+      "listed_date": "2025-01-27T13:00:00Z",
+      "price": 110,
+      "quantity": 3,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Vanilla coffee creamer",
+      "status": "active"
+    },
+    {
+      "id": 10,
+      "seller_id": 6,
+      "product_type_id": 16,
+      "days_already_used": 8,
+      "listed_date": "2025-01-26T14:00:00Z",
+      "price": 140,
+      "quantity": 3,
+      "unit": "containers",
+      "location": {
+        "lat": 14.6091,
+        "lng": 121.0223,
+        "address": "Pasig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Sour cream dip",
+      "status": "active"
+    },
+    {
+      "id": 11,
+      "seller_id": 7,
+      "product_type_id": 33,
+      "days_already_used": 2,
+      "listed_date": "2025-01-28T06:00:00Z",
+      "price": 90,
+      "quantity": 2,
+      "unit": "containers",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Yogurt - opened 2 days ago",
+      "status": "active"
+    },
+    {
+      "id": 12,
+      "seller_id": 7,
+      "product_type_id": 21,
+      "days_already_used": 10,
+      "listed_date": "2025-01-25T07:00:00Z",
+      "price": 170,
+      "quantity": 3,
+      "unit": "dozen",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Free-range eggs",
+      "status": "active"
+    },
+    {
+      "id": 13,
+      "seller_id": 7,
+      "product_type_id": 6,
+      "days_already_used": 5,
+      "listed_date": "2025-01-27T08:00:00Z",
+      "price": 300,
+      "quantity": 1,
+      "unit": "wheel",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "French brie cheese",
+      "status": "active"
+    },
+    {
+      "id": 14,
+      "seller_id": 7,
+      "product_type_id": 7,
+      "days_already_used": 3,
+      "listed_date": "2025-01-28T09:00:00Z",
+      "price": 160,
+      "quantity": 4,
+      "unit": "bags",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Shredded mozzarella",
+      "status": "active"
+    },
+    {
+      "id": 15,
+      "seller_id": 7,
+      "product_type_id": 11,
+      "days_already_used": 12,
+      "listed_date": "2025-01-24T10:00:00Z",
+      "price": 100,
+      "quantity": 2,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Half and half cream",
+      "status": "active"
+    },
+    {
+      "id": 16,
+      "seller_id": 7,
+      "product_type_id": 13,
+      "days_already_used": 1,
+      "listed_date": "2025-01-29T11:00:00Z",
+      "price": 180,
+      "quantity": 2,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Heavy whipping cream",
+      "status": "active"
+    },
+    {
+      "id": 17,
+      "seller_id": 7,
+      "product_type_id": 16,
+      "days_already_used": 4,
+      "listed_date": "2025-01-28T12:00:00Z",
+      "price": 190,
+      "quantity": 3,
+      "unit": "containers",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Fresh ricotta cheese",
+      "status": "active"
+    },
+    {
+      "id": 18,
+      "seller_id": 7,
+      "product_type_id": 25,
+      "days_already_used": 3,
+      "listed_date": "2025-01-27T13:00:00Z",
+      "price": 85,
+      "quantity": 1,
+      "unit": "bottle",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Kefir - 3 days old",
+      "status": "active"
+    },
+    {
+      "id": 19,
+      "seller_id": 7,
+      "product_type_id": 9,
+      "days_already_used": 6,
+      "listed_date": "2025-01-27T14:00:00Z",
+      "price": 145,
+      "quantity": 2,
+      "unit": "containers",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Cottage cheese - full fat",
+      "status": "active"
+    },
+    {
+      "id": 20,
+      "seller_id": 7,
+      "product_type_id": 2,
+      "days_already_used": 4,
+      "listed_date": "2025-01-27T15:00:00Z",
+      "price": 100,
+      "quantity": 2,
+      "unit": "liters",
+      "location": {
+        "lat": 14.5378,
+        "lng": 121.0506,
+        "address": "Taguig City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Fresh buttermilk",
+      "status": "active"
+    },
+    {
+      "id": 21,
+      "seller_id": 8,
+      "product_type_id": 33,
+      "days_already_used": 0,
+      "listed_date": "2025-01-30T05:00:00Z",
+      "price": 88,
+      "quantity": 5,
+      "unit": "containers",
+      "location": {
+        "lat": 14.5833,
+        "lng": 120.9794,
+        "address": "Manila City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Just opened - fresh yogurt",
+      "status": "active"
+    },
+    {
+      "id": 22,
+      "seller_id": 8,
+      "product_type_id": 21,
+      "days_already_used": 7,
+      "listed_date": "2025-01-26T06:00:00Z",
+      "price": 175,
+      "quantity": 4,
+      "unit": "dozen",
+      "location": {
+        "lat": 14.5833,
+        "lng": 120.9794,
+        "address": "Manila City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Large eggs",
+      "status": "active"
+    },
+    {
+      "id": 23,
+      "seller_id": 8,
+      "product_type_id": 5,
+      "days_already_used": 15,
+      "listed_date": "2025-01-22T07:00:00Z",
+      "price": 240,
+      "quantity": 1,
+      "unit": "kg",
+      "location": {
+        "lat": 14.5833,
+        "lng": 120.9794,
+        "address": "Manila City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Aged cheddar",
+      "status": "active"
+    },
+    {
+      "id": 24,
+      "seller_id": 8,
+      "product_type_id": 10,
+      "days_already_used": 2,
+      "listed_date": "2025-01-29T08:00:00Z",
+      "price": 135,
+      "quantity": 6,
+      "unit": "blocks",
+      "location": {
+        "lat": 14.5833,
+        "lng": 120.9794,
+        "address": "Manila City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Original cream cheese",
+      "status": "active"
+    },
+    {
+      "id": 25,
+      "seller_id": 8,
+      "product_type_id": 8,
+      "days_already_used": 10,
+      "listed_date": "2025-01-25T09:00:00Z",
+      "price": 105,
+      "quantity": 2,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.5833,
+        "lng": 120.9794,
+        "address": "Manila City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Hazelnut coffee creamer",
+      "status": "active"
+    },
+    {
+      "id": 26,
+      "seller_id": 9,
+      "product_type_id": 33,
+      "days_already_used": 1,
+      "listed_date": "2025-01-29T05:00:00Z",
+      "price": 82,
+      "quantity": 6,
+      "unit": "containers",
+      "location": {
+        "lat": 14.6507,
+        "lng": 120.9721,
+        "address": "Valenzuela City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Farm-fresh yogurt",
+      "status": "active"
+    },
+    {
+      "id": 27,
+      "seller_id": 9,
+      "product_type_id": 25,
+      "days_already_used": 1,
+      "listed_date": "2025-01-29T05:30:00Z",
+      "price": 78,
+      "quantity": 4,
+      "unit": "bottles",
+      "location": {
+        "lat": 14.6507,
+        "lng": 120.9721,
+        "address": "Valenzuela City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Kefir - fermented milk drink",
+      "status": "active"
+    },
+    {
+      "id": 28,
+      "seller_id": 9,
+      "product_type_id": 2,
+      "days_already_used": 1,
+      "listed_date": "2025-01-29T06:00:00Z",
+      "price": 92,
+      "quantity": 3,
+      "unit": "liters",
+      "location": {
+        "lat": 14.6507,
+        "lng": 120.9721,
+        "address": "Valenzuela City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Fresh buttermilk",
+      "status": "active"
+    },
+    {
+      "id": 29,
+      "seller_id": 9,
+      "product_type_id": 9,
+      "days_already_used": 2,
+      "listed_date": "2025-01-28T07:00:00Z",
+      "price": 148,
+      "quantity": 5,
+      "unit": "containers",
+      "location": {
+        "lat": 14.6507,
+        "lng": 120.9721,
+        "address": "Valenzuela City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Low-fat cottage cheese",
+      "status": "active"
+    },
+    {
+      "id": 30,
+      "seller_id": 9,
+      "product_type_id": 16,
+      "days_already_used": 3,
+      "listed_date": "2025-01-28T08:00:00Z",
+      "price": 138,
+      "quantity": 4,
+      "unit": "containers",
+      "location": {
+        "lat": 14.6507,
+        "lng": 120.9721,
+        "address": "Valenzuela City"
+      },
+      "storage_condition": "refrigerated_opened",
+      "description": "Sour cream dip",
+      "status": "active"
+    }
+  ],
+  "meta": {
+    "generated_at": "2026-01-30T08:47:17.257Z",
+    "user_count": 10,
+    "product_count": 30,
+    "data_source": "USDA FoodKeeper Database (product_types_perishables.json)"
+  }
+}

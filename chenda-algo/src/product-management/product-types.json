@@ -1,0 +1,2522 @@
+[
+  {
+    "id": 2,
+    "name": "Buttermilk",
+    "name_subtitle": null,
+    "category_id": 7,
+    "keywords": "Buttermilk",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Cheese",
+    "name_subtitle": "shredded; cheddar, mozzarella, etc.",
+    "category_id": 7,
+    "keywords": "Cheese,shredded,cheddar,mozzarella",
+    "default_shelf_life_days": 30,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Months"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Cheese",
+    "name_subtitle": "processed slices",
+    "category_id": 7,
+    "keywords": "Cheese,processed slices,slices,slice",
+    "default_shelf_life_days": 25,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Cheese",
+    "name_subtitle": "soft such as brie, bel paese, goat",
+    "category_id": 7,
+    "keywords": "Cheese,brie, bel paese, goat",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Coffee creamer",
+    "name_subtitle": "liquid refrigerated",
+    "category_id": 7,
+    "keywords": "Coffee creamer,Coffee, creamer,liquid refrigerated",
+    "default_shelf_life_days": 21,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Cottage cheese",
+    "name_subtitle": null,
+    "category_id": 7,
+    "keywords": "Cottage cheese,cheese",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Cream cheese",
+    "name_subtitle": null,
+    "category_id": 7,
+    "keywords": null,
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 11,
+    "name": "Cream",
+    "name_subtitle": "whipping, ultrapasteurized",
+    "category_id": 7,
+    "keywords": "Cream,whipping,ultrapasteurized",
+    "default_shelf_life_days": 30,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Months"
+    }
+  },
+  {
+    "id": 12,
+    "name": "Cream",
+    "name_subtitle": "whipped, sweetened",
+    "category_id": 7,
+    "keywords": "Cream,whipped, sweetened",
+    "default_shelf_life_days": 1,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 13,
+    "name": "Cream",
+    "name_subtitle": "half and half",
+    "category_id": 7,
+    "keywords": "Cream,half",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 14,
+    "name": "Cream",
+    "name_subtitle": "heavy",
+    "category_id": 7,
+    "keywords": "Cream,heavy",
+    "default_shelf_life_days": 10,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 10,
+      "max": 10,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 15,
+    "name": "Cream",
+    "name_subtitle": "light",
+    "category_id": 7,
+    "keywords": "Cream,light",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 16,
+    "name": "Dips",
+    "name_subtitle": "sour cream based",
+    "category_id": 7,
+    "keywords": "Dips,sour cream based,sour,cream based,cream,dip",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 17,
+    "name": "Egg substitutes",
+    "name_subtitle": "liquid",
+    "category_id": 7,
+    "keywords": "Egg substitutes,liquid,egg,substitutes,substitute",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 7,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 20,
+    "name": "Eggnog",
+    "name_subtitle": "commercial",
+    "category_id": 7,
+    "keywords": "Eggnog,commercial,egg,nog",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 21,
+    "name": "Eggs",
+    "name_subtitle": "in shell",
+    "category_id": 7,
+    "keywords": "Eggs,in shell,egg,shell",
+    "default_shelf_life_days": 28,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 22,
+    "name": "Eggs",
+    "name_subtitle": "raw whites, yolks",
+    "category_id": 7,
+    "keywords": "Eggs,raw whites, yolks,egg,whites",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 23,
+    "name": "Eggs",
+    "name_subtitle": "hard boiled cooked",
+    "category_id": 7,
+    "keywords": "Eggs,egg,hard boiled cooked,boiled,hard boiled",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 24,
+    "name": "Egg dishes",
+    "name_subtitle": null,
+    "category_id": 7,
+    "keywords": "Egg dishes,egg,dishes",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 25,
+    "name": "Kefir",
+    "name_subtitle": "fermented milk",
+    "category_id": 7,
+    "keywords": "Kefir,fermented milk,milk,fermented",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 30,
+    "name": "Whipped cream",
+    "name_subtitle": "aerosol can",
+    "category_id": 7,
+    "keywords": "Whipped cream,cream,aerosol can,can",
+    "default_shelf_life_days": 25,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 32,
+    "name": "Whipped topping",
+    "name_subtitle": "tub",
+    "category_id": 7,
+    "keywords": "Whipped topping,topping,tub,whipped",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 33,
+    "name": "Yogurt",
+    "name_subtitle": null,
+    "category_id": 7,
+    "keywords": "Yogurt",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 34,
+    "name": "Beef",
+    "name_subtitle": "rib roast, bone-in",
+    "category_id": 10,
+    "keywords": "Beef,rib roast,bone-in,roast,bone,rib",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 35,
+    "name": "Beef",
+    "name_subtitle": "rib roast; boneless, rolled",
+    "category_id": 10,
+    "keywords": "Beef,rib roast,boneless,rolled,roast,rib",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 36,
+    "name": "Beef",
+    "name_subtitle": "round or rump roast",
+    "category_id": 10,
+    "keywords": "Beef,round,rump roast,roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 37,
+    "name": "Beef",
+    "name_subtitle": "tenderloin, whole",
+    "category_id": 10,
+    "keywords": "Beef,tenderloin,whole",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 38,
+    "name": "Beef",
+    "name_subtitle": "tenderloin, half",
+    "category_id": 10,
+    "keywords": "Beef,tenderloin,half",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 39,
+    "name": "Beef",
+    "name_subtitle": "chuck roast, brisket",
+    "category_id": 10,
+    "keywords": "Beef,chuck roast,roast,brisket",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 40,
+    "name": "Beef",
+    "name_subtitle": "steaks",
+    "category_id": 10,
+    "keywords": "Beef,steaks,steak",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 41,
+    "name": "Beef",
+    "name_subtitle": "stew, cubes",
+    "category_id": 10,
+    "keywords": "Beef,stew, cubes,cube",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 42,
+    "name": "Beef",
+    "name_subtitle": "short ribs",
+    "category_id": 10,
+    "keywords": "Beef,short ribs,ribs,rib",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 43,
+    "name": "Beef",
+    "name_subtitle": "ground",
+    "category_id": 10,
+    "keywords": "Beef,ground",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 44,
+    "name": "Lamb",
+    "name_subtitle": "leg, bone-in - small",
+    "category_id": 10,
+    "keywords": "Lamb,leg,bone-in - small,bone-in,bone",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 45,
+    "name": "Lamb",
+    "name_subtitle": "leg, bone-in - large",
+    "category_id": 10,
+    "keywords": "Lamb,leg,bone-in - large,bone-in,bone",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 46,
+    "name": "Lamb",
+    "name_subtitle": "leg; boneless, rolled",
+    "category_id": 10,
+    "keywords": "Lamb,leg,boneless,rolled,bone",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 47,
+    "name": "Lamb",
+    "name_subtitle": "crown roast",
+    "category_id": 10,
+    "keywords": "Lamb,crown roast,roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 48,
+    "name": "Lamb",
+    "name_subtitle": "shoulder roast or shank leg half",
+    "category_id": 10,
+    "keywords": "Lamb,shoulder roast,roast,shoulder,shank leg half,half,shank,shank leg,leg",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 49,
+    "name": "Lamb",
+    "name_subtitle": "cubes for kabobs",
+    "category_id": 10,
+    "keywords": "Lamb,cubes,kabobs,cube,kabob",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 50,
+    "name": "Lamb",
+    "name_subtitle": "ground",
+    "category_id": 10,
+    "keywords": "Lamb,ground",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 51,
+    "name": "Lamb",
+    "name_subtitle": "chops, ribs, or loin",
+    "category_id": 10,
+    "keywords": "Lamb,chops,ribs,loin,rib",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 52,
+    "name": "Lamb",
+    "name_subtitle": "leg steaks",
+    "category_id": 10,
+    "keywords": "Lamb,leg steaks,steaks,steak,leg",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 53,
+    "name": "Lamb",
+    "name_subtitle": "stew meat, pieces",
+    "category_id": 10,
+    "keywords": "Lamb,stew,pieces,stew meat,meat,piece",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 54,
+    "name": "Lamb",
+    "name_subtitle": "shanks",
+    "category_id": 10,
+    "keywords": "Lamb,shanks,shank",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 55,
+    "name": "Lamb",
+    "name_subtitle": "breast, rolled",
+    "category_id": 10,
+    "keywords": "Lamb,breast,rolled",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 56,
+    "name": "Veal",
+    "name_subtitle": "shoulder roast, boneless",
+    "category_id": 10,
+    "keywords": "Veal,shoulder,boneless,shoulder roast,roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 57,
+    "name": "Veal",
+    "name_subtitle": "leg rump or round roast, boneless",
+    "category_id": 10,
+    "keywords": "Veal,leg rump,rump,leg,round,round roast,roast,boneless",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 58,
+    "name": "Veal",
+    "name_subtitle": "loin roast, bone-in",
+    "category_id": 10,
+    "keywords": "Veal,loin roast,bone-in,roast,bone,loin",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 59,
+    "name": "Veal",
+    "name_subtitle": "ground",
+    "category_id": 10,
+    "keywords": "Veal,ground",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 60,
+    "name": "Pork",
+    "name_subtitle": "loin roast, bone-in",
+    "category_id": 10,
+    "keywords": "Pork,loin roast,bone-in,roast,bone,loin",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 61,
+    "name": "Pork",
+    "name_subtitle": "loin roast, boneless",
+    "category_id": 10,
+    "keywords": "Pork,loin,boneless,loin roast,roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 63,
+    "name": "Pork",
+    "name_subtitle": "loin chops, bone-in",
+    "category_id": 10,
+    "keywords": "Pork,loin chops,bone-in,chops,bone,loin",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 64,
+    "name": "Pork",
+    "name_subtitle": "loin chops, boneless",
+    "category_id": 10,
+    "keywords": "Pork,loin,boneless,loin chops,chops",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 65,
+    "name": "Pork",
+    "name_subtitle": "crown roast - small",
+    "category_id": 10,
+    "keywords": "Pork,roast,crown,crown roast - small,small,crown roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 66,
+    "name": "Pork",
+    "name_subtitle": "crown roast - large",
+    "category_id": 10,
+    "keywords": "Pork,roast,crown,crown roast - large,large,crown roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 67,
+    "name": "Pork",
+    "name_subtitle": "tenderloin",
+    "category_id": 10,
+    "keywords": "Pork,tenderloin",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 69,
+    "name": "Pork",
+    "name_subtitle": "tenderloin medallions or loin cubes",
+    "category_id": 10,
+    "keywords": "Pork,tenderloin,tenderloin medallions,loin cubes,medallion,loin cube,loin,medallions,cube,cubes",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 70,
+    "name": "Goat",
+    "name_subtitle": "tender whole cuts (legs, ribs, shoulder, loin)",
+    "category_id": 10,
+    "keywords": "Goat,tender whole cuts,legs,ribs,shoulder,loin,tender,whole cuts,leg,rib",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 71,
+    "name": "Goat",
+    "name_subtitle": "less tender whole cuts (stew meat, riblets, shanks)",
+    "category_id": 10,
+    "keywords": "Goat,less tender whole cuts,stew meat,stew,meat,riblets,shanks,whole cuts,tender,less tender",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 72,
+    "name": "Pork",
+    "name_subtitle": "ribs",
+    "category_id": 10,
+    "keywords": "Pork,ribs,rib",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 73,
+    "name": "Pork",
+    "name_subtitle": "ground",
+    "category_id": 10,
+    "keywords": "Pork,ground",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 74,
+    "name": "Pork",
+    "name_subtitle": "shoulder",
+    "category_id": 10,
+    "keywords": "Pork,shoulder",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 75,
+    "name": "Pork",
+    "name_subtitle": "loin, cubes",
+    "category_id": 10,
+    "keywords": "Pork,loin,cubes,cube",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 76,
+    "name": "Venison",
+    "name_subtitle": "round, rump, loin, or rib roast",
+    "category_id": 10,
+    "keywords": "Venison,rump,round,loin,rib,rib roast,roast",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 77,
+    "name": "Variety meats",
+    "name_subtitle": "liver, tongue, chitterlings, etc.",
+    "category_id": 10,
+    "keywords": "Variety meats,liver,tongue,chitterlings,meats,meat,chitterling",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 78,
+    "name": "Goat",
+    "name_subtitle": "ground",
+    "category_id": 10,
+    "keywords": "Goat,ground",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 113,
+    "name": "Chicken",
+    "name_subtitle": "whole",
+    "category_id": 15,
+    "keywords": "Chicken,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 114,
+    "name": "Turkey",
+    "name_subtitle": "whole",
+    "category_id": 15,
+    "keywords": "Turkey,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 115,
+    "name": "Ground turkey or chicken",
+    "name_subtitle": null,
+    "category_id": 15,
+    "keywords": "Ground turkey,chicken,turkey",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 116,
+    "name": "Chicken parts",
+    "name_subtitle": "breast halves, bone-in",
+    "category_id": 15,
+    "keywords": "Chicken parts,breast halves,bone-in,halves,bone,breast,chicken,half",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 117,
+    "name": "Chicken parts",
+    "name_subtitle": "breast halves, boneless",
+    "category_id": 15,
+    "keywords": "Chicken parts,breast halves,boneless,chicken,breast,halves,half,bone",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 118,
+    "name": "Chicken parts",
+    "name_subtitle": "legs or thighs",
+    "category_id": 15,
+    "keywords": "Chicken parts,legs,thighs,chicken,leg,thigh",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 119,
+    "name": "Turkey parts",
+    "name_subtitle": "breast halves, bone-in",
+    "category_id": 15,
+    "keywords": "Turkey parts,breast halves,bone-in,halves,bone,breast,half,turkey",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 120,
+    "name": "Turkey parts",
+    "name_subtitle": "breast halves, boneless",
+    "category_id": 15,
+    "keywords": "Turkey parts,breast,boneless,bone,turkey",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 121,
+    "name": "Turkey parts",
+    "name_subtitle": "legs or thighs",
+    "category_id": 15,
+    "keywords": "Turkey parts,legs,thighs,turkey,leg,thigh",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 123,
+    "name": "Duckling",
+    "name_subtitle": "domestic or wild, whole",
+    "category_id": 15,
+    "keywords": "Duckling,domestic,wild,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 125,
+    "name": "Goose",
+    "name_subtitle": "domestic or wild, whole",
+    "category_id": 15,
+    "keywords": "Goose,domestic,wild,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 126,
+    "name": "Pheasant",
+    "name_subtitle": "young, whole",
+    "category_id": 15,
+    "keywords": "Pheasant,young,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 127,
+    "name": "Quail",
+    "name_subtitle": "whole",
+    "category_id": 15,
+    "keywords": "Quail,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 128,
+    "name": "Capon",
+    "name_subtitle": "whole",
+    "category_id": 15,
+    "keywords": "Capon,whole",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 129,
+    "name": "Cornish Hens",
+    "name_subtitle": "whole",
+    "category_id": 15,
+    "keywords": "Cornish Hens,Hens,whole,Hen",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 130,
+    "name": "Giblets",
+    "name_subtitle": null,
+    "category_id": 15,
+    "keywords": "Giblets,giblet",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 249,
+    "name": "Apricots",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Apricots,Apricot",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 250,
+    "name": "Avocados",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Avocados,Avocado",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 251,
+    "name": "Bananas",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Bananas,banana",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 252,
+    "name": "Berries",
+    "name_subtitle": "cherries, goose berries, lychee",
+    "category_id": 18,
+    "keywords": "Berries,berry,cherries,cherry,goose berries,goose berry,lychee,gooseberries",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 7,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 253,
+    "name": "Berries",
+    "name_subtitle": "blackberries, boysenberries, currant",
+    "category_id": 18,
+    "keywords": "Berries,berry,blackberries,blackberry,boysenberries,boysenberry,currant",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 6,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 254,
+    "name": "Blueberries",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Blueberries,blueberry,berries,berry",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 255,
+    "name": "Cherimoya",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Cherimoya",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 256,
+    "name": "Citrus fruit",
+    "name_subtitle": "lemon, lime, orange, grapefruit, tangerines, clementines",
+    "category_id": 18,
+    "keywords": "Citrus fruit,fruit,citrus,lemon,lime,orange,grape,grapefruit,tangerines,tangerine,clementines,clementine",
+    "default_shelf_life_days": 16,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 10,
+      "max": 21,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 258,
+    "name": "Coconuts",
+    "name_subtitle": "fresh",
+    "category_id": 18,
+    "keywords": "Coconuts,Coconut,fresh",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 261,
+    "name": "Grapes",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Grapes,grape",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 262,
+    "name": "Guava",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Guava",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 263,
+    "name": "Kiwi fruit",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Kiwi fruit,kiwi,fruit",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 6,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 264,
+    "name": "Melons",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Melons,melon",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 265,
+    "name": "Papaya, mango, feijoa, passionfruit, casaha melon",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Papaya,mango,feijoa,passionfruit,casaha melon,melon,fruit,passion",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 266,
+    "name": "Peaches, nectarines, plums, pears, sapote",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Peaches,nectarines,plums,pears,sapote,peach,nectarine,plum,pear",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 267,
+    "name": "Pineapple",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Pineapple",
+    "default_shelf_life_days": 6,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 5,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 268,
+    "name": "Plantains",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Plantains,plantain",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 270,
+    "name": "Artichokes, whole",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Artichokes,artichoke,whole",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 271,
+    "name": "Asparagus",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Asparagus",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 272,
+    "name": "Bamboo shoots",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Bamboo shoots,bamboo,shoots,shoot",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 273,
+    "name": "Beans and peas",
+    "name_subtitle": "green, fava, lima, soybean, wax, snow, sugar snap",
+    "category_id": 19,
+    "keywords": "Beans,peas,green,fava,lima,soybean,wax,snow,sugar snap,sugar,pea,soya",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 274,
+    "name": "Beets",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Beets",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 275,
+    "name": "Bok choy",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Bok choy",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 276,
+    "name": "Broccoli and broccoli raab (rapini)",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Broccoli,broccoli raab,rapini,raab",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 277,
+    "name": "Brussels sprouts",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Brussels sprouts,brussels,sprouts,sprout,brussel",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 278,
+    "name": "Cabbage",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Cabbage",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 279,
+    "name": "Carrots, parsnips",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Carrots,parsnips,carrot,parsnip",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 280,
+    "name": "Cauliflower",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Cauliflower",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 281,
+    "name": "Celery",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Celery",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 282,
+    "name": "Corn on the cob",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Corn,cob",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 283,
+    "name": "Cucumbers",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Cucumbers,cucumber",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 6,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 284,
+    "name": "Eggplant",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Eggplant,egg",
+    "default_shelf_life_days": 6,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 285,
+    "name": "Garlic",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Garlic",
+    "default_shelf_life_days": 9,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 14,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 286,
+    "name": "Ginger root",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Ginger root,ginger,root",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 287,
+    "name": "Greens",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Greens,green",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 288,
+    "name": "Herbs",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Herbs,herb",
+    "default_shelf_life_days": 9,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 7,
+      "max": 10,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 289,
+    "name": "Leeks",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Leeks,leek",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 290,
+    "name": "Lettuce",
+    "name_subtitle": "iceberg, romaine",
+    "category_id": 19,
+    "keywords": "Lettuce,iceberg,romaine",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 291,
+    "name": "Lettuce",
+    "name_subtitle": "leaf, spinach",
+    "category_id": 19,
+    "keywords": "Lettuce,leaf,spinach",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 292,
+    "name": "Mushrooms",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Mushroom,mushrooms",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 293,
+    "name": "Okra",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Okra",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 295,
+    "name": "Onions",
+    "name_subtitle": "spring or green",
+    "category_id": 19,
+    "keywords": "Onions,spring,green,onion",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 296,
+    "name": "Peppers",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Peppers,pepper",
+    "default_shelf_life_days": 9,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 14,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 297,
+    "name": "Potatoes",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Potatoes,potato",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 299,
+    "name": "Radishes",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Radishes,radish",
+    "default_shelf_life_days": 12,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 10,
+      "max": 14,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 300,
+    "name": "Rhubarb",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Rhubarb",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 7,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 301,
+    "name": "Rutabagas",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Rutabagas",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 302,
+    "name": "Squash",
+    "name_subtitle": "summer and zucchini",
+    "category_id": 19,
+    "keywords": "Squash,summer,zucchini",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 305,
+    "name": "Taro",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Taro",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 307,
+    "name": "Turnips",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Turnips,turnip",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 308,
+    "name": "Yuca/cassava",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Yuca,cassava",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 414,
+    "name": "Kumquats",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Kumquats",
+    "default_shelf_life_days": 21,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 415,
+    "name": "Bagged greens",
+    "name_subtitle": "leaf, spinach, lettuce, etc.",
+    "category_id": 19,
+    "keywords": "Bagged greens,leaf,spinach,lettuce,bagged,greens,green",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 422,
+    "name": "Yams/sweet potatoes",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Yams,sweet potatoes,potatoes,potato,yam",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "pantry_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 423,
+    "name": "Kale",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Kale",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 478,
+    "name": "Star fruit",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Star fruit,fruit,fruits",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 479,
+    "name": "Prickly pear ",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Prickly pear,pear,pickle",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 480,
+    "name": "Pitaya/dragon fruit",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Pitaya,dragon fruit,fruit,fruits",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 481,
+    "name": "Strawberries",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Strawberries,strawberry",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 482,
+    "name": "Raspberries",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Raspberries,raspberry",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 483,
+    "name": "Cherries",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Cherries,cherry",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 490,
+    "name": "Ricotta",
+    "name_subtitle": null,
+    "category_id": 7,
+    "keywords": "Ricotta",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 491,
+    "name": "Baby carrots",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Baby carrots, carrot,baby carrot",
+    "default_shelf_life_days": 28,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 4,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 492,
+    "name": "Jicama",
+    "name_subtitle": "fresh",
+    "category_id": 19,
+    "keywords": "Jicama,fresh",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 494,
+    "name": "Kohlrabi",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Kohlrabi",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 495,
+    "name": "Watermelon",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Watermelon",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 496,
+    "name": "Cantaloupe",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Cantaloupe",
+    "default_shelf_life_days": 10,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 5,
+      "max": 15,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 497,
+    "name": "Honeydew",
+    "name_subtitle": null,
+    "category_id": 18,
+    "keywords": "Honeydew",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 505,
+    "name": "Lemongrass",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Lemongrass",
+    "default_shelf_life_days": 8,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 7,
+      "max": 9,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 506,
+    "name": "Cilantro",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Cilantro",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 507,
+    "name": "Mint",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Mint",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 509,
+    "name": "Basil",
+    "name_subtitle": "fresh",
+    "category_id": 19,
+    "keywords": "Basil,fresh",
+    "default_shelf_life_days": 10,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 10,
+      "max": 10,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 510,
+    "name": "Oregano",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Oregano",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 511,
+    "name": "Rosemary",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Rosemary",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 512,
+    "name": "Chives",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Chives",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 513,
+    "name": "Thyme",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Thyme",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 546,
+    "name": "Quark",
+    "name_subtitle": "fresh cheese",
+    "category_id": 7,
+    "keywords": "Quark,fresh cheese,cheese",
+    "default_shelf_life_days": 9,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 7,
+      "max": 10,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 547,
+    "name": "Zucchini",
+    "name_subtitle": "fresh, whole",
+    "category_id": 19,
+    "keywords": "Zucchini,fresh, whole",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 548,
+    "name": "Hot peppers",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Hot peppers,pepper",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 549,
+    "name": "Bean sprouts",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Bean sprouts,bean,sprouts",
+    "default_shelf_life_days": 8,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 5,
+      "max": 10,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 550,
+    "name": "Swiss chard",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Swiss chard,chard",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated_opened",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 562,
+    "name": "Applesauce",
+    "name_subtitle": "homemade",
+    "category_id": 18,
+    "keywords": "Applesauce,homemade",
+    "default_shelf_life_days": 21,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 570,
+    "name": "Marinated vegetables",
+    "name_subtitle": "in oil",
+    "category_id": 19,
+    "keywords": "Marinated vegetables,vegetables,oil,vegetable",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 4,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 595,
+    "name": "Rabbit",
+    "name_subtitle": "whole, fresh",
+    "category_id": 10,
+    "keywords": "Rabbit,whole, fresh",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 596,
+    "name": "Spaghetti squash",
+    "name_subtitle": "whole",
+    "category_id": 19,
+    "keywords": "Spaghetti squash,squash,whole",
+    "default_shelf_life_days": 11,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 597,
+    "name": "Spaghetti squash",
+    "name_subtitle": "cut",
+    "category_id": 19,
+    "keywords": "Spaghetti squash,squash,cut",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 600,
+    "name": "Cherry tomatoes",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "Cherry, tomatoes,tomato",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 5,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 611,
+    "name": "Parsley",
+    "name_subtitle": "fresh",
+    "category_id": 19,
+    "keywords": "parsley",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 621,
+    "name": "Bison",
+    "name_subtitle": "whole",
+    "category_id": 10,
+    "keywords": "bison whole,bison,whole",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 622,
+    "name": "Bison",
+    "name_subtitle": "ground",
+    "category_id": 10,
+    "keywords": "ground bison,bison,ground",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 628,
+    "name": "Cheese Curds",
+    "name_subtitle": "fresh, unaged",
+    "category_id": 7,
+    "keywords": "cheese curd,cheese,curd,curds,cheese curds",
+    "default_shelf_life_days": 14,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 2,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 630,
+    "name": "Chorizo",
+    "name_subtitle": "fresh",
+    "category_id": 10,
+    "keywords": "fresh chorizo,chorizo",
+    "default_shelf_life_days": 2,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 2,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 638,
+    "name": "Bratwurst",
+    "name_subtitle": "fresh",
+    "category_id": 10,
+    "keywords": "fresh brautwurst,brautwurst,fresh",
+    "default_shelf_life_days": 3,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 640,
+    "name": "Edamame",
+    "name_subtitle": "fresh",
+    "category_id": 19,
+    "keywords": "edamame,fresh,fresh edamame,soybeans,soybean",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 4,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 661,
+    "name": "Celery root",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "celeriac,celery root,celery",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 1,
+      "max": 1,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 674,
+    "name": "Radicchio",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "radicchio",
+    "default_shelf_life_days": 18,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 2,
+      "max": 3,
+      "metric": "Weeks"
+    }
+  },
+  {
+    "id": 677,
+    "name": "Ham ",
+    "name_subtitle": "uncured, fresh, uncooked",
+    "category_id": 10,
+    "keywords": "ham,uncured,fresh,uncooked,uncured ham,uncured ham uncooked",
+    "default_shelf_life_days": 4,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 5,
+      "metric": "Days"
+    }
+  },
+  {
+    "id": 678,
+    "name": "Arugula",
+    "name_subtitle": null,
+    "category_id": 19,
+    "keywords": "arugula,greens,salad greens,salad",
+    "default_shelf_life_days": 5,
+    "default_storage_condition": "refrigerated",
+    "shelf_life_source": {
+      "min": 3,
+      "max": 7,
+      "metric": "Days"
+    }
+  }
+]

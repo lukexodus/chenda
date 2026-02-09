@@ -1,0 +1,443 @@
+{
+  "fileName": "FMA-Data-v128.xlsx",
+  "sheets": [
+    {
+      "name": "Category",
+      "data": [
+        [
+          {
+            "ID": 1
+          },
+          {
+            "Category_Name": "Baby Food"
+          },
+          {
+            "Subcategory_Name": null
+          }
+        ],
+        [
+          {
+            "ID": 2
+          },
+          {
+            "Category_Name": "Baked Goods"
+          },
+          {
+            "Subcategory_Name": "Bakery"
+          }
+        ],
+        [
+          {
+            "ID": 3
+          },
+          {
+            "Category_Name": "Baked Goods"
+          },
+          {
+            "Subcategory_Name": "Baking and Cooking"
+          }
+        ]
+      ],
+      "maxRows": 25,
+      "maxCols": 0,
+      "note": "Full dataset has 25 rows, showing first 3 as examples"
+    },
+    {
+      "name": "Product",
+      "data": [
+        [
+          {
+            "ID": 1
+          },
+          {
+            "Category_ID": 7
+          },
+          {
+            "Name": "Butter"
+          },
+          {
+            "Name_subtitle": null
+          },
+          {
+            "Keywords": "Butter"
+          },
+          {
+            "Pantry_Min": null
+          },
+          {
+            "Pantry_Max": null
+          },
+          {
+            "Pantry_Metric": null
+          },
+          {
+            "Pantry_tips": "May be left at room temperature for 1 - 2 days."
+          },
+          {
+            "DOP_Pantry_Min": null
+          },
+          {
+            "DOP_Pantry_Max": null
+          },
+          {
+            "DOP_Pantry_Metric": null
+          },
+          {
+            "DOP_Pantry_tips": null
+          },
+          {
+            "Pantry_After_Opening_Min": null
+          },
+          {
+            "Pantry_After_Opening_Max": null
+          },
+          {
+            "Pantry_After_Opening_Metric": null
+          },
+          {
+            "Refrigerate_Min": null
+          },
+          {
+            "Refrigerate_Max": null
+          },
+          {
+            "Refrigerate_Metric": null
+          },
+          {
+            "Refrigerate_tips": null
+          },
+          {
+            "DOP_Refrigerate_Min": 1
+          },
+          {
+            "DOP_Refrigerate_Max": 2
+          },
+          {
+            "DOP_Refrigerate_Metric": "Months"
+          },
+          {
+            "DOP_Refrigerate_tips": null
+          },
+          {
+            "Refrigerate_After_Opening_Min": null
+          },
+          {
+            "Refrigerate_After_Opening_Max": null
+          },
+          {
+            "Refrigerate_After_Opening_Metric": null
+          },
+          {
+            "Refrigerate_After_Thawing_Min": null
+          },
+          {
+            "Refrigerate_After_Thawing_Max": null
+          },
+          {
+            "Refrigerate_After_Thawing_Metric": null
+          },
+          {
+            "Freeze_Min": null
+          },
+          {
+            "Freeze_Max": null
+          },
+          {
+            "Freeze_Metric": null
+          },
+          {
+            "Freeze_Tips": null
+          },
+          {
+            "DOP_Freeze_Min": 6
+          },
+          {
+            "DOP_Freeze_Max": 9
+          },
+          {
+            "DOP_Freeze_Metric": "Months"
+          },
+          {
+            "DOP_Freeze_Tips": null
+          }
+        ],
+        [
+          {
+            "ID": 2
+          },
+          {
+            "Category_ID": 7
+          },
+          {
+            "Name": "Buttermilk"
+          },
+          {
+            "Name_subtitle": null
+          },
+          {
+            "Keywords": "Buttermilk"
+          },
+          {
+            "Pantry_Min": null
+          },
+          {
+            "Pantry_Max": null
+          },
+          {
+            "Pantry_Metric": null
+          },
+          {
+            "Pantry_tips": null
+          },
+          {
+            "DOP_Pantry_Min": null
+          },
+          {
+            "DOP_Pantry_Max": null
+          },
+          {
+            "DOP_Pantry_Metric": null
+          },
+          {
+            "DOP_Pantry_tips": null
+          },
+          {
+            "Pantry_After_Opening_Min": null
+          },
+          {
+            "Pantry_After_Opening_Max": null
+          },
+          {
+            "Pantry_After_Opening_Metric": null
+          },
+          {
+            "Refrigerate_Min": null
+          },
+          {
+            "Refrigerate_Max": null
+          },
+          {
+            "Refrigerate_Metric": null
+          },
+          {
+            "Refrigerate_tips": null
+          },
+          {
+            "DOP_Refrigerate_Min": 1
+          },
+          {
+            "DOP_Refrigerate_Max": 2
+          },
+          {
+            "DOP_Refrigerate_Metric": "Weeks"
+          },
+          {
+            "DOP_Refrigerate_tips": null
+          },
+          {
+            "Refrigerate_After_Opening_Min": null
+          },
+          {
+            "Refrigerate_After_Opening_Max": null
+          },
+          {
+            "Refrigerate_After_Opening_Metric": null
+          },
+          {
+            "Refrigerate_After_Thawing_Min": null
+          },
+          {
+            "Refrigerate_After_Thawing_Max": null
+          },
+          {
+            "Refrigerate_After_Thawing_Metric": null
+          },
+          {
+            "Freeze_Min": null
+          },
+          {
+            "Freeze_Max": null
+          },
+          {
+            "Freeze_Metric": null
+          },
+          {
+            "Freeze_Tips": null
+          },
+          {
+            "DOP_Freeze_Min": 3
+          },
+          {
+            "DOP_Freeze_Max": 3
+          },
+          {
+            "DOP_Freeze_Metric": "Months"
+          },
+          {
+            "DOP_Freeze_Tips": null
+          }
+        ],
+        [
+          {
+            "ID": 3
+          },
+          {
+            "Category_ID": 7
+          },
+          {
+            "Name": "Cheese"
+          },
+          {
+            "Name_subtitle": "hard such as cheddar, swiss, block parmesan"
+          },
+          {
+            "Keywords": "Cheese,cheddar, swiss,parmesan"
+          },
+          {
+            "Pantry_Min": null
+          },
+          {
+            "Pantry_Max": null
+          },
+          {
+            "Pantry_Metric": null
+          },
+          {
+            "Pantry_tips": null
+          },
+          {
+            "DOP_Pantry_Min": null
+          },
+          {
+            "DOP_Pantry_Max": null
+          },
+          {
+            "DOP_Pantry_Metric": null
+          },
+          {
+            "DOP_Pantry_tips": null
+          },
+          {
+            "Pantry_After_Opening_Min": null
+          },
+          {
+            "Pantry_After_Opening_Max": null
+          },
+          {
+            "Pantry_After_Opening_Metric": null
+          },
+          {
+            "Refrigerate_Min": null
+          },
+          {
+            "Refrigerate_Max": null
+          },
+          {
+            "Refrigerate_Metric": null
+          },
+          {
+            "Refrigerate_tips": null
+          },
+          {
+            "DOP_Refrigerate_Min": 6
+          },
+          {
+            "DOP_Refrigerate_Max": 6
+          },
+          {
+            "DOP_Refrigerate_Metric": "Months"
+          },
+          {
+            "DOP_Refrigerate_tips": null
+          },
+          {
+            "Refrigerate_After_Opening_Min": 3
+          },
+          {
+            "Refrigerate_After_Opening_Max": 4
+          },
+          {
+            "Refrigerate_After_Opening_Metric": "Weeks"
+          },
+          {
+            "Refrigerate_After_Thawing_Min": null
+          },
+          {
+            "Refrigerate_After_Thawing_Max": null
+          },
+          {
+            "Refrigerate_After_Thawing_Metric": null
+          },
+          {
+            "Freeze_Min": null
+          },
+          {
+            "Freeze_Max": null
+          },
+          {
+            "Freeze_Metric": null
+          },
+          {
+            "Freeze_Tips": null
+          },
+          {
+            "DOP_Freeze_Min": 6
+          },
+          {
+            "DOP_Freeze_Max": 6
+          },
+          {
+            "DOP_Freeze_Metric": "Months"
+          },
+          {
+            "DOP_Freeze_Tips": null
+          }
+        ]
+      ],
+      "maxRows": 661,
+      "maxCols": 0,
+      "note": "Full dataset has 661 rows, showing first 3 as examples"
+    },
+    {
+      "name": "Data Dictionary",
+      "data": [
+        [
+          {
+            "Sheet": "Version"
+          },
+          {
+            "Column": "Data_Version_Number"
+          },
+          {
+            "Description": "Integer"
+          }
+        ],
+        [
+          {
+            "Sheet": "Version"
+          },
+          {
+            "Column": "Modified_Date"
+          },
+          {
+            "Description": "Date"
+          }
+        ],
+        [
+          {
+            "Sheet": "Version"
+          },
+          {
+            "Column": "FSIS_Approved_Flag"
+          },
+          {
+            "Description": "Character, Y or N"
+          }
+        ]
+      ],
+      "maxRows": 62,
+      "maxCols": 0,
+      "note": "Full dataset has 62 rows, showing first 3 as examples"
+    }
+  ]
+}

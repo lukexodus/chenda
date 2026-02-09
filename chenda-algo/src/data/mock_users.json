@@ -1,0 +1,192 @@
+[
+  {
+    "id": 1,
+    "name": "Maria Santos",
+    "email": "maria.santos@email.com",
+    "type": "buyer",
+    "location": {
+      "lat": 14.5995,
+      "lng": 120.9842,
+      "address": "Quezon City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 60,
+      "shelf_life_weight": 40,
+      "max_radius_km": 30,
+      "min_freshness_percent": 50,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-15T08:30:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Carlos Reyes",
+    "email": "carlos.reyes@email.com",
+    "type": "buyer",
+    "location": {
+      "lat": 14.5547,
+      "lng": 121.0244,
+      "address": "Makati City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 70,
+      "shelf_life_weight": 30,
+      "max_radius_km": 20,
+      "min_freshness_percent": 60,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-18T10:15:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Ana Garcia",
+    "email": "ana.garcia@email.com",
+    "type": "buyer",
+    "location": {
+      "lat": 14.5794,
+      "lng": 121.0359,
+      "address": "Mandaluyong City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 40,
+      "shelf_life_weight": 60,
+      "max_radius_km": 50,
+      "min_freshness_percent": 70,
+      "display_mode": "filter_sort"
+    },
+    "created_at": "2025-01-20T14:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Roberto Cruz",
+    "email": "roberto.cruz@email.com",
+    "type": "buyer",
+    "location": {
+      "lat": 14.676,
+      "lng": 120.9626,
+      "address": "Caloocan City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 50,
+      "shelf_life_weight": 50,
+      "max_radius_km": 40,
+      "min_freshness_percent": null,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-22T09:00:00Z"
+  },
+  {
+    "id": 5,
+    "name": "Sofia Mendoza",
+    "email": "sofia.mendoza@email.com",
+    "type": "buyer",
+    "location": {
+      "lat": 14.409,
+      "lng": 121.0185,
+      "address": "Parañaque City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 80,
+      "shelf_life_weight": 20,
+      "max_radius_km": 15,
+      "min_freshness_percent": 40,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-25T11:30:00Z"
+  },
+  {
+    "id": 6,
+    "name": "Juan's Fresh Market",
+    "email": "juan.market@email.com",
+    "type": "seller",
+    "location": {
+      "lat": 14.6091,
+      "lng": 121.0223,
+      "address": "Pasig City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 50,
+      "shelf_life_weight": 50,
+      "max_radius_km": 50,
+      "min_freshness_percent": null,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-10T10:00:00Z"
+  },
+  {
+    "id": 7,
+    "name": "Tindahan ni Aling Nena",
+    "email": "nena.store@email.com",
+    "type": "seller",
+    "location": {
+      "lat": 14.5378,
+      "lng": 121.0506,
+      "address": "Taguig City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 50,
+      "shelf_life_weight": 50,
+      "max_radius_km": 50,
+      "min_freshness_percent": null,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-12T08:00:00Z"
+  },
+  {
+    "id": 8,
+    "name": "Manila Bay Groceries",
+    "email": "manilabaygroceries@email.com",
+    "type": "seller",
+    "location": {
+      "lat": 14.5833,
+      "lng": 120.9794,
+      "address": "Manila City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 50,
+      "shelf_life_weight": 50,
+      "max_radius_km": 50,
+      "min_freshness_percent": null,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-08T07:00:00Z"
+  },
+  {
+    "id": 9,
+    "name": "Linda's Dairy Corner",
+    "email": "linda.dairy@email.com",
+    "type": "both",
+    "location": {
+      "lat": 14.6507,
+      "lng": 120.9721,
+      "address": "Valenzuela City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 55,
+      "shelf_life_weight": 45,
+      "max_radius_km": 35,
+      "min_freshness_percent": 50,
+      "display_mode": "ranking"
+    },
+    "created_at": "2025-01-14T09:30:00Z"
+  },
+  {
+    "id": 10,
+    "name": "Pedro's Produce Hub",
+    "email": "pedro.produce@email.com",
+    "type": "both",
+    "location": {
+      "lat": 14.5243,
+      "lng": 120.9832,
+      "address": "Las Piñas City, Metro Manila"
+    },
+    "preferences": {
+      "proximity_weight": 45,
+      "shelf_life_weight": 55,
+      "max_radius_km": 45,
+      "min_freshness_percent": 60,
+      "display_mode": "filter_sort"
+    },
+    "created_at": "2025-01-16T13:00:00Z"
+  }
+]
