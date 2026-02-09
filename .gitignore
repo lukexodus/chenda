@@ -1,0 +1,42 @@
+node_modules
+package-lock.json
+coverage
+.DS_Store
+.idea
+.vscode
+*.log
+*.tsbuildinfo
+
+# Ignore build output
+build
+dist
+
+# Ignore test output
+test-output
+
+# Ignore temporary files
+tmp
+temp
+
+# Ignore OS-specific files
+Thumbs.db
+Desktop.ini
+
+# Ignore IDE-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore npm debug logs
+npm-debug.log*
+
+# Ignore lock files
+yarn.lock
+
+# Ignore environment variable files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

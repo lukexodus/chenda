@@ -1,0 +1,28 @@
+{
+  "name": "chenda",
+  "version": "1.0.0",
+  "description": "1. **Backend Integration** (Algorithm → Server) 2. **Frontend Development** (User Interface) 3. **Integration & Deployment** (Connect Everything)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukexodus/chenda.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lukexodus/chenda/issues"
+  },
+  "homepage": "https://github.com/lukexodus/chenda#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "pg": "^8.18.0"
+  }
+}
