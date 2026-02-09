@@ -40,3 +40,12 @@ yarn.lock
 .env.development.local
 .env.test.local
 .env.production.local
+
+server/node_modules
+server/package-lock.json
+server/.env
+server/.env.local
+server/.env.development.local
+server/.env.test.local
+server/.env.production.local
+server/.env.example

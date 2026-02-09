@@ -44,13 +44,13 @@
 
 ---
 
-### **Task 1.2: API Server Setup** (2-3 days)
+### **Task 1.2: API Server Setup** (2-3 days) ✅ **COMPLETE**
 **Goal**: Create Express.js server with basic structure
 
 #### Subtasks:
-- [ ] 1.2.1: Initialize Node.js project
-- [ ] 1.2.2: Install dependencies (express, pg, bcrypt, passport, etc.)
-- [ ] 1.2.3: Create server structure
+- [x] 1.2.1: Initialize Node.js project
+- [x] 1.2.2: Install dependencies (express, pg, bcrypt, passport, etc.)
+- [x] 1.2.3: Create server structure
   ```
   server/
   ├── config/           # Database & environment config
@@ -60,48 +60,51 @@
   ├── middleware/       # Auth, validation, etc.
   └── app.js           # Main entry point
   ```
-- [ ] 1.2.4: Set up environment variables (.env)
-- [ ] 1.2.5: Create database connection pool
-- [ ] 1.2.6: Test server startup
+- [x] 1.2.4: Set up environment variables (.env)
+- [x] 1.2.5: Create database connection pool
+- [x] 1.2.6: Test server startup
 
 **Deliverables**:
-- Working Express.js server on `http://localhost:3001`
-- Database connection established
-- Basic error handling middleware
+- ✅ `server/app.js` (Main Express application)
+- ✅ `server/config/database.js` (PostgreSQL connection pool)
+- ✅ `server/config/index.js` (Centralized configuration)
+- ✅ `server/middleware/errorHandler.js` (Error handling)
+- ✅ `server/middleware/logger.js` (Request logging)
+- ✅ `server/routes/health.js` (Health check endpoint)
+- ✅ Server running on `http://localhost:3001`
+- ✅ Database connection verified
 
 **Tools**: Express.js, dotenv, pg (node-postgres)
 
 ---
 
-### **Task 1.3: Authentication System** (3-4 days)
+### **Task 1.3: Authentication System** (3-4 days) ✅ **COMPLETE**
 **Goal**: Implement email/password authentication with optional verification
 
 #### Subtasks:
-- [ ] 1.3.1: Create User model (CRUD operations)
-- [ ] 1.3.2: Implement Passport.js Local Strategy
-- [ ] 1.3.3: Create auth routes
+- [x] 1.3.1: Create User model (CRUD operations)
+- [x] 1.3.2: Implement Passport.js Local Strategy
+- [x] 1.3.3: Create auth routes
   - POST `/api/auth/register` (with password hashing)
   - POST `/api/auth/login` (with session creation)
   - POST `/api/auth/logout`
   - GET `/api/auth/me` (get current user)
-- [ ] 1.3.4: Create auth middleware (protect routes)
-- [ ] 1.3.5: Implement session management (express-session)
-- [ ] 1.3.6: **Optional**: Email verification system
-  - Generate verification tokens
-  - Set up Nodemailer + MailHog (local SMTP)
-  - POST `/api/auth/verify-email`
-  - Create email templates
-- [ ] 1.3.7: Add feature toggle for email verification
-- [ ] 1.3.8: Test all auth flows (register, login, logout)
+- [x] 1.3.4: Create auth middleware (protect routes)
+- [x] 1.3.5: Implement session management (PostgreSQL storage)
+- [ ] 1.3.6: **Optional**: Email verification system (skipped for MVP)
+- [ ] 1.3.7: Add feature toggle for email verification (skipped for MVP)
+- [x] 1.3.8: Test all auth flows (register, login, logout)
 
 **Deliverables**:
-- `routes/auth.js`
-- `controllers/authController.js`
-- `middleware/authenticate.js`
-- `services/emailService.js` (if verification enabled)
-- Working auth endpoints
+- ✅ `server/models/User.js` (User model with CRUD operations)
+- ✅ `server/config/passport.js` (Passport Local Strategy)
+- ✅ `server/routes/auth.js` (Auth endpoints)
+- ✅ `server/controllers/authController.js` (Auth business logic)
+- ✅ `server/middleware/authenticate.js` (Auth middleware: isAuthenticated, isBuyer, isSeller, isOwner)
+- ✅ `migrations/003_create_session_table.sql` (PostgreSQL session storage)
+- ✅ Working auth endpoints (register, login, logout, /me, password update)
 
-**Tools**: Passport.js, bcrypt, express-session, Nodemailer, MailHog
+**Tools**: Passport.js, bcrypt, express-session, connect-pg-simple
 
 ---
 
