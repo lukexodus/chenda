@@ -141,6 +141,19 @@ const createProduct = async (req, res) => {
     delete newProduct.lat;
     delete newProduct.lng;
 
+    // Track product creation analytics
+    if (req.analytics) {
+      req.analytics.track('product_created', {
+        product_id: newProduct.id,
+        product_type_id: newProduct.product_type_id,
+        price: newProduct.price,
+        quantity: newProduct.quantity,
+        days_already_used: newProduct.days_already_used,
+        storage_condition: newProduct.storage_condition,
+        has_image: !!newProduct.image_url
+      }, seller_id).catch(err => console.error('Product creation analytics error:', err));
+    }
+
     res.status(201).json({
       success: true,
       message: 'Product created successfully',
@@ -242,6 +255,17 @@ const getProductById = async (req, res) => {
         email: row.seller_email
       }
     };
+
+    // Track product view analytics
+    if (req.analytics) {
+      req.analytics.track('product_viewed', {
+        product_id: product.id,
+        product_type_id: product.product_type_id,
+        seller_id: product.seller_id,
+        price: product.price,
+        view_source: req.get('Referer') ? 'search_results' : 'direct'
+      }, req.user?.id).catch(err => console.error('Product view analytics error:', err));
+    }
 
     res.json({
       success: true,

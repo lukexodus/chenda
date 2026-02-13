@@ -119,6 +119,17 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
     const products = await Product.getProductsWithMetrics(buyerLocation, filters);
 
     if (products.length === 0) {
+      // Track empty search results
+      if (req.analytics) {
+        req.analytics.trackSearch(
+          {
+            buyer: buyerLocation,
+            config: config
+          },
+          [] // empty results
+        ).catch(err => console.error('Search analytics error:', err));
+      }
+      
       return res.status(200).json({
         success: true,
         message: 'No products found matching your criteria',
@@ -155,7 +166,18 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
       finalProducts = finalProducts.slice(0, config.limit);
     }
 
-    // Step 5: Return results
+    // Step 5: Track search analytics
+    if (req.analytics) {
+      req.analytics.trackSearch(
+        {
+          buyer: buyerLocation,
+          config: config
+        },
+        finalProducts
+      ).catch(err => console.error('Search analytics error:', err));
+    }
+
+    // Step 6: Return results
     res.status(200).json({
       success: true,
       count: finalProducts.length,

@@ -15,12 +15,14 @@ const passport = require('./config/passport');
 // Import middleware
 const getLogger = require('./middleware/logger');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
+const { responseTimeTracker, authAnalyticsMiddleware, preferenceAnalyticsMiddleware, errorAnalyticsMiddleware } = require('./middleware/analyticsMiddleware');
 
 const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
+const analyticsRoutes = require('./routes/analytics');
 // Import routes
 const healthRoutes = require('./routes/health');
 
@@ -94,6 +96,11 @@ app.use(passport.session());
 app.use(getLogger());
 
 /**
+ * Analytics Middleware (Response time tracking and utilities)
+ */
+app.use(responseTimeTracker);
+
+/**
  * Static File Serving
  */
 // Serve uploaded files
@@ -119,8 +126,8 @@ app.get('/', (req, res) => {
 // Health check
 app.use('/api/health', healthRoutes);
 
-// Authentication routes
-app.use('/api/auth', authRoutes);
+// Authentication routes (with analytics middleware)
+app.use('/api/auth', authAnalyticsMiddleware, authRoutes);
 
 // Search routes (public search endpoints)
 app.use('/api/search', searchRoutes);
@@ -134,10 +141,13 @@ app.use('/api/products', searchRoutes);
 app.use('/api/products', productRoutes);
 
 // User management routes (profile, preferences, location)
-app.use('/api/users', userRoutes);
+app.use('/api/users', preferenceAnalyticsMiddleware, userRoutes);
 
 // Order management routes (mock payment system)
 app.use('/api/orders', orderRoutes);
+
+// Analytics routes (dashboard endpoints)
+app.use('/api/analytics', analyticsRoutes);
 
 /**
  * Error Handling
@@ -145,6 +155,9 @@ app.use('/api/orders', orderRoutes);
 
 // 404 handler (must be after all routes)
 app.use(notFound);
+
+// Analytics error tracking (before general error handler)
+app.use(errorAnalyticsMiddleware);
 
 // General error handler (must be last)
 app.use(errorHandler);

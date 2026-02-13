@@ -88,6 +88,20 @@ const createOrder = async (req, res) => {
   // Get order details for response
   const orderDetails = await Order.getById(order.id);
 
+  // Track order creation analytics
+  if (req.analytics) {
+    req.analytics.track('order_created', {
+      order_id: orderDetails.id,
+      product_id: orderDetails.product_id,
+      seller_id: orderDetails.seller_id,
+      buyer_id: orderDetails.buyer_id,
+      quantity: orderDetails.quantity,
+      unit_price: orderDetails.unit_price,
+      total_amount: orderDetails.total_amount,
+      payment_method: orderDetails.payment_method
+    }, buyer_id).catch(err => console.error('Order creation analytics error:', err));
+  }
+
   res.status(201).json({
     success: true,
     message: 'Order created successfully',
