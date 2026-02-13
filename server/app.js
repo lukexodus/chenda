@@ -16,6 +16,7 @@ const getLogger = require('./middleware/logger');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/auth');
+const searchRoutes = require('./routes/search');
 // Import routes
 const healthRoutes = require('./routes/health');
 
@@ -111,8 +112,10 @@ app.use('/api/health', healthRoutes);
 // Authentication routes
 app.use('/api/auth', authRoutes);
 
+// Product search routes (with algorithm integration)
+app.use('/api/products', searchRoutes);
+
 // API routes will be added here
-// app.use('/api/products', productRoutes);
 // app.use('/api/users', userRoutes);
 // app.use('/api/orders', orderRoutes);
 
