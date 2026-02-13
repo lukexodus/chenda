@@ -20,6 +20,7 @@ const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
+const orderRoutes = require('./routes/orders');
 // Import routes
 const healthRoutes = require('./routes/health');
 
@@ -121,6 +122,9 @@ app.use('/api/health', healthRoutes);
 // Authentication routes
 app.use('/api/auth', authRoutes);
 
+// Search routes (public search endpoints)
+app.use('/api/search', searchRoutes);
+
 // Product search routes (with algorithm integration)
 // These must come before product management routes (more specific paths)
 app.use('/api/products', searchRoutes);
@@ -132,8 +136,8 @@ app.use('/api/products', productRoutes);
 // User management routes (profile, preferences, location)
 app.use('/api/users', userRoutes);
 
-// API routes will be added here
-// app.use('/api/orders', orderRoutes);
+// Order management routes (mock payment system)
+app.use('/api/orders', orderRoutes);
 
 /**
  * Error Handling

@@ -36,6 +36,7 @@ yarn.lock
 
 # Ignore environment variable files
 .env
+.env.test
 .env.local
 .env.development.local
 .env.test.local

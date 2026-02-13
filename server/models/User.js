@@ -87,7 +87,7 @@ class User {
    * @returns {Promise<Object>} Updated user object
    */
   static async update(id, updates) {
-    const allowedFields = ['name', 'address', 'type'];
+    const allowedFields = ['name', 'email', 'address', 'type'];
     const updateFields = [];
     const values = [];
     let paramCount = 1;

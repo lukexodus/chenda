@@ -78,7 +78,9 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
     config.max_radius = config.max_radius || req.user.preferences.max_radius_km || 50;
     config.min_freshness_score = config.min_freshness_score !== undefined 
       ? config.min_freshness_score 
-      : req.user.preferences.min_freshness_percent || 0;
+      : config.min_freshness !== undefined
+        ? config.min_freshness
+        : req.user.preferences.min_freshness_percent || 0;
     
     // Apply weight preferences (convert from 0-100 to 0-1 if needed)
     if (!config.weights && req.user.preferences) {
@@ -96,7 +98,11 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
   } else {
     // Default config for unauthenticated users
     config.max_radius = config.max_radius || 50;
-    config.min_freshness_score = config.min_freshness_score !== undefined ? config.min_freshness_score : 0;
+    config.min_freshness_score = config.min_freshness_score !== undefined 
+      ? config.min_freshness_score 
+      : config.min_freshness !== undefined
+        ? config.min_freshness
+        : 0;
     config.mode = config.mode || 'ranking';
   }
 
@@ -116,7 +122,14 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
       return res.status(200).json({
         success: true,
         message: 'No products found matching your criteria',
-        products: [],
+        results: [],
+        config: {
+          mode: config.mode,
+          max_radius: config.max_radius,
+          min_freshness_score: config.min_freshness_score,
+          proximity_weight: Math.round((config.weights?.proximity_weight || 0.4) * 100),
+          freshness_weight: Math.round((config.weights?.freshness_weight || 0.6) * 100)
+        },
         metadata: {
           config,
           stats: { input_products: 0, output_products: 0 }
@@ -146,7 +159,14 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
     res.status(200).json({
       success: true,
       count: finalProducts.length,
-      products: finalProducts,
+      results: finalProducts,
+      config: {
+        mode: config.mode,
+        max_radius: config.max_radius,
+        min_freshness_score: config.min_freshness_score,
+        proximity_weight: Math.round((config.weights?.proximity_weight || 0.4) * 100),
+        freshness_weight: Math.round((config.weights?.freshness_weight || 0.6) * 100)
+      },
       metadata: {
         ...algorithmResult.metadata,
         buyer_location: buyerLocation,
@@ -201,6 +221,21 @@ const getNearbyProducts = asyncHandler(async (req, res, next) => {
     });
   }
 
+  // Validate coordinate ranges
+  if (lat < -90 || lat > 90) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid latitude. Must be between -90 and 90.'
+    });
+  }
+
+  if (lng < -180 || lng > 180) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid longitude. Must be between -180 and 180.'
+    });
+  }
+
   const buyerLocation = { lat, lng };
   const filters = {
     max_radius_km: radius,
@@ -234,7 +269,150 @@ const getNearbyProducts = asyncHandler(async (req, res, next) => {
   }
 });
 
+/**
+ * GET /api/search/public
+ * Public search endpoint using query parameters
+ * 
+ * Query parameters:
+ * - lat, lng: buyer location
+ * - radius: search radius in km (default: 50)
+ * - proximity_weight: 0-100 (default: 50)
+ * - freshness_weight: 0-100 (default: 50)
+ * - min_freshness: 0-100 (default: 0)
+ * - mode: "ranking" | "filter" (default: "ranking")
+ * - sort_by: "score" | "price" | "distance" | "freshness" (default: "score")
+ * - sort_order: "asc" | "desc" (default: "desc")
+ * - limit: max results (default: no limit)
+ */
+const publicSearch = asyncHandler(async (req, res, next) => {
+  // Extract location from query parameters
+  const lat = parseFloat(req.query.lat);
+  const lng = parseFloat(req.query.lng);
+
+  if (isNaN(lat) || isNaN(lng)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Valid lat and lng query parameters are required'
+    });
+  }
+
+  // Validate coordinate ranges
+  if (lat < -90 || lat > 90) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid latitude. Must be between -90 and 90.'
+    });
+  }
+
+  if (lng < -180 || lng > 180) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid longitude. Must be between -180 and 180.'
+    });
+  }
+
+  const buyerLocation = { lat, lng };
+
+  // Build config from query parameters with defaults
+  const proximity_weight_raw = parseFloat(req.query.proximity_weight) || 50;
+  const freshness_weight_raw = parseFloat(req.query.freshness_weight) || 50;
+  
+  // Handle both decimal (0-1) and percentage (0-100) formats
+  const proximity_weight = proximity_weight_raw <= 1 ? proximity_weight_raw : proximity_weight_raw / 100;
+  const freshness_weight = freshness_weight_raw <= 1 ? freshness_weight_raw : freshness_weight_raw / 100;
+  
+  const config = {
+    max_radius: parseFloat(req.query.radius) || 50,
+    mode: req.query.mode || 'ranking',
+    weights: {
+      proximity_weight,
+      freshness_weight
+    },
+    min_freshness_score: parseFloat(req.query.min_freshness) || 0,
+    sort_by: req.query.sort_by || 'score',
+    sort_order: req.query.sort_order || 'desc',
+    limit: req.query.limit ? parseInt(req.query.limit) : undefined
+  };
+
+  // Validate weights sum to 1
+  const totalWeight = config.weights.proximity_weight + config.weights.freshness_weight;
+  if (Math.abs(totalWeight - 1.0) > 0.01) {
+    return res.status(400).json({
+      success: false,
+      message: 'Proximity and freshness weights must sum to 100%'
+    });
+  }
+
+  // Get products with location/distance metrics
+  const filters = {
+    max_radius_km: config.max_radius,
+    min_freshness_percent: config.min_freshness_score,
+    available_only: true
+  };
+
+  try {
+    const products = await Product.getProductsWithMetrics(buyerLocation, filters);
+
+    if (products.length === 0) {
+      return res.json({
+        success: true,
+        count: 0,
+        results: [],
+        config: {
+          ...config,
+          proximity_weight: Math.round(config.weights.proximity_weight * 100),
+          freshness_weight: Math.round(config.weights.freshness_weight * 100)
+        },
+        metadata: {
+          buyer_location: buyerLocation,
+          radius_km: config.max_radius,
+          algorithm_mode: config.mode
+        }
+      });
+    }
+
+    // Create buyer object for algorithm with correct property names
+    const buyer = {
+      latitude: buyerLocation.lat,
+      longitude: buyerLocation.lng
+    };
+
+    // Run algorithm with correct parameter order
+    const algorithmResult = chendaAlgorithm(buyer, products, config);
+    
+    // Apply limit if specified
+    let finalProducts = algorithmResult.products;
+    if (config.limit && config.limit > 0) {
+      finalProducts = finalProducts.slice(0, config.limit);
+    }
+
+    return res.json({
+      success: true,
+      count: finalProducts.length,
+      results: finalProducts,
+      config: {
+        ...config,
+        proximity_weight: Math.round(config.weights.proximity_weight * 100),
+        freshness_weight: Math.round(config.weights.freshness_weight * 100)
+      },
+      metadata: {
+        ...algorithmResult.metadata,
+        buyer_location: buyerLocation
+      }
+    });
+
+  } catch (error) {
+    console.error('Public search error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error searching products',
+      error: error.message
+    });
+  }
+});
+
 module.exports = {
   searchProducts,
-  getNearbyProducts
+  getNearbyProducts,
+  publicSearch
 };

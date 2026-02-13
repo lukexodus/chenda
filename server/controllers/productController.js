@@ -144,7 +144,7 @@ const createProduct = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Product created successfully',
-      data: newProduct
+      product: newProduct
     });
   } catch (error) {
     console.error('Error creating product:', error);
@@ -227,6 +227,9 @@ const getProductById = async (req, res) => {
       status: row.status,
       created_at: row.created_at,
       updated_at: row.updated_at,
+      // Flattened seller info for backward compatibility
+      seller_name: row.seller_name,
+      seller_email: row.seller_email,
       product_type: {
         id: row.pt_id,
         name: row.pt_name,
@@ -242,7 +245,7 @@ const getProductById = async (req, res) => {
 
     res.json({
       success: true,
-      data: product
+      product: product
     });
   } catch (error) {
     console.error('Error fetching product:', error);
@@ -276,6 +279,7 @@ const getMyProducts = async (req, res) => {
     const result = await query(
       `SELECT 
         p.id,
+        p.seller_id,
         p.product_type_id,
         p.days_already_used,
         p.listed_date,
@@ -310,6 +314,7 @@ const getMyProducts = async (req, res) => {
 
     const products = result.rows.map(row => ({
       id: row.id,
+      seller_id: row.seller_id,
       product_type_id: row.product_type_id,
       days_already_used: row.days_already_used,
       listed_date: row.listed_date,
@@ -336,7 +341,7 @@ const getMyProducts = async (req, res) => {
 
     res.json({
       success: true,
-      data: products,
+      products: products,
       pagination: {
         total: parseInt(countResult.rows[0].total),
         limit: parseInt(limit),
@@ -557,10 +562,14 @@ const updateProduct = async (req, res) => {
     delete updatedProduct.lat;
     delete updatedProduct.lng;
 
+    // Parse numeric fields
+    updatedProduct.price = parseFloat(updatedProduct.price);
+    updatedProduct.quantity = parseFloat(updatedProduct.quantity);
+
     res.json({
       success: true,
       message: 'Product updated successfully',
-      data: updatedProduct
+      product: updatedProduct
     });
   } catch (error) {
     console.error('Error updating product:', error);
