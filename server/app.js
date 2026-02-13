@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
+const path = require('path');
 require('dotenv').config();
 
 // Import configuration
@@ -17,6 +18,7 @@ const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
+const productRoutes = require('./routes/products');
 // Import routes
 const healthRoutes = require('./routes/health');
 
@@ -90,6 +92,12 @@ app.use(passport.session());
 app.use(getLogger());
 
 /**
+ * Static File Serving
+ */
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+/**
  * Routes
  */
 
@@ -113,7 +121,12 @@ app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 
 // Product search routes (with algorithm integration)
+// These must come before product management routes (more specific paths)
 app.use('/api/products', searchRoutes);
+
+// Product management routes (CRUD for sellers)
+// Less specific paths, so registered after search routes
+app.use('/api/products', productRoutes);
 
 // API routes will be added here
 // app.use('/api/users', userRoutes);
