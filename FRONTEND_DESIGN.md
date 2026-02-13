@@ -1,214 +1,351 @@
-Based on your comprehensive project documentation, here are the key design and style principles from your CHENDA fresh market application that you should transfer to your new, simpler frontend:
+# Chenda Frontend Design System
 
-## 🎨 **Core Design System**
+Design principles, tokens, and visual patterns for the Chenda fresh marketplace frontend.
 
-### **Color Palette (Food-Safety Focused)**
+---
+
+## Color Palette
+
+Food-safety focused color system communicating trust, freshness, and urgency.
+
 ```css
-/* Primary Colors */
---fresh-primary: #2EA44F;     /* Green - trust, freshness */
---fresh-accent: #FFD166;      /* Yellow - energy, warmth */
---fresh-danger: #E63946;      /* Red - urgency, expiration */
---fresh-warning: #FFB300;     /* Orange - caution */
+/* Primary */
+--fresh-primary: #2EA44F;      /* Green — trust, freshness */
+--fresh-accent: #FFD166;       /* Yellow — energy, warmth */
+--fresh-danger: #E63946;       /* Red — urgency, expiration */
+--fresh-warning: #FFB300;      /* Orange — caution */
 
 /* Neutrals */
---fresh-surface: #F7F9FA;     /* Clean backgrounds */
---fresh-border: #E5E7EB;      /* Subtle separators */
---fresh-text-primary: #111827; /* High contrast */
---fresh-text-muted: #6B7280;  /* Secondary info */
+--fresh-surface: #F7F9FA;      /* Clean backgrounds */
+--fresh-border: #E5E7EB;       /* Subtle separators */
+--fresh-text-primary: #111827; /* High contrast text */
+--fresh-text-muted: #6B7280;   /* Secondary / caption text */
 ```
 
-### **Typography Scale**
+### Status Color Mapping
+
+| State      | Color              | Usage                             |
+|------------|--------------------|-----------------------------------|
+| Fresh/Good | `--fresh-primary`  | In-stock, high freshness          |
+| Warning    | `--fresh-warning`  | Expiring soon, low stock          |
+| Critical   | `--fresh-danger`   | Expired, unavailable              |
+| Highlight  | `--fresh-accent`   | Featured items, promotions        |
+
+---
+
+## Typography
+
 ```css
---text-h1: 28px / 36px;       /* Main headings */
---text-h2: 22px / 30px;       /* Section headers */
---text-h3: 18px / 26px;       /* Card titles */
---text-body: 16px / 24px;     /* Body text */
---text-small: 12px / 18px;    /* Labels, captions */
+--text-h1: 28px / 36px;   /* Page headings */
+--text-h2: 22px / 30px;   /* Section headers */
+--text-h3: 18px / 26px;   /* Card titles */
+--text-body: 16px / 24px;  /* Body text */
+--text-small: 12px / 18px; /* Labels, captions, badges */
 ```
 
-### **Spacing & Radius System**
+Use `font-medium` for card titles, `font-semibold` for section headers, and `font-bold` sparingly for page headings only.
+
+---
+
+## Spacing, Radius & Shadows
+
 ```css
---radius-card: 12px;          /* Cards, containers */
---radius-button: 8px;         /* Interactive elements */
---radius-input: 6px;          /* Form fields */
+/* Border radius */
+--radius-card: 12px;     /* Cards, containers */
+--radius-button: 8px;    /* Buttons, interactive elements */
+--radius-input: 6px;     /* Form fields */
 
---shadow-small: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
---shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+/* Shadows */
+--shadow-small: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+--shadow-medium: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
 ```
 
-## 🧩 **Component Design Patterns**
+Spacing follows Tailwind's 4px base unit. Standard content padding is `p-4` on mobile, `p-6` on tablet+.
 
-### **1. Card-Based Layout**
-Your ProductCard pattern with trust and urgency indicators:
-```tsx
-<div className="bg-white rounded-[var(--radius-card)] p-4 shadow-[var(--shadow-small)] border border-[var(--fresh-border)]">
-  {/* Status badges with color coding */}
-  <Badge className={`${getUrgencyColor()} text-white border-0`}>
-    <Clock className="w-3 h-3 mr-1" />
-    {getStatusText()}
-  </Badge>
-  
-  {/* Clear information hierarchy */}
-  <h3 className="font-medium text-[var(--fresh-text-primary)]">{title}</h3>
-  <p className="text-[var(--fresh-text-muted)]">{subtitle}</p>
-  
-  {/* Action button */}
-  <Button className="w-full mt-3">Primary Action</Button>
-</div>
+---
+
+## Layout Architecture
+
+### Mobile-First Vertical Stack
+
+```
+┌─────────────────────┐
+│   TopAppHeader      │  ← Fixed, context-aware title
+├─────────────────────┤
+│                     │
+│   Scrollable        │  ← Main content area
+│   Content           │
+│                     │
+├─────────────────────┤
+│   BottomNav         │  ← Fixed, role-based tabs
+└─────────────────────┘
 ```
 
-### **2. Status-Driven UI**
-Color-coded system based on urgency/state:
-```tsx
-const getStatusColor = (status) => {
-  if (critical) return 'bg-[var(--fresh-danger)]';    // Red
-  if (warning) return 'bg-[var(--fresh-warning)]';    // Orange 
-  return 'bg-[var(--fresh-primary)]';                 // Green
-};
-```
+- **Fixed header + footer**: Navigation always accessible
+- **Scrollable middle**: Content scrolls between the fixed bars
+- **Bottom padding**: Content area uses `pb-20` to clear the fixed bottom nav
 
-### **3. Mobile-First Navigation**
-Role-based bottom navigation:
-```tsx
-// Adapt tabs based on user context
-const tabs = userRole === 'consumer' 
-  ? [{ id: 'products', icon: Package }, { id: 'profile', icon: User }]
-  : [{ id: 'dashboard', icon: Home }, { id: 'settings', icon: Settings }];
-```
+### Responsive Breakpoints
 
-## 📱 **Responsive Design Patterns**
+| Breakpoint | Layout                                         |
+|------------|------------------------------------------------|
+| Mobile     | Single column, 2-col product grid              |
+| `md`       | 3-col product grid                             |
+| `lg`       | 4-col product grid, side-by-side map + list    |
 
-### **Mobile-First Approach**
 ```tsx
-// Progressive enhancement
-<div className="text-3xl sm:text-4xl lg:text-5xl">
+// Progressive enhancement pattern
 <div className="p-4 sm:p-6 lg:p-8">
-<div className="w-full max-w-md"> {/* Mobile constraint */}
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<div className="flex flex-col lg:flex-row gap-4">
 ```
 
-### **Adaptive Components**
+---
+
+## Navigation
+
+### Top Header
+
+- Displays app name "Chenda" by default with logo
+- Shows contextual title + back button when in detail views
+- Keeps location indicator visible
+
+### Bottom Navigation
+
+Role-adapted, maximum 4 tabs:
+
+| Role   | Tabs                                    |
+|--------|-----------------------------------------|
+| Buyer  | Search · Orders · Profile               |
+| Seller | Dashboard · Products · Orders · Profile |
+
+Each tab uses icon + label. Badge indicators for unread counts.
+
+### Navigation Hierarchy
+
+Detail views layer over the main content. Back button unwinds the stack:
+
+```
+Level 0: Tab views (Search, Dashboard, etc.)
+Level 1: Detail views (Product detail, Vendor detail)
+Level 2: Modals (Checkout, Location picker)
+```
+
+---
+
+## Component Patterns
+
+### Product Card
+
 ```tsx
-// Component behavior changes by screen size
-{showDistance && (
-  <Badge className="absolute top-2 right-2 bg-white/90">
-    <MapPin className="w-3 h-3 mr-1" />
-    {distance}
+<Card className="rounded-[var(--radius-card)] shadow-[var(--shadow-small)] border border-[var(--fresh-border)]">
+  {/* Status badge — top corner */}
+  <Badge className="bg-[statusColor] text-white">
+    <Clock className="w-3 h-3 mr-1" />
+    Freshness label
   </Badge>
-)}
+
+  {/* Image */}
+  {/* Title — font-medium, --fresh-text-primary */}
+  {/* Price + metadata — --fresh-text-muted */}
+  {/* Distance badge if location available */}
+
+  <Button className="w-full mt-3">Add to Cart</Button>
+</Card>
 ```
 
-## 🎯 **UX Principles**
+Cards use hover elevation: `hover:shadow-[var(--shadow-medium)]`.
 
-### **1. Information Hierarchy**
-- **Primary**: Status/urgency information (freshness, availability)
-- **Secondary**: Core details (title, price)
-- **Tertiary**: Metadata (distance, seller info)
+### Badge System
 
-### **2. Progressive Disclosure**
+Semantic color badges for statuses:
+
 ```tsx
-// Summary on card, details on click
-const handleCardClick = () => {
-  if (onViewDetail) {
-    onViewDetail({ id, title, ...allDetails });
-  }
-};
-```
-
-### **3. Clear Actions with Context**
-```tsx
-<Button
-  onClick={(e) => {
-    e.stopPropagation(); // Don't trigger card click
-    onPrimaryAction?.(id);
-  }}
-  disabled={isDisabled}
-  variant={isDisabled ? "secondary" : "default"}
->
-  {isDisabled ? 'Unavailable' : 'Primary Action'}
-</Button>
-```
-
-## 🌟 **Visual Elements**
-
-### **Icon System** (Lucide Icons)
-- `Package` for products/inventory
-- `MapPin` for location
-- `Clock` for time/urgency  
-- `User` for profile/people
-- `Star` for ratings/quality
-
-### **Badge System**
-```tsx
-// Status badges with semantic colors
-<Badge className="bg-[var(--fresh-primary)] text-white">
+<Badge className="bg-[var(--fresh-primary)] text-white border-0">
   <Icon className="w-3 h-3 mr-1" />
-  Status Text
+  Label
 </Badge>
 ```
 
-### **Interactive States**
-```css
-/* Hover effects */
-.hover\:shadow-lg:hover { box-shadow: var(--shadow-medium); }
-.hover\:underline:hover { text-decoration: underline; }
+- Green badge: fresh / available / verified
+- Orange badge: expiring soon / low stock
+- Red badge: expired / unavailable
+- White/translucent badge: distance overlay (`bg-white/90`)
 
-/* Focus states */
-.focus-visible\:ring-ring\/50:focus-visible { 
-  ring: 3px solid var(--fresh-primary)/50; 
-}
+### Dashboard Metrics
+
+Seller/admin dashboards use a metrics grid at top, content below:
+
+```tsx
+<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  <MetricCard />
+</div>
+<div className="mt-6 space-y-6">
+  {/* Charts, tables, lists */}
+</div>
 ```
 
-## 🛠 **Implementation Architecture**
+### Search Interface
 
-### **CSS Custom Properties**
-Use semantic tokens, not hardcoded values:
+Stacked structure:
+
+```
+Search input
+Filter controls (sliders, toggles)
+Sort options (dropdown/tabs)
+Results grid (product cards)
+Map toggle (optional overlay)
+```
+
+---
+
+## Loading & Empty States
+
+### Skeleton Loading
+
+Match the shape of the content being loaded:
+
+```tsx
+// Card grid skeleton
+<div className="grid grid-cols-2 gap-4">
+  <Skeleton className="h-48 rounded-[var(--radius-card)]" />
+  <Skeleton className="h-48 rounded-[var(--radius-card)]" />
+</div>
+
+// Text skeleton
+<Skeleton className="h-4 w-32" />
+```
+
+Use the app's primary color for spinner: `border-[var(--fresh-primary)]`.
+
+### Empty States
+
+Always provide icon + title + description + action:
+
+```tsx
+<EmptyState
+  icon={Package}
+  title="No products found"
+  description="Try adjusting your search filters"
+  action={<Button>Reset Filters</Button>}
+/>
+```
+
+### Error States
+
+- Clear error message
+- Retry button
+- Dev-only error details
+
+---
+
+## Icon System
+
+Using **Lucide React** icons consistently:
+
+| Icon      | Usage                    |
+|-----------|--------------------------|
+| `Package` | Products, inventory      |
+| `MapPin`  | Location, distance       |
+| `Clock`   | Time, urgency, freshness |
+| `User`    | Profile, people          |
+| `Star`    | Ratings, quality         |
+| `Search`  | Search tab               |
+| `Home`    | Dashboard                |
+| `Leaf`    | Freshness indicator      |
+
+Icon sizing: `w-4 h-4` in body text, `w-3 h-3` inside badges, `w-5 h-5` in navigation.
+
+---
+
+## Interactive States
+
 ```css
-/* Good */
+/* Hover — cards and clickable surfaces */
+hover:shadow-[var(--shadow-medium)]
+
+/* Focus — keyboard accessibility */
+focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)]/50
+
+/* Disabled */
+opacity-50 cursor-not-allowed
+
+/* Active/pressed */
+scale-[0.98] transition
+```
+
+Buttons use the `default` variant for primary actions, `secondary` for secondary, `destructive` for danger. Disabled buttons switch to `secondary` variant.
+
+---
+
+## UX Principles
+
+### Information Hierarchy
+
+1. **Primary**: Status/urgency (freshness badge, availability)
+2. **Secondary**: Core details (title, price)
+3. **Tertiary**: Metadata (distance, seller name)
+
+### Progressive Disclosure
+
+- Card shows summary (image, title, price, freshness badge)
+- Click opens full detail view (description, seller info, location, add to cart)
+- Further drill-down to vendor profile
+
+### Touch-First Design
+
+- **44px minimum** touch target size
+- Adequate spacing between clickable elements
+- Important actions in thumb-reachable zones (bottom nav)
+- Natural scroll behavior for content areas
+
+### User Feedback
+
+- Toast notifications for actions (add to cart, profile saved, errors)
+- High-priority toasts: 6s duration with close button
+- Position: top-center
+- Use Sonner with `richColors` and `closeButton`
+
+---
+
+## CSS Approach
+
+Use semantic design tokens, not hardcoded values:
+
+```css
+/* Preferred */
 color: var(--fresh-text-primary);
 border-radius: var(--radius-card);
+box-shadow: var(--shadow-small);
 
 /* Avoid */
 color: #111827;
 border-radius: 12px;
 ```
 
-### **Component Composition**
-State-driven rendering patterns:
+shadcn/ui component theming uses oklch-based CSS variables (green-tinted, hue 155) defined in `globals.css`. Custom `--fresh-*` tokens layer on top for app-specific semantics.
+
+Dark mode is supported via `.dark` class with adjusted oklch values.
+
+---
+
+## Auth Pages
+
+Centered card layout, no navigation bars:
+
 ```tsx
-{status === 'login' && <LoginForm />}
-{status === 'register' && <RegisterForm />}
-{status === 'success' && <SuccessMessage />}
+<div className="min-h-screen flex items-center justify-center bg-[var(--fresh-surface)]">
+  <Card className="w-full max-w-md">
+    {/* Logo + app name */}
+    {/* Form fields */}
+    {/* Submit button */}
+    {/* Link to alternate auth page */}
+  </Card>
+</div>
 ```
 
-### **Prop-Based Variants**
-```tsx
-interface ComponentProps {
-  variant?: 'primary' | 'secondary' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
-  status?: 'active' | 'pending' | 'disabled';
-}
-```
+---
 
-## 🎯 **Key Transferable Patterns**
+## Currency
 
-1. **Trust-First Design**: Clear status indicators, verification systems
-2. **Urgency Communication**: Color-coded status, time-sensitive information  
-3. **Mobile-Responsive**: Touch-friendly, progressive enhancement
-4. **Information Density**: Essential info first, progressive disclosure
-5. **Semantic Design Tokens**: Maintainable, consistent styling system
-6. **Status-Based UI**: Components adapt based on data state
-7. **Clear Action Hierarchy**: Primary actions prominent, secondary subtle
-
-## 📋 **Implementation Checklist**
-
-- [ ] Set up CSS custom properties with your color system
-- [ ] Create base card component with status variants
-- [ ] Implement badge system for status communication  
-- [ ] Add responsive typography and spacing scales
-- [ ] Create mobile-first navigation pattern
-- [ ] Implement loading and empty states
-- [ ] Add hover/focus states for interactivity
-- [ ] Test on mobile devices
-
-This design system balances **clarity** (essential for any app) with **status communication** (adapted to your app's needs) while maintaining **mobile usability** throughout. The semantic token approach makes it highly transferable to any new project.
-
+Philippine Peso (₱). Format: `₱{amount.toFixed(2)}`.

@@ -1,0 +1,948 @@
+{
+	"info": {
+		"_postman_id": "chenda-api-collection-v1",
+		"name": "Chenda API Collection",
+		"description": "Complete API collection for the Chenda fresh marketplace platform featuring proximity-freshness ranking algorithm.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "chenda-api-v1.0.0"
+	},
+	"item": [
+		{
+			"name": "🏥 Health Check",
+			"item": [
+				{
+					"name": "Server Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "health"]
+						},
+						"description": "Check server and database health status"
+					},
+					"response": []
+				}
+			],
+			"description": "Health check endpoints for monitoring server status",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response has success field', function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('success', true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{testUserName}}\",\n  \"email\": \"{{testUserEmail}}\",\n  \"password\": \"{{testUserPassword}}\",\n  \"type\": \"{{testUserType}}\",\n  \"address\": \"Manila, Philippines\",\n  \"location\": {\n    \"lat\": 14.5995,\n    \"lng\": 120.9842\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						},
+						"description": "Register a new user (buyer/seller/both)"
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Login successful', function () {",
+									"    pm.response.to.have.status(200);",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});",
+									"",
+									"// Store session cookie for subsequent requests",
+									"const cookies = pm.cookies.get('connect.sid');",
+									"if (cookies) {",
+									"    pm.environment.set('sessionCookie', cookies);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{testUserEmail}}\",\n  \"password\": \"{{testUserPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						},
+						"description": "Login user and create session"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "me"]
+						},
+						"description": "Get currently authenticated user profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currentPassword\": \"{{testUserPassword}}\",\n  \"newPassword\": \"{{newPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/password",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "password"]
+						},
+						"description": "Update user password"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "logout"]
+						},
+						"description": "Logout user and destroy session"
+					},
+					"response": []
+				}
+			],
+			"description": "User authentication endpoints",
+			"auth": {
+				"type": "noauth"
+			}
+		},
+		{
+			"name": "🔍 Product Search",
+			"item": [
+				{
+					"name": "Main Search (Algorithm)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Search successful', function () {",
+									"    pm.response.to.have.status(200);",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    pm.expect(jsonData).to.have.property('products');",
+									"    pm.expect(jsonData).to.have.property('metadata');",
+									"});",
+									"",
+									"pm.test('Algorithm execution time under 100ms', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.metadata.execution_time_ms).to.be.below(100);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"buyer\": {\n    \"lat\": {{buyerLat}},\n    \"lng\": {{buyerLng}}\n  },\n  \"config\": {\n    \"max_radius\": {{maxRadius}},\n    \"weights\": {\n      \"proximity_weight\": {{proximityWeight}},\n      \"freshness_weight\": {{freshnessWeight}}\n    },\n    \"min_freshness_score\": {{minFreshnessScore}},\n    \"mode\": \"ranking\",\n    \"sort_order\": \"desc\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/search",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "search"]
+						},
+						"description": "Main product search using Chenda proximity-freshness algorithm"
+					},
+					"response": []
+				},
+				{
+					"name": "Personalized Search",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"buyer\": {\n    \"lat\": {{buyerLat}},\n    \"lng\": {{buyerLng}}\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/search/personalized",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "search", "personalized"]
+						},
+						"description": "Search using user's saved preferences"
+					},
+					"response": []
+				},
+				{
+					"name": "Nearby Products (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/nearby?lat={{buyerLat}}&lng={{buyerLng}}&radius={{maxRadius}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "nearby"],
+							"query": [
+								{
+									"key": "lat",
+									"value": "{{buyerLat}}"
+								},
+								{
+									"key": "lng",
+									"value": "{{buyerLng}}"
+								},
+								{
+									"key": "radius",
+									"value": "{{maxRadius}}"
+								}
+							]
+						},
+						"description": "Get nearby products without algorithm ranking (public access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Public Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/search/public?lat={{buyerLat}}&lng={{buyerLng}}&proximity_weight={{proximityWeight}}&freshness_weight={{freshnessWeight}}&max_radius={{maxRadius}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "search", "public"],
+							"query": [
+								{
+									"key": "lat",
+									"value": "{{buyerLat}}"
+								},
+								{
+									"key": "lng", 
+									"value": "{{buyerLng}}"
+								},
+								{
+									"key": "proximity_weight",
+									"value": "{{proximityWeight}}"
+								},
+								{
+									"key": "freshness_weight",
+									"value": "{{freshnessWeight}}"
+								},
+								{
+									"key": "max_radius",
+									"value": "{{maxRadius}}"
+								}
+							]
+						},
+						"description": "Public search with algorithm (no authentication required)"
+					},
+					"response": []
+				}
+			],
+			"description": "Product search endpoints with Chenda algorithm",
+			"auth": {
+				"type": "inherit"
+			}
+		},
+		{
+			"name": "📦 Product Management",
+			"item": [
+				{
+					"name": "Upload Product Image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"description": "Product image file (max 5MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/upload-image",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "upload-image"]
+						},
+						"description": "Upload product image (sellers only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Product created successfully', function () {",
+									"    pm.response.to.have.status(201);",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    ",
+									"    // Store product ID for other tests",
+									"    if (jsonData.product && jsonData.product.id) {",
+									"        pm.environment.set('testProductId', jsonData.product.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Fresh Organic Tomatoes\",\n  \"description\": \"Locally grown organic tomatoes\",\n  \"price\": 150.00,\n  \"quantity\": 25,\n  \"unit\": \"kg\",\n  \"product_type_id\": 45,\n  \"days_already_used\": 1,\n  \"location\": {\n    \"lat\": 14.6042,\n    \"lng\": 121.0100\n  },\n  \"storage_condition\": \"room_temp\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products"]
+						},
+						"description": "Create new product listing (sellers only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Seller Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products?limit=50&offset=0",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "Get all products for authenticated seller"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/{{testProductId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "{{testProductId}}"]
+						},
+						"description": "Get single product details (public access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"price\": 175.00,\n  \"quantity\": 20,\n  \"description\": \"Fresh organic tomatoes - premium quality\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/{{testProductId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "{{testProductId}}"]
+						},
+						"description": "Update product (seller owner only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/{{testProductId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "products", "{{testProductId}}"]
+						},
+						"description": "Delete product (seller owner only)"
+					},
+					"response": []
+				}
+			],
+			"description": "Product CRUD operations for sellers",
+			"auth": {
+				"type": "inherit"
+			}
+		},
+		{
+			"name": "👤 User Management",
+			"item": [
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "profile"]
+						},
+						"description": "Get user profile information"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{testUserName}} Updated\",\n  \"address\": \"Updated Address, Manila, Philippines\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "profile"]
+						},
+						"description": "Update user profile information"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Preferences",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"proximity_weight\": {{proximityWeight}},\n  \"freshness_weight\": {{freshnessWeight}},\n  \"max_radius\": {{maxRadius}},\n  \"min_freshness_score\": {{minFreshnessScore}},\n  \"storage_condition\": \"refrigerated\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/preferences",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "preferences"]
+						},
+						"description": "Update algorithm preferences"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Location",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"lat\": {{buyerLat}},\n  \"lng\": {{buyerLng}},\n  \"address\": \"Manila, Philippines\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/location",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "location"]
+						},
+						"description": "Update user location"
+					},
+					"response": []
+				},
+				{
+					"name": "Geocode Address",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"address\": \"Makati City, Metro Manila, Philippines\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/geocode",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "geocode"]
+						},
+						"description": "Convert address to coordinates"
+					},
+					"response": []
+				},
+				{
+					"name": "Reverse Geocode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"lat\": 14.5547,\n  \"lng\": 121.0244\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/reverse-geocode",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "reverse-geocode"]
+						},
+						"description": "Convert coordinates to address"
+					},
+					"response": []
+				}
+			],
+			"description": "User profile and preference management",
+			"auth": {
+				"type": "inherit"
+			}
+		},
+		{
+			"name": "🛒 Order Management",
+			"item": [
+				{
+					"name": "Get Payment Methods",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/payment-methods",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders", "payment-methods"]
+						},
+						"description": "Get supported payment methods (public access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Order created successfully', function () {",
+									"    pm.response.to.have.status(201);",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    ",
+									"    // Store order ID for payment test",
+									"    if (jsonData.order && jsonData.order.id) {",
+									"        pm.environment.set('testOrderId', jsonData.order.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": {{testProductId}},\n  \"quantity\": 3,\n  \"payment_method\": \"gcash\",\n  \"delivery_address\": \"Manila, Philippines\",\n  \"delivery_notes\": \"Gate 2, Building A\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders"]
+						},
+						"description": "Create new order (buyers only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Process Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Payment processed', function () {",
+									"    pm.response.to.have.status(200);",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    pm.expect(jsonData).to.have.property('payment');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"payment_method\": \"gcash\",\n  \"payment_details\": {\n    \"phone\": \"+639123456789\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/{{testOrderId}}/payment",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders", "{{testOrderId}}", "payment"]
+						},
+						"description": "Process payment for order (mock payment system)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/{{testOrderId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders", "{{testOrderId}}"]
+						},
+						"description": "Get order details (buyer/seller access)"
+					},
+					"response": []
+				},
+				{
+					"name": "List User Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders?limit=50&offset=0&role=buyer",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "role",
+									"value": "buyer"
+								}
+							]
+						},
+						"description": "List user's orders (buyer/seller context)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Order fulfilled and delivered\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/{{testOrderId}}/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "orders", "{{testOrderId}}", "status"]
+						},
+						"description": "Update order status (sellers only)"
+					},
+					"response": []
+				}
+			],
+			"description": "Order processing with mock payment system",
+			"auth": {
+				"type": "inherit"
+			}
+		},
+		{
+			"name": "📊 Analytics",
+			"item": [
+				{
+					"name": "Platform Overview (Public)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/overview",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "overview"]
+						},
+						"description": "Platform overview statistics (public access)"
+					},
+					"response": []
+				},
+				{
+					"name": "Algorithm Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/algorithm?period=7%20days",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "algorithm"],
+							"query": [
+								{
+									"key": "period",
+									"value": "7 days"
+								}
+							]
+						},
+						"description": "Algorithm usage analytics and performance metrics"
+					},
+					"response": []
+				},
+				{
+					"name": "Business Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/business?period=30%20days",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "business"],
+							"query": [
+								{
+									"key": "period",
+									"value": "30 days"
+								}
+							]
+						},
+						"description": "Business metrics (revenue, orders, popular products)"
+					},
+					"response": []
+				},
+				{
+					"name": "Performance Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/performance?period=24%20hours",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "performance"],
+							"query": [
+								{
+									"key": "period",
+									"value": "24 hours"
+								}
+							]
+						},
+						"description": "System performance metrics (response times, errors)"
+					},
+					"response": []
+				},
+				{
+					"name": "Seller Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/seller-dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "seller-dashboard"]
+						},
+						"description": "Seller-specific dashboard metrics (sellers only)"
+					},
+					"response": []
+				},
+				{
+					"name": "My Activity", 
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/my-activity",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "my-activity"]
+						},
+						"description": "Personal user activity analytics"
+					},
+					"response": []
+				},
+				{
+					"name": "Real-time Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/analytics/realtime",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "analytics", "realtime"]
+						},
+						"description": "Real-time platform activity summary"
+					},
+					"response": []
+				}
+			],
+			"description": "Analytics and monitoring endpoints",
+			"auth": {
+				"type": "inherit"
+			}
+		}
+	],
+	"auth": {
+		"type": "inherit"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set timestamp for requests",
+					"pm.globals.set('timestamp', Date.now());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test for response time",
+					"pm.test('Response time is reasonable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"// Global test for valid JSON",
+					"pm.test('Response is valid JSON', function () {",
+					"    pm.response.to.be.json;",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "{{baseUrl}}",
+			"type": "string"
+		}
+	]
+}
