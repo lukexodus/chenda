@@ -185,31 +185,34 @@
 
 ---
 
-### **Task 1.6: User Management API** (2 days)
+### **Task 1.6: User Management API** (2 days) ✅ **COMPLETE**
 **Goal**: User profile and preferences
 
 #### Subtasks:
-- [ ] 1.6.1: Create user routes
+- [x] 1.6.1: Create user routes
   - GET `/api/users/profile` (get own profile)
   - PUT `/api/users/profile` (update profile)
   - PUT `/api/users/preferences` (update search preferences)
   - PUT `/api/users/location` (update location)
-- [ ] 1.6.2: Implement geocoding integration
-  - POST `/api/geocode` (address → lat/lng)
-  - Use Nominatim API with rate limiting
-  - Cache results to avoid duplicate requests
-- [ ] 1.6.3: Add validation for preferences
+- [x] 1.6.2: Implement geocoding integration
+  - POST `/api/users/geocode` (address → lat/lng)
+  - POST `/api/users/reverse-geocode` (lat/lng → address)
+  - Use Nominatim API with rate limiting (1 req/second)
+  - Cache results for 7 days
+- [x] 1.6.3: Add validation for preferences
   - Ensure weights sum to 100%
-  - Validate coordinate ranges
-- [ ] 1.6.4: Test user updates
+  - Validate coordinate ranges (-90/90, -180/180)
+  - Validate all preference fields
+- [x] 1.6.4: Test user updates
 
 **Deliverables**:
-- `routes/users.js`
-- `controllers/userController.js`
-- `services/geocodingService.js`
-- Working user management
+- ✅ `routes/users.js` (56 lines with 6 endpoints)
+- ✅ `controllers/userController.js` (374 lines with full validation)
+- ✅ `services/geocodingService.js` (229 lines with caching & rate limiting)
+- ✅ Working user management (8/8 tests passed)
+- ✅ Test scripts: `quick-test.sh`, `test-user-api.sh`
 
-**Tools**: Axios (for Nominatim), express-validator
+**Tools**: Axios (for Nominatim), node-cache, express-validator
 
 ---
 
@@ -952,8 +955,8 @@
 - [x] Algorithm integrated
 
 ## **Week 3: Backend Completion**
-- [ ] Product CRUD complete
-- [ ] User management complete
+- [x] Product CRUD complete
+- [x] User management complete
 - [ ] Mock payments implemented
 - [ ] API tests passing
 

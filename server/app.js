@@ -19,6 +19,7 @@ const { notFound, errorHandler } = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
 const productRoutes = require('./routes/products');
+const userRoutes = require('./routes/users');
 // Import routes
 const healthRoutes = require('./routes/health');
 
@@ -128,8 +129,10 @@ app.use('/api/products', searchRoutes);
 // Less specific paths, so registered after search routes
 app.use('/api/products', productRoutes);
 
+// User management routes (profile, preferences, location)
+app.use('/api/users', userRoutes);
+
 // API routes will be added here
-// app.use('/api/users', userRoutes);
 // app.use('/api/orders', orderRoutes);
 
 /**
