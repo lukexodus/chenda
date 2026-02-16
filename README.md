@@ -2,7 +2,34 @@
 
 ---
 
-## 🚀 API Quick Reference
+## �️ Setup & Installation
+
+**New to the project?** Get started quickly:
+
+- 📋 **Quick Setup**: [QUICK_SETUP.md](QUICK_SETUP.md) - 5-minute setup guide
+- 📖 **Detailed Guide**: [SETUP_GUIDE.md](SETUP_GUIDE.md) - Complete documentation with troubleshooting
+
+### Prerequisites
+- **Node.js 20+** | **PostgreSQL 15** | **PostGIS Extension**
+
+### Quick Start
+```bash
+# Windows (use Git Bash)
+./setup-backend-windows.bat
+
+# Linux
+./setup-backend-linux.sh
+
+# Then:
+node migrations/migrate.js up    # Run migrations
+node seeds/seed.js               # Seed database
+cd server && npm run dev         # Start backend
+cd chenda-frontend && npm run dev # Start frontend
+```
+
+---
+
+## �🚀 API Quick Reference
 
 **Status**: ✅ **Backend API Complete** (Task 1.8 - Analytics & Logging)  
 **Base URL**: `http://localhost:3001`  
@@ -405,17 +432,17 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Goal**: Initialize frontend project with Next.js
 
 #### Subtasks:
-- [ ] 2.1.1: Create Next.js app
+- [x] 2.1.1: Create Next.js app
   ```bash
   npx create-next-app@latest chenda-frontend
   ```
-- [ ] 2.1.2: Install dependencies
+- [x] 2.1.2: Install dependencies
   - Tailwind CSS + shadcn/ui
   - Leaflet.js (maps)
   - Axios (API calls)
   - React Hook Form (forms)
   - Zustand or Context API (state management)
-- [ ] 2.1.3: Set up project structure
+- [x] 2.1.3: Set up project structure
   ```
   app/
   ├── (auth)/          # Login, register pages
@@ -432,8 +459,8 @@ curl -X POST http://localhost:3001/api/auth/register \
   ├── api.js           # API client
   └── utils.js         # Utility functions
   ```
-- [ ] 2.1.4: Configure Tailwind CSS
-- [ ] 2.1.5: Set up environment variables (.env.local)
+- [x] 2.1.4: Configure Tailwind CSS
+- [x] 2.1.5: Set up environment variables (.env.local)
 
 **Deliverables**:
 - Working Next.js app on `http://localhost:3000`
@@ -444,81 +471,90 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ---
 
-### **Task 2.2: Authentication UI** (2-3 days)
+### **Task 2.2: Authentication UI** (2-3 days) ✅ **COMPLETE**
 **Goal**: Login, registration, and session management
 
 #### Subtasks:
-- [ ] 2.2.1: Create login page
+- [x] 2.2.1: Create login page
   - Email + password form
   - Form validation (React Hook Form)
   - "Remember me" checkbox
   - Link to register
-- [ ] 2.2.2: Create registration page
+- [x] 2.2.2: Create registration page
   - Email, password, name, user type (buyer/seller/both)
   - Password confirmation
   - Terms & conditions checkbox
-  - **Optional**: Email verification notice
-- [ ] 2.2.3: Implement auth state management
-  - Store user session (JWT or session cookie)
-  - Create auth context/store
+  - **Optional**: Email verification notice (skipped)
+- [x] 2.2.3: Implement auth state management
+  - Store user session (HTTP-only cookies + Zustand)
+  - Create Zustand auth store
   - Protected route wrapper
-- [ ] 2.2.4: Create logout functionality
-- [ ] 2.2.5: Add loading states and error handling
-- [ ] 2.2.6: **Optional**: Email verification page
-  - Token verification UI
-  - Success/error messages
+- [x] 2.2.4: Create logout functionality (API integration ready)
+- [x] 2.2.5: Add loading states and error handling
+- [ ] 2.2.6: **Optional**: Email verification page (intentionally skipped)
 
 **Deliverables**:
-- `app/(auth)/login/page.js`
-- `app/(auth)/register/page.js`
-- `components/auth/LoginForm.jsx`
-- `components/auth/RegisterForm.jsx`
-- `lib/authContext.js` (or Zustand store)
-- Working authentication flow
+- ✅ `app/(auth)/login/page.tsx` - Login page with Chenda branding
+- ✅ `app/(auth)/register/page.tsx` - Registration page with Chenda branding
+- ✅ `components/auth/LoginForm.tsx` - Complete login form with Remember Me
+- ✅ `components/auth/RegisterForm.tsx` - Registration form with radio buttons
+- ✅ `components/auth/ProtectedRoute.tsx` - Auth guard wrapper with role checks
+- ✅ `lib/validators/authSchemas.ts` - Zod validation schemas
+- ✅ `components/ui/radio-group.tsx` - Radio button component
+- ✅ `components/ui/checkbox.tsx` - Checkbox component
+- ✅ Protected buyer and seller layouts
+- ✅ Working authentication flow (session-based)
+- ✅ **Guide**: `chenda-frontend/TASK_2.2_AUTH_GUIDE.md`
 
-**Tools**: React Hook Form, Zod (validation), Axios
+**Tools**: React Hook Form, Zod (validation), Axios, Zustand
 
 ---
 
-### **Task 2.3: Buyer Dashboard** (3-4 days)
+### **Task 2.3: Buyer Dashboard** (3-4 days) ✅ **COMPLETE**
 **Goal**: Main interface for buyers to search products
 
 #### Subtasks:
-- [ ] 2.3.1: Create buyer layout
+- [x] 2.3.1: Create buyer layout
   - Navigation bar (home, search, orders, profile)
   - User dropdown menu
   - Responsive design
-- [ ] 2.3.2: Create search interface
+- [x] 2.3.2: Create search interface
   - Location input (address search with Nominatim)
   - Weight sliders (proximity vs freshness)
   - Max radius selector (10-100km)
   - Min freshness threshold (0-100%)
   - Search button
-- [ ] 2.3.3: Create product results display
+- [x] 2.3.3: Create product results display
   - Product cards with image, name, price, freshness, distance
   - Freshness indicator (progress bar or badge)
   - Distance indicator
   - Combined score display
   - Rank badge (#1, #2, etc.)
-- [ ] 2.3.4: Create product detail modal
+- [x] 2.3.4: Create product detail modal
   - Full product information
   - Seller information
   - Expiration date
   - Location on map (Leaflet.js)
   - "Add to Cart" button (mock)
-- [ ] 2.3.5: Add sorting options
+- [x] 2.3.5: Add sorting options
   - Toggle between ranking/filter mode
   - Sort by: score, price, distance, freshness
-- [ ] 2.3.6: Add loading states and empty states
+- [x] 2.3.6: Add loading states and empty states
 
 **Deliverables**:
-- `app/(buyer)/dashboard/page.js`
-- `components/buyer/SearchForm.jsx`
-- `components/products/ProductCard.jsx`
-- `components/products/ProductDetail.jsx`
-- Working buyer search interface
+- ✅ `app/(buyer)/page.tsx` (213 lines - Complete buyer dashboard)
+- ✅ `components/buyer/SearchForm.tsx` (317 lines - Full search interface with geocoding)
+- ✅ `components/products/ProductCard.tsx` (188 lines - Product cards with freshness indicators)
+- ✅ `components/products/ProductGrid.tsx` (75 lines - Responsive product grid)
+- ✅ `components/products/ProductDetail.tsx` (331 lines - Modal with Leaflet map integration)
+- ✅ `components/products/ProductMap.tsx` (81 lines - Interactive Leaflet map component)
+- ✅ `components/products/SortControls.tsx` (93 lines - 5 sorting options)
+- ✅ `lib/stores/searchStore.ts` (169 lines - Zustand store with localStorage persistence)
+- ✅ `lib/stores/cartStore.ts` (110 lines - Shopping cart state management)
+- ✅ Working buyer search interface (1,577 lines total)
+- ✅ Frontend builds successfully
 
-**Tools**: React, Tailwind CSS, shadcn/ui components
+**Tools**: React, Tailwind CSS, shadcn/ui components, Zustand, Leaflet.js
 
 ---
 

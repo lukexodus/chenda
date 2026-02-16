@@ -5,18 +5,23 @@
  * Executes SQL migration files in order
  */
 
+const path = require('path');
 const { Client } = require('pg');
 const fs = require('fs').promises;
-const path = require('path');
 
 // Database connection configuration
+const dbPassword = process.env.DB_PASSWORD;
 const DB_CONFIG = {
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'chenda',
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || ''
+  database: process.env.DB_NAME || 'chenda_db',
+  user: process.env.DB_USER || 'postgres'
 };
+
+// Only include password if it's set
+if (dbPassword && dbPassword !== '') {
+  DB_CONFIG.password = dbPassword;
+}
 
 // Colors for terminal output
 const colors = {
