@@ -5,6 +5,9 @@
  * Executes SQL migration files in order
  */
 
+// Load environment variables from .env file
+require('dotenv').config();
+
 const path = require('path');
 const { Client } = require('pg');
 const fs = require('fs').promises;

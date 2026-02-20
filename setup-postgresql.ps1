@@ -24,15 +24,15 @@ if (-not $isAdmin) {
     exit 1
 }
 
-$pgPath = "C:\Program Files\PostgreSQL\15"
+$pgPath = "C:\Program Files\PostgreSQL\18"
 $pgBin = "$pgPath\bin"
 $pgData = "$pgPath\data"
 
 # Check if PostgreSQL is installed
 if (-not (Test-Path $pgPath)) {
-    Write-Host "ERROR: PostgreSQL 15 not found at $pgPath" -ForegroundColor Red
+    Write-Host "ERROR: PostgreSQL 18 not found at $pgPath" -ForegroundColor Red
     Write-Host ""
-    Write-Host "Please install PostgreSQL 15:" -ForegroundColor Yellow
+    Write-Host "Please install PostgreSQL 18:" -ForegroundColor Yellow
     Write-Host "  1. Download from: https://www.postgresql.org/download/windows/" -ForegroundColor White
     Write-Host "  2. Run the installer" -ForegroundColor White
     Write-Host "  3. Remember the postgres password you set!" -ForegroundColor White
@@ -76,13 +76,13 @@ if (Test-Path "$pgData\postgresql.conf") {
 Write-Host ""
 
 # Check if service is registered
-$service = Get-Service -Name "postgresql-x64-15" -ErrorAction SilentlyContinue
+$service = Get-Service -Name "postgresql-x64-18" -ErrorAction SilentlyContinue
 
 if ($null -eq $service) {
     Write-Host "[3/5] Registering PostgreSQL Service..." -ForegroundColor Yellow
     
     try {
-        & "$pgBin\pg_ctl.exe" register -N "postgresql-x64-15" -D "$pgData"
+        & "$pgBin\pg_ctl.exe" register -N "postgresql-x64-18" -D "$pgData"
         Write-Host "      Service registered successfully!" -ForegroundColor Green
     } catch {
         Write-Host "      ERROR: Failed to register service" -ForegroundColor Red
@@ -92,23 +92,23 @@ if ($null -eq $service) {
     }
 } else {
     Write-Host "[3/5] PostgreSQL Service Already Registered" -ForegroundColor Green
-    Write-Host "      Service Name: postgresql-x64-15" -ForegroundColor Gray
+    Write-Host "      Service Name: postgresql-x64-18" -ForegroundColor Gray
 }
 Write-Host ""
 
 # Start the service
 Write-Host "[4/5] Starting PostgreSQL Service..." -ForegroundColor Yellow
 
-$service = Get-Service -Name "postgresql-x64-15" -ErrorAction SilentlyContinue
+$service = Get-Service -Name "postgresql-x64-18" -ErrorAction SilentlyContinue
 
 if ($service.Status -eq "Running") {
     Write-Host "      PostgreSQL is already running" -ForegroundColor Green
 } else {
     try {
-        Start-Service -Name "postgresql-x64-15"
+        Start-Service -Name "postgresql-x64-18"
         Start-Sleep -Seconds 3
         
-        $service = Get-Service -Name "postgresql-x64-15"
+        $service = Get-Service -Name "postgresql-x64-18"
         if ($service.Status -eq "Running") {
             Write-Host "      PostgreSQL service started successfully!" -ForegroundColor Green
         } else {
@@ -135,7 +135,7 @@ Write-Host ""
 # Set PostgreSQL to auto-start
 Write-Host "[5/5] Configuring Auto-Start..." -ForegroundColor Yellow
 try {
-    Set-Service -Name "postgresql-x64-15" -StartupType Automatic
+    Set-Service -Name "postgresql-x64-18" -StartupType Automatic
     Write-Host "      PostgreSQL set to start automatically" -ForegroundColor Green
 } catch {
     Write-Host "      WARNING: Could not set auto-start" -ForegroundColor Yellow
@@ -175,7 +175,7 @@ Write-Host "   Next Steps" -ForegroundColor Cyan
 Write-Host "================================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "1. Set postgres password (if you haven't):" -ForegroundColor Yellow
-Write-Host '   cd "C:\Program Files\PostgreSQL\15\bin"' -ForegroundColor White
+Write-Host '   cd "C:\Program Files\PostgreSQL\18\bin"' -ForegroundColor White
 Write-Host '   .\psql.exe -U postgres' -ForegroundColor White
 Write-Host "   ALTER USER postgres WITH PASSWORD 'your_password';" -ForegroundColor White
 Write-Host ""

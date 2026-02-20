@@ -21,16 +21,16 @@ interface NavItem {
 }
 
 const buyerNav: NavItem[] = [
-  { href: "/search", label: "Search", icon: Search },
-  { href: "/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/buyer", label: "Search", icon: Search },
+  { href: "/buyer/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/buyer/profile", label: "Profile", icon: User },
 ];
 
 const sellerNav: NavItem[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/products", label: "Products", icon: Package },
-  { href: "/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/seller/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/seller/products", label: "Products", icon: Package },
+  { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/seller/profile", label: "Profile", icon: User },
 ];
 
 /**

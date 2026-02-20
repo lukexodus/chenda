@@ -696,77 +696,82 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ---
 
-### **Task 2.7: Mock Payment UI** (1-2 days)
+### **Task 2.7: Mock Payment UI** (1-2 days) ✅ **COMPLETE**
 **Goal**: Checkout flow with mock payment
 
 #### Subtasks:
-- [ ] 2.7.1: Create shopping cart (simple)
+- [x] 2.7.1: Create shopping cart (simple)
   - Add products to cart (in-memory or localStorage)
   - Display cart items
   - Remove from cart
   - Calculate total
-- [ ] 2.7.2: Create checkout page
+- [x] 2.7.2: Create checkout page
   - Cart summary
   - Delivery address confirmation
   - Payment method selector (Cash/GCash/Card - all mock)
   - Place order button
-- [ ] 2.7.3: Create payment modal
+- [x] 2.7.3: Create payment modal
   - Show selected payment method
   - "Processing payment..." animation
   - Mock 2-second delay
   - Success/failure message
-- [ ] 2.7.4: Create order confirmation page
+- [x] 2.7.4: Create order confirmation page
   - Order ID
   - Mock transaction ID
   - Order items
   - Total amount
   - Payment method
   - "Back to Dashboard" button
-- [ ] 2.7.5: Add prominent mock disclaimer
+- [x] 2.7.5: Add prominent mock disclaimer
   - Banner: "⚠️ This is a mock payment system"
   - Explain no real transactions occur
 
 **Deliverables**:
-- `app/(buyer)/cart/page.js`
-- `app/(buyer)/checkout/page.js`
-- `app/(buyer)/orders/[id]/page.js`
-- `components/payment/PaymentModal.jsx`
-- `components/cart/CartSummary.jsx`
-- Mock payment flow working
+- ✅ `app/(buyer)/cart/page.tsx` (68 lines - Shopping cart with CartSummary component)
+- ✅ `app/(buyer)/checkout/page.tsx` (330 lines - Checkout with payment method selection)
+- ✅ `app/(buyer)/orders/[id]/page.tsx` (112 lines - Order confirmation with success banner)
+- ✅ `components/payment/PaymentModal.tsx` (232 lines - Payment processing with 2s delay)
+- ✅ `components/cart/CartSummary.tsx` (179 lines - Reusable cart summary with quantity controls)
+- ✅ `lib/types/order.ts` (157 lines - Order, payment, and status TypeScript types)
+- ✅ Mock payment flow working with backend integration
+- ✅ Prominent mock disclaimers on checkout and payment screens
 
-**Tools**: React, localStorage (cart state)
+**Tools**: React, localStorage (cart state), date-fns
 
 ---
 
-### **Task 2.8: Orders & History** (2 days)
+### **Task 2.8: Orders & History** (2 days) ✅ **COMPLETE**
 **Goal**: View order history (buyers and sellers)
 
 #### Subtasks:
-- [ ] 2.8.1: Create buyer orders page
+- [x] 2.8.1: Create buyer orders page
   - List all orders (newest first)
   - Show: order date, items, total, status
   - Click to view details
-- [ ] 2.8.2: Create seller orders page
+- [x] 2.8.2: Create seller orders page
   - List orders for seller's products
   - Show: buyer info, items, total, status
   - Mark as "completed" (mock)
-- [ ] 2.8.3: Create order detail view
+- [x] 2.8.3: Create order detail view
   - Full order information
   - Product details
   - Payment info (mock)
   - Status timeline
-- [ ] 2.8.4: Add order filters
+- [x] 2.8.4: Add order filters
   - Status: all, pending, paid, completed
   - Date range picker
 
 **Deliverables**:
-- `app/(buyer)/orders/page.js`
-- `app/(seller)/orders/page.js`
-- `components/orders/OrderCard.jsx`
-- `components/orders/OrderDetail.jsx`
-- Working order views
+- ✅ `app/(buyer)/orders/page.tsx` (130 lines - Buyer orders list with status filtering)
+- ✅ `app/(seller)/orders/page.tsx` (228 lines - Seller orders with status update functionality)
+- ✅ `components/orders/OrderCard.tsx` (126 lines - Order card with role-based display)
+- ✅ `components/orders/OrderDetail.tsx` (282 lines - Full order details with status timeline)
+- ✅ Status filtering tabs (All, Pending, Paid, Completed, Cancelled)
+- ✅ Seller can mark orders as completed
+- ✅ Order detail modal for sellers
+- ✅ Working order views with date-fns formatting
 
-**Tools**: React, date-fns (date formatting)
+**Tools**: React, date-fns (date formatting), shadcn/ui Tabs
 
 ---
 

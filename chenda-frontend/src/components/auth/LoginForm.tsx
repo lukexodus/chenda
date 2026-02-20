@@ -39,7 +39,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      const user = await login(data.email, data.password);
       
       // Store rememberMe preference in localStorage
       if (data.rememberMe) {
@@ -52,8 +52,11 @@ export function LoginForm() {
         description: "Welcome back to Chenda",
       });
 
-      // Redirect based on user type (will be handled by auth check)
-      router.push("/dashboard");
+      // Redirect based on user type
+      const redirectPath = (user as any)?.type === "seller" || (user as any)?.type === "both" 
+        ? "/seller/dashboard" 
+        : "/buyer";
+      router.push(redirectPath);
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed", {

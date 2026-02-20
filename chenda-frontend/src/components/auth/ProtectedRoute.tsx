@@ -39,7 +39,7 @@ export function ProtectedRoute({
     if (requiredType && user.type !== requiredType && user.type !== "both") {
       // User doesn't have required type - redirect to appropriate dashboard
       if (user.type === "buyer") {
-        router.push("/buyer/dashboard");
+        router.push("/buyer");
       } else if (user.type === "seller") {
         router.push("/seller/dashboard");
       }
@@ -53,11 +53,11 @@ export function ProtectedRoute({
       if (!hasAccess) {
         // User doesn't have access - redirect to appropriate dashboard
         if (user.type === "buyer") {
-          router.push("/buyer/dashboard");
+          router.push("/buyer");
         } else if (user.type === "seller") {
           router.push("/seller/dashboard");
         } else {
-          router.push("/dashboard");
+          router.push("/");
         }
       }
     }

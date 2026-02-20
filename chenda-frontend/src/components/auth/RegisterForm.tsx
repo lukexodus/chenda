@@ -56,8 +56,11 @@ export function RegisterForm() {
         description: "Welcome to Chenda. Setting up your account...",
       });
 
-      // Redirect to dashboard
-      router.push("/dashboard");
+      // Redirect based on user type
+      const redirectPath = data.type === "seller" || data.type === "both" 
+        ? "/seller/dashboard" 
+        : "/buyer";
+      router.push(redirectPath);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error("Registration failed", {

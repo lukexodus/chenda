@@ -23,6 +23,7 @@
   "homepage": "https://github.com/lukexodus/chenda#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "dotenv": "^17.3.1",
     "pg": "^8.18.0"
   },
   "devDependencies": {

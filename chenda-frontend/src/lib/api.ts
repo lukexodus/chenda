@@ -220,4 +220,5 @@ export const analyticsApi = {
   overview: () => api.get("/analytics/overview"),
 };
 
+export { api };
 export default api;
