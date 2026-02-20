@@ -1,16 +1,25 @@
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = { title: "Search — Chenda" };
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 export default function SearchPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Redirect to main dashboard where search functionality exists
+    router.replace("/");
+  }, [router]);
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold text-[var(--fresh-text-primary)]">
-        Search Products
-      </h1>
-      <p className="mt-2 text-sm text-[var(--fresh-text-muted)]">
-        Algorithm-powered search — coming in Task 2.3
-      </p>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2 text-[var(--fresh-primary)]" />
+        <p className="text-sm text-[var(--fresh-text-muted)]">
+          Redirecting to search...
+        </p>
+      </div>
     </div>
   );
 }

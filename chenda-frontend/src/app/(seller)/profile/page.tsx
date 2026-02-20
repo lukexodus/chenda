@@ -2,7 +2,7 @@
 
 import { ProfileForm } from "@/components/profile/ProfileForm";
 
-export default function BuyerProfilePage() {
+export default function SellerProfilePage() {
   return (
     <div className="container max-w-4xl mx-auto py-6 px-4">
       <div className="mb-6">
@@ -14,3 +14,5 @@ export default function BuyerProfilePage() {
 
       <ProfileForm />
     </div>
+  );
+}

@@ -20,6 +20,7 @@ const { responseTimeTracker, authAnalyticsMiddleware, preferenceAnalyticsMiddlew
 const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
 const productRoutes = require('./routes/products');
+const productTypesRoutes = require('./routes/productTypes');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
 const analyticsRoutes = require('./routes/analytics');
@@ -139,6 +140,9 @@ app.use('/api/products', searchRoutes);
 // Product management routes (CRUD for sellers)
 // Less specific paths, so registered after search routes
 app.use('/api/products', productRoutes);
+
+// Product types routes (USDA data)
+app.use('/api/product-types', productTypesRoutes);
 
 // User management routes (profile, preferences, location)
 app.use('/api/users', preferenceAnalyticsMiddleware, userRoutes);

@@ -558,55 +558,59 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ---
 
-### **Task 2.4: Map Integration** (2-3 days)
+### **Task 2.4: Map Integration** (2-3 days) ✅ **COMPLETE**
 **Goal**: Visual map display of products
 
 #### Subtasks:
-- [ ] 2.4.1: Set up Leaflet.js
+- [x] 2.4.1: Set up Leaflet.js
   - Install and configure
   - Create map component
   - Use OpenStreetMap tiles
-- [ ] 2.4.2: Create map view for search results
+- [x] 2.4.2: Create map view for search results
   - Show buyer location (blue marker)
   - Show product locations (custom markers)
   - Color-code by freshness (green=fresh, yellow=ok, red=expiring)
   - Draw radius circle (visual max_radius)
-- [ ] 2.4.3: Add map interactivity
+- [x] 2.4.3: Add map interactivity
   - Click marker to open product popup
   - Hover to highlight product card
   - Sync map with product list
-- [ ] 2.4.4: Create address autocomplete
+- [x] 2.4.4: Create address autocomplete
   - Integrate Nominatim search
   - Dropdown suggestions
   - Click to set location
-- [ ] 2.4.5: Add geolocation button
+- [x] 2.4.5: Add geolocation button
   - "Use my current location"
   - Browser geolocation API
   - Update map center
 
 **Deliverables**:
-- `components/maps/ProductMap.jsx`
-- `components/maps/AddressSearch.jsx`
-- `components/maps/GeolocationButton.jsx`
-- Interactive map working
+- ✅ `components/maps/SearchResultsMap.tsx` (245 lines - Multi-product map with color-coded markers)
+- ✅ `components/maps/AddressAutocomplete.tsx` (195 lines - Address search with dropdown suggestions)
+- ✅ `components/maps/GeolocationButton.tsx` (81 lines - Reusable geolocation button)
+- ✅ `components/maps/ProductDetailMap.tsx` (Renamed from ProductMap.tsx - Single product map)
+- ✅ `app/(buyer)/page.tsx` - Updated with List/Map view toggle (270 lines total)
+- ✅ `components/buyer/SearchForm.tsx` - Refactored to use new map components (255 lines)
+- ✅ Interactive map working with freshness color coding
+- ✅ Frontend builds successfully
 
 **Tools**: Leaflet.js, React-Leaflet, Nominatim API
 
 ---
 
-### **Task 2.5: Seller Dashboard** (3-4 days)
+### **Task 2.5: Seller Dashboard** (3-4 days) ✅ **COMPLETE**
 **Goal**: Product management for sellers
 
 #### Subtasks:
-- [ ] 2.5.1: Create seller layout
+- [x] 2.5.1: Create seller layout
   - Navigation: products, add product, orders, analytics
   - Seller-specific menu items
-- [ ] 2.5.2: Create product list page
+- [x] 2.5.2: Create product list page
   - Table/grid of seller's products
   - Show: name, price, freshness, days left
   - Actions: edit, delete
   - Freshness warnings (expiring soon)
-- [ ] 2.5.3: Create "Add Product" form
+- [x] 2.5.3: Create "Add Product" form
   - Product type selector (180 USDA types with search)
   - Price input
   - Quantity + unit
@@ -615,70 +619,80 @@ curl -X POST http://localhost:3001/api/auth/register \
   - Location (auto-fill from seller profile)
   - Description textarea
   - Submit button
-- [ ] 2.5.4: Create "Edit Product" form
+- [x] 2.5.4: Create "Edit Product" form
   - Pre-filled with existing data
   - Same fields as add form
   - Update functionality
-- [ ] 2.5.5: Add product deletion
+- [x] 2.5.5: Add product deletion
   - Confirmation dialog
   - Delete API call
-- [ ] 2.5.6: Create seller analytics view
+- [x] 2.5.6: Create seller analytics view
   - Average product freshness
   - Total active listings
   - Products expiring within 3 days
   - Most popular product types
 
 **Deliverables**:
-- `app/(seller)/products/page.js`
-- `app/(seller)/products/add/page.js`
-- `app/(seller)/products/[id]/edit/page.js`
-- `components/seller/ProductForm.jsx`
-- `components/seller/ProductTable.jsx`
-- `components/seller/SellerAnalytics.jsx`
-- Working seller product management
+- ✅ `app/(seller)/products/page.tsx` (uses ProductTable component)
+- ✅ `app/(seller)/products/add/page.tsx` (Add product form)
+- ✅ `app/(seller)/products/[id]/edit/page.tsx` (Edit product form)
+- ✅ `app/(seller)/dashboard/page.tsx` (Seller analytics dashboard)
+- ✅ `components/seller/ProductForm.tsx` (455+ lines - Reusable form with validation & image upload)
+- ✅ `components/seller/ProductTable.tsx` (370+ lines - Responsive table with freshness indicators)
+- ✅ `components/seller/SellerAnalytics.tsx` (245+ lines - Dashboard metrics and charts)
+- ✅ `components/seller/ProductTypeCombobox.tsx` (165+ lines - Searchable product type selector)
+- ✅ `server/routes/productTypes.js` (Backend endpoint for USDA product types)
+- ✅ `lib/types/seller.ts` (TypeScript types for seller components)
+- ✅ `components/ui/table.tsx`, `components/ui/textarea.tsx` (New UI components)
+- ✅ Working seller product management (1,235+ lines total)
+- ✅ Frontend builds successfully
 
-**Tools**: React Hook Form, shadcn/ui form components, Multer (file upload)
+**Tools**: React Hook Form, shadcn/ui, TypeScript, Multer (backend)
 
 ---
 
-### **Task 2.6: User Profile & Preferences** (2 days)
+### **Task 2.6: User Profile & Preferences** (2 days) ✅ **COMPLETE**
 **Goal**: User settings and algorithm preferences
 
 #### Subtasks:
-- [ ] 2.6.1: Create profile page
+- [x] 2.6.1: Create profile page
   - Name, email (read-only)
   - User type (buyer/seller/both)
-  - Profile picture upload (optional)
+  - Avatar with initials (no upload for MVP)
   - Save changes button
-- [ ] 2.6.2: Create location settings
+- [x] 2.6.2: Create location settings
   - Current address display
   - Address search (Nominatim)
-  - Map to confirm location
+  - Interactive map with draggable marker
   - Save location button
-- [ ] 2.6.3: Create algorithm preferences (buyers)
+- [x] 2.6.3: Create algorithm preferences (buyers)
   - Weight preset selector (balanced, proximity, freshness)
   - Custom weight sliders
   - Default max radius
   - Default min freshness
   - Display mode preference (ranking/filter)
   - Save preferences button
-- [ ] 2.6.4: Add storage condition preference
+- [x] 2.6.4: Add storage condition preference
   - Pantry, Refrigerated, Frozen
-  - Filter products by storage match
-- [ ] 2.6.5: Create password change form
+  - Multi-select checkboxes
+- [x] 2.6.5: Create password change form
   - Current password
   - New password + confirmation
+  - Password strength indicator
   - Update password
 
 **Deliverables**:
-- `app/(buyer)/profile/page.js`
-- `app/(seller)/profile/page.js`
-- `components/profile/ProfileForm.jsx`
-- `components/profile/LocationSettings.jsx`
-- `components/profile/AlgorithmPreferences.jsx`
-- Working profile management
+- ✅ `app/(buyer)/profile/page.tsx` (Profile page for buyers)
+- ✅ `app/(seller)/profile/page.tsx` (Profile page for sellers)
+- ✅ `components/profile/ProfileForm.tsx` (243 lines - Tab layout with profile info)
+- ✅ `components/profile/LocationSettings.tsx` (212 lines - Location tab with map)
+- ✅ `components/profile/AlgorithmPreferences.tsx` (329 lines - Preferences tab with presets & sliders)
+- ✅ `components/profile/StoragePreference.tsx` (56 lines - Storage condition multi-select)
+- ✅ `components/profile/PasswordChangeForm.tsx` (288 lines - Security tab with password change)
+- ✅ `lib/types/profile.ts` (76 lines - TypeScript types for profile features)
+- ✅ Working profile management (1,204+ lines total)
 
-**Tools**: React Hook Form, Leaflet.js (location picker)
+**Tools**: React Hook Form, Leaflet.js (location picker), Zustand
 
 ---
 

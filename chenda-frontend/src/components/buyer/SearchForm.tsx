@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Search, MapPin, Sliders, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, Sliders, ChevronDown, ChevronUp, MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useSearchStore } from "@/lib/stores/searchStore";
 import { useAuthStore } from "@/lib/store";
 import { usersApi } from "@/lib/api";
+import AddressAutocomplete from "@/components/maps/AddressAutocomplete";
+import GeolocationButton from "@/components/maps/GeolocationButton";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
@@ -28,30 +29,26 @@ export function SearchForm() {
   const [addressInput, setAddressInput] = useState(
     filters.location?.address || ""
   );
-  const [geocoding, setGeocoding] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
-  // Handle geocoding
-  const handleGeocodeAddress = async () => {
-    if (!addressInput.trim()) {
-      toast.error("Please enter an address");
-      return;
-    }
+  // Handle address selection from autocomplete
+  const handleAddressSelect = (lat: number, lng: number, address: string) => {
+    setLocation(lat, lng, address);
+    toast.success("Location set successfully");
+  };
 
-    setGeocoding(true);
+  // Handle geolocation
+  const handleGeolocationFound = async (lat: number, lng: number) => {
     try {
-      const response = await usersApi.geocode(addressInput);
-      const { lat, lng, display_name } = response.data;
-
-      setLocation(lat, lng, display_name || addressInput);
-      setAddressInput(display_name || addressInput);
-
-      toast.success("Location set successfully");
+      const response = await usersApi.reverseGeocode(lat, lng);
+      const address = response.data.address || "Current Location";
+      
+      setLocation(lat, lng, address);
+      setAddressInput(address);
     } catch (error) {
-      console.error("Geocoding error:", error);
-      toast.error("Failed to find location. Please try again.");
-    } finally {
-      setGeocoding(false);
+      console.error("Reverse geocoding error:", error);
+      setLocation(lat, lng, "Current Location");
+      setAddressInput("Current Location");
     }
   };
 
@@ -63,41 +60,6 @@ export function SearchForm() {
       toast.success("Using your saved location");
     } else {
       toast.error("No saved location found. Please set your location in your profile.");
-    }
-  };
-
-  // Use browser geolocation
-  const handleBrowserGeolocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          
-          // Reverse geocode to get address
-          try {
-            const response = await usersApi.reverseGeocode(
-              latitude,
-              longitude
-            );
-            const address = response.data.address || "Current Location";
-            
-            setLocation(latitude, longitude, address);
-            setAddressInput(address);
-            toast.success("Using your current location");
-          } catch (error) {
-            console.error("Reverse geocoding error:", error);
-            setLocation(latitude, longitude, "Current Location");
-            setAddressInput("Current Location");
-            toast.success("Location set (address not found)");
-          }
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          toast.error("Failed to get your location. Please enable location services.");
-        }
-      );
-    } else {
-      toast.error("Geolocation is not supported by your browser");
     }
   };
 
@@ -118,56 +80,32 @@ export function SearchForm() {
           <Label htmlFor="location" className="text-sm font-medium">
             Your Location
           </Label>
-          <div className="mt-2 flex gap-2">
-            <div className="flex-1">
-              <Input
-                id="location"
-                type="text"
-                placeholder="Enter address or city"
-                value={addressInput}
-                onChange={(e) => setAddressInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleGeocodeAddress()}
-                disabled={geocoding || loading}
-                className="w-full"
-              />
-            </div>
-            <Button
-              type="button"
-              onClick={handleGeocodeAddress}
-              disabled={geocoding || loading || !addressInput.trim()}
-              variant="secondary"
-            >
-              {geocoding ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <MapPin className="h-4 w-4" />
-              )}
-            </Button>
+          <div className="mt-2">
+            <AddressAutocomplete
+              value={addressInput}
+              onChange={setAddressInput}
+              onSelect={handleAddressSelect}
+              placeholder="Enter address or city..."
+            />
           </div>
 
           {/* Quick Location Buttons */}
           <div className="mt-2 flex gap-2">
+            <GeolocationButton
+              onLocationFound={handleGeolocationFound}
+              size="sm"
+              className="flex-1"
+            />
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={handleUseMyLocation}
               disabled={!user?.location || loading}
-              className="text-xs"
+              className="flex-1"
             >
-              <MapPin className="mr-1 h-3 w-3" />
-              My Saved Location
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleBrowserGeolocation}
-              disabled={loading}
-              className="text-xs"
-            >
-              <MapPin className="mr-1 h-3 w-3" />
-              Use Current Location
+              <MapPin className="mr-2 h-4 w-4" />
+              Saved Location
             </Button>
           </div>
 

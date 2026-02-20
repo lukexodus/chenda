@@ -126,6 +126,15 @@ export const productsApi = {
     }),
 };
 
+// --------------- product types---------------
+
+export const productTypesApi = {
+  getAll: (search?: string) =>
+    api.get("/product-types", { params: search ? { search } : undefined }),
+
+  getById: (id: number | string) => api.get(`/product-types/${id}`),
+};
+
 // --------------- users ---------------
 
 export const usersApi = {

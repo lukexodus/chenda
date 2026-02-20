@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Search, ShoppingCart, History } from "lucide-react";
+import { Search, ShoppingCart, History, List, Map as MapIcon } from "lucide-react";
 
 import { SearchForm } from "@/components/buyer/SearchForm";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { ProductDetail } from "@/components/products/ProductDetail";
 import { SortControls, SortOption } from "@/components/products/SortControls";
+import SearchResultsMap from "@/components/maps/SearchResultsMap";
 import { useSearchStore } from "@/lib/stores/searchStore";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { Button } from "@/components/ui/button";
@@ -14,12 +15,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Product } from "@/lib/stores/searchStore";
 
+type ViewMode = "list" | "map";
+
 export default function BuyerDashboardPage() {
-  const { results: products, loading, error, history: searchHistory } = useSearchStore();
+  const { results: products, loading, error, history: searchHistory, filters } = useSearchStore();
   const { getTotalItems } = useCartStore();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("score");
   const [showHistory, setShowHistory] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   // Sort products based on selected option
   const sortedProducts = useMemo(() => {
@@ -190,20 +194,66 @@ export default function BuyerDashboardPage() {
               </Card>
             )}
 
-            {/* Sort Controls & Results */}
+            {/* Sort Controls & View Toggle */}
             {!loading && products.length > 0 && (
               <>
-                <SortControls
-                  value={sortBy}
-                  onChange={setSortBy}
-                  resultCount={products.length}
-                />
+                <div className="flex items-center justify-between">
+                  <SortControls
+                    value={sortBy}
+                    onChange={setSortBy}
+                    resultCount={products.length}
+                  />
 
-                <ProductGrid
-                  products={sortedProducts}
-                  loading={false}
-                  onProductClick={setSelectedProduct}
-                />
+                  {/* View Mode Toggle */}
+                  <div className="flex items-center gap-2 bg-white border border-[var(--fresh-border)] rounded-lg p-1">
+                    <Button
+                      variant={viewMode === "list" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewMode("list")}
+                      className={viewMode === "list" ? "bg-[var(--fresh-primary)]" : ""}
+                    >
+                      <List className="h-4 w-4 mr-2" />
+                      List
+                    </Button>
+                    <Button
+                      variant={viewMode === "map" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewMode("map")}
+                      className={viewMode === "map" ? "bg-[var(--fresh-primary)]" : ""}
+                    >
+                      <MapIcon className="h-4 w-4 mr-2" />
+                      Map
+                    </Button>
+                  </div>
+                </div>
+
+                {/* List View */}
+                {viewMode === "list" && (
+                  <ProductGrid
+                    products={sortedProducts}
+                    loading={false}
+                    onProductClick={setSelectedProduct}
+                  />
+                )}
+
+                {/* Map View */}
+                {viewMode === "map" && (
+                  <div className="h-[600px] rounded-lg overflow-hidden border border-[var(--fresh-border)]">
+                    <SearchResultsMap
+                      products={sortedProducts}
+                      buyerLocation={
+                        filters?.location
+                          ? {
+                              lat: filters.location.lat,
+                              lng: filters.location.lng,
+                            }
+                          : undefined
+                      }
+                      searchRadius={filters?.maxRadius || 50}
+                      onMarkerClick={setSelectedProduct}
+                    />
+                  </div>
+                )}
               </>
             )}
 
