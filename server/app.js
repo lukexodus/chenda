@@ -72,6 +72,7 @@ app.use(session({
     pool: pool,
     tableName: 'session',
     createTableIfMissing: false, // We created it with migration
+    pruneSessionInterval: 60 * 60, // Prune every hour (in seconds)
   }),
   secret: config.session.secret,
   resave: false,
