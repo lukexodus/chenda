@@ -822,19 +822,19 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Goal**: Component and integration testing
 
 #### Subtasks:
-- [ ] 2.10.1: Set up testing environment
+- [x] 2.10.1: Set up testing environment
   - Jest + React Testing Library
   - Mock API responses
-- [ ] 2.10.2: Write component tests
+- [x] 2.10.2: Write component tests
   - Auth forms
   - Product cards
   - Search form
   - Profile forms
-- [ ] 2.10.3: Write integration tests
+- [x] 2.10.3: Write integration tests
   - Login → Search → View Product flow
   - Register → Complete Profile flow
   - Seller: Add Product flow
-- [ ] 2.10.4: Test error states
+- [x] 2.10.4: Test error states
   - API failures
   - Invalid form inputs
   - Network errors
@@ -863,22 +863,22 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Goal**: Connect frontend to backend API
 
 #### Subtasks:
-- [ ] 3.1.1: Configure API client
+- [x] 3.1.1: Configure API client
   - Set backend URL in environment variables
   - Add authentication headers
   - Handle token refresh (if using JWT)
-- [ ] 3.1.2: Test all API endpoints from frontend
+- [x] 3.1.2: Test all API endpoints from frontend
   - Auth flow
   - Product search
   - Product CRUD
   - User profile updates
   - Mock payments
-- [ ] 3.1.3: Fix CORS issues (if any)
-- [ ] 3.1.4: Add request/response interceptors
+- [x] 3.1.3: Fix CORS issues (if any)
+- [x] 3.1.4: Add request/response interceptors
   - Error handling
   - Loading states
   - Token management
-- [ ] 3.1.5: Test error scenarios
+- [x] 3.1.5: Test error scenarios
   - Network failures
   - API errors (4xx, 5xx)
   - Validation errors

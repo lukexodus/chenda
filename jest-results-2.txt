@@ -1,0 +1,1407 @@
+
+> chenda-frontend@0.1.0 test
+> jest --no-coverage --forceExit
+
+PASS src/__tests__/components/products/ProductCard.test.tsx (7.756 s)
+PASS src/__tests__/integration/login-search-product.test.tsx (8.714 s)
+PASS src/__tests__/components/profile/ProfileForm.test.tsx (11.525 s)
+PASS src/__tests__/components/buyer/SearchForm.test.tsx
+  ● Console
+
+    console.error
+      An update to SearchForm inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+      135 |
+      136 |         if (!filters.location) {
+    > 137 |           set({ error: "Please set your location first" });
+          |           ^
+      138 |           return;
+      139 |         }
+      140 |
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at forceStoreRerender (node_modules/react-dom/cjs/react-dom-client.development.js:8262:24)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:8247:11
+      at node_modules/zustand/vanilla.js:11:39
+          at Set.forEach (<anonymous>)
+      at setState (node_modules/zustand/vanilla.js:11:17)
+      at node_modules/zustand/middleware.js:372:7
+      at Object.search (src/lib/stores/searchStore.ts:137:11)
+      at Object.<anonymous> (src/__tests__/components/buyer/SearchForm.test.tsx:148:31)
+
+PASS src/__tests__/integration/seller-add-product.test.tsx (13.419 s)
+PASS src/__tests__/components/auth/LoginForm.test.tsx (13.955 s)
+  ● Console
+
+    console.error
+      Error: Not implemented: navigation (except hash changes)
+          at module.exports (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/browser/not-implemented.js:9:17)
+          at navigateFetch (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+          at exports.navigate (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+          at LocationImpl._locationObjectNavigate (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:30:5)
+          at LocationImpl._locationObjectSetterNavigate (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:24:17)
+          at LocationImpl.set href [as href] (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:46:10)
+          at Location.set href [as href] (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/jsdom/lib/jsdom/living/generated/Location.js:125:37)
+          at /home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/api.ts:30:29
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:41:14)
+          at login (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/store.ts:70:19)
+          at onSubmit (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/auth/LoginForm.tsx:42:20)
+          at unset (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7) {
+        type: 'not implemented'
+      }
+
+      28 |       const path = window.location.pathname;
+      29 |       if (!path.startsWith("/login") && !path.startsWith("/register")) {
+    > 30 |         window.location.href = "/login";
+         |                             ^
+      31 |       }
+      32 |     }
+      33 |     return Promise.reject(error);
+
+      at VirtualConsole.<anonymous> (node_modules/@jest/environment-jsdom-abstract/build/index.js:87:23)
+      at module.exports (node_modules/jsdom/lib/jsdom/browser/not-implemented.js:12:26)
+      at navigateFetch (node_modules/jsdom/lib/jsdom/living/window/navigation.js:77:3)
+      at exports.navigate (node_modules/jsdom/lib/jsdom/living/window/navigation.js:55:3)
+      at LocationImpl._locationObjectNavigate (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:30:5)
+      at LocationImpl._locationObjectSetterNavigate (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:24:17)
+      at LocationImpl.set href [as href] (node_modules/jsdom/lib/jsdom/living/window/Location-impl.js:46:10)
+      at Location.set href [as href] (node_modules/jsdom/lib/jsdom/living/generated/Location.js:125:37)
+      at src/lib/api.ts:30:29
+      at Axios.request (node_modules/axios/lib/core/Axios.js:41:14)
+      at login (src/lib/store.ts:70:19)
+      at onSubmit (src/components/auth/LoginForm.tsx:42:20)
+      at unset (node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7)
+
+    console.error
+      Login error: AxiosError: Request failed with status code 401
+          at settle (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/settle.js:19:12)
+          at XMLHttpRequest.onloadend (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/adapters/xhr.js:59:7)
+          at XMLHttpRequest.methodCall (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:216:20)
+          at Proxy.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/createProxy.ts:93:29)
+          at XMLHttpRequestController.trigger (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:641:16)
+          at finalizeResponse (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:431:12)
+          at readNextResponseBodyChunk (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:447:11)
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:46:41)
+          at login (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/store.ts:70:19)
+          at onSubmit (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/auth/LoginForm.tsx:42:20)
+          at unset (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7) {
+        isAxiosError: true,
+        code: 'ERR_BAD_REQUEST',
+        config: {
+          transitional: {
+            silentJSONParsing: true,
+            forcedJSONParsing: true,
+            clarifyTimeoutError: false,
+            legacyInterceptorReqResOrdering: true
+          },
+          adapter: [ 'xhr', 'http', 'fetch' ],
+          transformRequest: [ [Function: transformRequest] ],
+          transformResponse: [ [Function: transformResponse] ],
+          timeout: 15000,
+          xsrfCookieName: 'XSRF-TOKEN',
+          xsrfHeaderName: 'X-XSRF-TOKEN',
+          maxContentLength: -1,
+          maxBodyLength: -1,
+          env: { FormData: [Function], Blob: [class Blob] },
+          validateStatus: [Function: validateStatus],
+          headers: Object [AxiosHeaders] {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          baseURL: 'http://localhost:3001/api',
+          withCredentials: true,
+          method: 'post',
+          url: '/auth/login',
+          data: '{"email":"wrong@test.com","password":"password123"}',
+          allowAbsoluteUrls: true
+        },
+        request: XMLHttpRequest {
+          open: [Function: open],
+          setRequestHeader: [Function: setRequestHeader],
+          send: [Function: send],
+          abort: [Function: abort],
+          getResponseHeader: [Function (anonymous)],
+          getAllResponseHeaders: [Function (anonymous)],
+          overrideMimeType: [Function: overrideMimeType],
+          onreadystatechange: [Getter/Setter],
+          readyState: 4,
+          timeout: [Getter/Setter],
+          withCredentials: [Getter/Setter],
+          upload: XMLHttpRequestUpload {},
+          responseURL: 'http://localhost:3001/api/auth/login',
+          status: 401,
+          statusText: 'Unauthorized',
+          responseType: [Getter/Setter],
+          response: [Getter],
+          responseText: [Getter],
+          responseXML: [Getter],
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4,
+          Symbol(SameObject caches): [Object: null prototype] { upload: XMLHttpRequestUpload {} }
+        },
+        response: {
+          data: { success: false, message: 'Invalid email or password' },
+          status: 401,
+          statusText: 'Unauthorized',
+          headers: Object [AxiosHeaders] {
+            'content-length': '55',
+            'content-type': 'application/json'
+          },
+          config: {
+            transitional: [Object],
+            adapter: [Array],
+            transformRequest: [Array],
+            transformResponse: [Array],
+            timeout: 15000,
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN',
+            maxContentLength: -1,
+            maxBodyLength: -1,
+            env: [Object],
+            validateStatus: [Function: validateStatus],
+            headers: [Object [AxiosHeaders]],
+            baseURL: 'http://localhost:3001/api',
+            withCredentials: true,
+            method: 'post',
+            url: '/auth/login',
+            data: '{"email":"wrong@test.com","password":"password123"}',
+            allowAbsoluteUrls: true
+          },
+          request: XMLHttpRequest {
+            open: [Function: open],
+            setRequestHeader: [Function: setRequestHeader],
+            send: [Function: send],
+            abort: [Function: abort],
+            getResponseHeader: [Function (anonymous)],
+            getAllResponseHeaders: [Function (anonymous)],
+            overrideMimeType: [Function: overrideMimeType],
+            onreadystatechange: [Getter/Setter],
+            readyState: 4,
+            timeout: [Getter/Setter],
+            withCredentials: [Getter/Setter],
+            upload: XMLHttpRequestUpload {},
+            responseURL: 'http://localhost:3001/api/auth/login',
+            status: 401,
+            statusText: 'Unauthorized',
+            responseType: [Getter/Setter],
+            response: [Getter],
+            responseText: [Getter],
+            responseXML: [Getter],
+            UNSENT: 0,
+            OPENED: 1,
+            HEADERS_RECEIVED: 2,
+            LOADING: 3,
+            DONE: 4,
+            Symbol(SameObject caches): [Object: null prototype]
+          }
+        },
+        status: 401
+      }
+
+      59 |       router.push(redirectPath);
+      60 |     } catch (error) {
+    > 61 |       console.error("Login error:", error);
+         |               ^
+      62 |       toast.error("Login failed", {
+      63 |         description:
+      64 |           (error as { response?: { data?: { message?: string } } })?.response
+
+      at onSubmit (src/components/auth/LoginForm.tsx:61:15)
+      at unset (node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7)
+
+PASS src/__tests__/integration/register-profile.test.tsx (6.936 s)
+  ● Console
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      56 |     await user.type(screen.getByLabelText(/^password$/i), "password123");
+      57 |     await user.type(screen.getByLabelText(/confirm password/i), "password123");
+    > 58 |     await user.click(screen.getByLabelText(/buy fresh products/i));
+         |     ^
+      59 |     await user.click(screen.getByRole("checkbox"));
+      60 |     await user.click(screen.getByRole("button", { name: /create account/i }));
+      61 |
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at Object.<anonymous> (src/__tests__/integration/register-profile.test.tsx:58:5)
+
+PASS src/__tests__/components/auth/RegisterForm.test.tsx (15.143 s)
+  ● Console
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      94 |     await user.type(screen.getByLabelText(/^password$/i), "password123");
+      95 |     await user.type(screen.getByLabelText(/confirm password/i), "different");
+    > 96 |     await user.click(screen.getByLabelText(/buy fresh products/i));
+         |     ^
+      97 |     await user.click(screen.getByRole("checkbox"));
+      98 |     await user.click(screen.getByRole("button", { name: /create account/i }));
+      99 |
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at Object.<anonymous> (src/__tests__/components/auth/RegisterForm.test.tsx:96:5)
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      111 |     await user.type(screen.getByLabelText(/^password$/i), "password123");
+      112 |     await user.type(screen.getByLabelText(/confirm password/i), "password123");
+    > 113 |     await user.click(screen.getByLabelText(/buy fresh products/i));
+          |     ^
+      114 |     // Don't click checkbox
+      115 |     await user.click(screen.getByRole("button", { name: /create account/i }));
+      116 |
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at Object.<anonymous> (src/__tests__/components/auth/RegisterForm.test.tsx:113:5)
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      52 |   await user.type(screen.getByLabelText(/confirm password/i), "password123");
+      53 |   // Select "buyer" radio
+    > 54 |   await user.click(screen.getByLabelText(/buy fresh products/i));
+         |   ^
+      55 |   // Accept terms
+      56 |   await user.click(screen.getByRole("checkbox"));
+      57 | }
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at fillValidForm (src/__tests__/components/auth/RegisterForm.test.tsx:54:3)
+      at Object.<anonymous> (src/__tests__/components/auth/RegisterForm.test.tsx:126:5)
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      140 |     await user.type(screen.getByLabelText(/^password$/i), "password123");
+      141 |     await user.type(screen.getByLabelText(/confirm password/i), "password123");
+    > 142 |     await user.click(screen.getByLabelText(/sell products/i));
+          |     ^
+      143 |     await user.click(screen.getByRole("checkbox"));
+      144 |     await user.click(screen.getByRole("button", { name: /create account/i }));
+      145 |
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at Object.<anonymous> (src/__tests__/components/auth/RegisterForm.test.tsx:142:5)
+
+PASS src/__tests__/error-states.test.tsx (15.715 s)
+  ● Console
+
+    console.error
+      Login error: AxiosError: Request failed with status code 500
+          at settle (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/settle.js:19:12)
+          at XMLHttpRequest.onloadend (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/adapters/xhr.js:59:7)
+          at XMLHttpRequest.methodCall (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:216:20)
+          at Proxy.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/createProxy.ts:93:29)
+          at XMLHttpRequestController.trigger (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:641:16)
+          at finalizeResponse (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:431:12)
+          at readNextResponseBodyChunk (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:447:11)
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:46:41)
+          at login (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/store.ts:70:19)
+          at onSubmit (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/auth/LoginForm.tsx:42:20)
+          at unset (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7) {
+        isAxiosError: true,
+        code: 'ERR_BAD_RESPONSE',
+        config: {
+          transitional: {
+            silentJSONParsing: true,
+            forcedJSONParsing: true,
+            clarifyTimeoutError: false,
+            legacyInterceptorReqResOrdering: true
+          },
+          adapter: [ 'xhr', 'http', 'fetch' ],
+          transformRequest: [ [Function: transformRequest] ],
+          transformResponse: [ [Function: transformResponse] ],
+          timeout: 15000,
+          xsrfCookieName: 'XSRF-TOKEN',
+          xsrfHeaderName: 'X-XSRF-TOKEN',
+          maxContentLength: -1,
+          maxBodyLength: -1,
+          env: { FormData: [Function], Blob: [class Blob] },
+          validateStatus: [Function: validateStatus],
+          headers: Object [AxiosHeaders] {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          baseURL: 'http://localhost:3001/api',
+          withCredentials: true,
+          method: 'post',
+          url: '/auth/login',
+          data: '{"email":"buyer@test.com","password":"password123"}',
+          allowAbsoluteUrls: true
+        },
+        request: XMLHttpRequest {
+          open: [Function: open],
+          setRequestHeader: [Function: setRequestHeader],
+          send: [Function: send],
+          abort: [Function: abort],
+          getResponseHeader: [Function (anonymous)],
+          getAllResponseHeaders: [Function (anonymous)],
+          overrideMimeType: [Function: overrideMimeType],
+          onreadystatechange: [Getter/Setter],
+          readyState: 4,
+          timeout: [Getter/Setter],
+          withCredentials: [Getter/Setter],
+          upload: XMLHttpRequestUpload {},
+          responseURL: 'http://localhost:3001/api/auth/login',
+          status: 500,
+          statusText: 'Internal Server Error',
+          responseType: [Getter/Setter],
+          response: [Getter],
+          responseText: [Getter],
+          responseXML: [Getter],
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4,
+          Symbol(SameObject caches): [Object: null prototype] { upload: XMLHttpRequestUpload {} }
+        },
+        response: {
+          data: { success: false, message: 'Internal server error' },
+          status: 500,
+          statusText: 'Internal Server Error',
+          headers: Object [AxiosHeaders] {
+            'content-length': '51',
+            'content-type': 'application/json'
+          },
+          config: {
+            transitional: [Object],
+            adapter: [Array],
+            transformRequest: [Array],
+            transformResponse: [Array],
+            timeout: 15000,
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN',
+            maxContentLength: -1,
+            maxBodyLength: -1,
+            env: [Object],
+            validateStatus: [Function: validateStatus],
+            headers: [Object [AxiosHeaders]],
+            baseURL: 'http://localhost:3001/api',
+            withCredentials: true,
+            method: 'post',
+            url: '/auth/login',
+            data: '{"email":"buyer@test.com","password":"password123"}',
+            allowAbsoluteUrls: true
+          },
+          request: XMLHttpRequest {
+            open: [Function: open],
+            setRequestHeader: [Function: setRequestHeader],
+            send: [Function: send],
+            abort: [Function: abort],
+            getResponseHeader: [Function (anonymous)],
+            getAllResponseHeaders: [Function (anonymous)],
+            overrideMimeType: [Function: overrideMimeType],
+            onreadystatechange: [Getter/Setter],
+            readyState: 4,
+            timeout: [Getter/Setter],
+            withCredentials: [Getter/Setter],
+            upload: XMLHttpRequestUpload {},
+            responseURL: 'http://localhost:3001/api/auth/login',
+            status: 500,
+            statusText: 'Internal Server Error',
+            responseType: [Getter/Setter],
+            response: [Getter],
+            responseText: [Getter],
+            responseXML: [Getter],
+            UNSENT: 0,
+            OPENED: 1,
+            HEADERS_RECEIVED: 2,
+            LOADING: 3,
+            DONE: 4,
+            Symbol(SameObject caches): [Object: null prototype]
+          }
+        },
+        status: 500
+      }
+
+      59 |       router.push(redirectPath);
+      60 |     } catch (error) {
+    > 61 |       console.error("Login error:", error);
+         |               ^
+      62 |       toast.error("Login failed", {
+      63 |         description:
+      64 |           (error as { response?: { data?: { message?: string } } })?.response
+
+      at onSubmit (src/components/auth/LoginForm.tsx:61:15)
+      at unset (node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7)
+
+    console.error
+      Login error: AxiosError: Network Error
+          at XMLHttpRequest.handleError (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/adapters/xhr.js:112:20)
+          at XMLHttpRequest.methodCall (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:216:20)
+          at Proxy.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/createProxy.ts:93:29)
+          at XMLHttpRequestController.trigger (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:641:16)
+          at XMLHttpRequestController.errorWith (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:591:10)
+          at Object.respondWith (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestProxy.ts:64:20)
+          at RequestController.respondWith (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/RequestController.ts:83:17)
+          at _Emitter.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/msw/src/node/SetupServerCommonApi.ts:94:22)
+          at emitAsync (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/emitAsync.ts:23:5)
+          at /home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/handleRequest.ts:123:5
+          at until (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@open-draft/until/src/until.ts:23:18)
+          at Object.handleRequest (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/handleRequest.ts:112:18)
+          at XMLHttpRequestController.xhrRequestController.onRequest (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestProxy.ts:86:9)
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:46:41)
+          at login (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/store.ts:70:19)
+          at onSubmit (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/auth/LoginForm.tsx:42:20)
+          at unset (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7) {
+        isAxiosError: true,
+        code: 'ERR_NETWORK',
+        config: {
+          transitional: {
+            silentJSONParsing: true,
+            forcedJSONParsing: true,
+            clarifyTimeoutError: false,
+            legacyInterceptorReqResOrdering: true
+          },
+          adapter: [ 'xhr', 'http', 'fetch' ],
+          transformRequest: [ [Function: transformRequest] ],
+          transformResponse: [ [Function: transformResponse] ],
+          timeout: 15000,
+          xsrfCookieName: 'XSRF-TOKEN',
+          xsrfHeaderName: 'X-XSRF-TOKEN',
+          maxContentLength: -1,
+          maxBodyLength: -1,
+          env: { FormData: [Function], Blob: [class Blob] },
+          validateStatus: [Function: validateStatus],
+          headers: Object [AxiosHeaders] {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          baseURL: 'http://localhost:3001/api',
+          withCredentials: true,
+          method: 'post',
+          url: '/auth/login',
+          data: '{"email":"buyer@test.com","password":"password123"}',
+          allowAbsoluteUrls: true
+        },
+        request: XMLHttpRequest {
+          open: [Function: open],
+          setRequestHeader: [Function: setRequestHeader],
+          send: [Function: send],
+          abort: [Function: abort],
+          getResponseHeader: [Function: getResponseHeader],
+          getAllResponseHeaders: [Function: getAllResponseHeaders],
+          overrideMimeType: [Function: overrideMimeType],
+          onreadystatechange: [Getter/Setter],
+          readyState: 4,
+          timeout: [Getter/Setter],
+          withCredentials: [Getter/Setter],
+          upload: XMLHttpRequestUpload {},
+          responseURL: [Getter],
+          status: [Getter],
+          statusText: [Getter],
+          responseType: [Getter/Setter],
+          response: [Getter],
+          responseText: [Getter],
+          responseXML: [Getter],
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4,
+          Symbol(SameObject caches): [Object: null prototype] { upload: XMLHttpRequestUpload {} }
+        },
+        event: ProgressEvent { isTrusted: [Getter] }
+      }
+
+      59 |       router.push(redirectPath);
+      60 |     } catch (error) {
+    > 61 |       console.error("Login error:", error);
+         |               ^
+      62 |       toast.error("Login failed", {
+      63 |         description:
+      64 |           (error as { response?: { data?: { message?: string } } })?.response
+
+      at onSubmit (src/components/auth/LoginForm.tsx:61:15)
+      at unset (node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7)
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      111 |     await user.type(screen.getByLabelText(/^password$/i), "password123");
+      112 |     await user.type(screen.getByLabelText(/confirm password/i), "password123");
+    > 113 |     await user.click(screen.getByLabelText(/buy fresh products/i));
+          |     ^
+      114 |     await user.click(screen.getByRole("checkbox"));
+      115 |     await user.click(screen.getByRole("button", { name: /create account/i }));
+      116 |
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at Object.<anonymous> (src/__tests__/error-states.test.tsx:113:5)
+
+    console.error
+      Registration error: AxiosError: Request failed with status code 409
+          at settle (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/settle.js:19:12)
+          at XMLHttpRequest.onloadend (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/adapters/xhr.js:59:7)
+          at XMLHttpRequest.methodCall (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:216:20)
+          at Proxy.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/createProxy.ts:93:29)
+          at XMLHttpRequestController.trigger (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:641:16)
+          at finalizeResponse (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:431:12)
+          at readNextResponseBodyChunk (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:447:11)
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:46:41)
+          at register (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/store.ts:86:19)
+          at onSubmit (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/auth/RegisterForm.tsx:53:7)
+          at unset (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7) {
+        isAxiosError: true,
+        code: 'ERR_BAD_REQUEST',
+        config: {
+          transitional: {
+            silentJSONParsing: true,
+            forcedJSONParsing: true,
+            clarifyTimeoutError: false,
+            legacyInterceptorReqResOrdering: true
+          },
+          adapter: [ 'xhr', 'http', 'fetch' ],
+          transformRequest: [ [Function: transformRequest] ],
+          transformResponse: [ [Function: transformResponse] ],
+          timeout: 15000,
+          xsrfCookieName: 'XSRF-TOKEN',
+          xsrfHeaderName: 'X-XSRF-TOKEN',
+          maxContentLength: -1,
+          maxBodyLength: -1,
+          env: { FormData: [Function], Blob: [class Blob] },
+          validateStatus: [Function: validateStatus],
+          headers: Object [AxiosHeaders] {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          baseURL: 'http://localhost:3001/api',
+          withCredentials: true,
+          method: 'post',
+          url: '/auth/register',
+          data: '{"name":"Test User","email":"existing@test.com","password":"password123","type":"buyer"}',
+          allowAbsoluteUrls: true
+        },
+        request: XMLHttpRequest {
+          open: [Function: open],
+          setRequestHeader: [Function: setRequestHeader],
+          send: [Function: send],
+          abort: [Function: abort],
+          getResponseHeader: [Function (anonymous)],
+          getAllResponseHeaders: [Function (anonymous)],
+          overrideMimeType: [Function: overrideMimeType],
+          onreadystatechange: [Getter/Setter],
+          readyState: 4,
+          timeout: [Getter/Setter],
+          withCredentials: [Getter/Setter],
+          upload: XMLHttpRequestUpload {},
+          responseURL: 'http://localhost:3001/api/auth/register',
+          status: 409,
+          statusText: 'Conflict',
+          responseType: [Getter/Setter],
+          response: [Getter],
+          responseText: [Getter],
+          responseXML: [Getter],
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4,
+          Symbol(SameObject caches): [Object: null prototype] { upload: XMLHttpRequestUpload {} }
+        },
+        response: {
+          data: { success: false, message: 'Email already registered' },
+          status: 409,
+          statusText: 'Conflict',
+          headers: Object [AxiosHeaders] {
+            'content-length': '54',
+            'content-type': 'application/json'
+          },
+          config: {
+            transitional: [Object],
+            adapter: [Array],
+            transformRequest: [Array],
+            transformResponse: [Array],
+            timeout: 15000,
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN',
+            maxContentLength: -1,
+            maxBodyLength: -1,
+            env: [Object],
+            validateStatus: [Function: validateStatus],
+            headers: [Object [AxiosHeaders]],
+            baseURL: 'http://localhost:3001/api',
+            withCredentials: true,
+            method: 'post',
+            url: '/auth/register',
+            data: '{"name":"Test User","email":"existing@test.com","password":"password123","type":"buyer"}',
+            allowAbsoluteUrls: true
+          },
+          request: XMLHttpRequest {
+            open: [Function: open],
+            setRequestHeader: [Function: setRequestHeader],
+            send: [Function: send],
+            abort: [Function: abort],
+            getResponseHeader: [Function (anonymous)],
+            getAllResponseHeaders: [Function (anonymous)],
+            overrideMimeType: [Function: overrideMimeType],
+            onreadystatechange: [Getter/Setter],
+            readyState: 4,
+            timeout: [Getter/Setter],
+            withCredentials: [Getter/Setter],
+            upload: XMLHttpRequestUpload {},
+            responseURL: 'http://localhost:3001/api/auth/register',
+            status: 409,
+            statusText: 'Conflict',
+            responseType: [Getter/Setter],
+            response: [Getter],
+            responseText: [Getter],
+            responseXML: [Getter],
+            UNSENT: 0,
+            OPENED: 1,
+            HEADERS_RECEIVED: 2,
+            LOADING: 3,
+            DONE: 4,
+            Symbol(SameObject caches): [Object: null prototype]
+          }
+        },
+        status: 409
+      }
+
+      63 |       router.push(redirectPath);
+      64 |     } catch (error) {
+    > 65 |       console.error("Registration error:", error);
+         |               ^
+      66 |       toast.error("Registration failed", {
+      67 |         description:
+      68 |           (error as { response?: { data?: { message?: string } } })?.response
+
+      at onSubmit (src/components/auth/RegisterForm.tsx:65:15)
+      at unset (node_modules/react-hook-form/src/logic/createFormControl.ts:1293:7)
+
+    console.error
+      Failed to fetch profile: AxiosError: Request failed with status code 404
+          at settle (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/settle.js:19:12)
+          at XMLHttpRequest.onloadend (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/adapters/xhr.js:59:7)
+          at XMLHttpRequest.methodCall (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:216:20)
+          at Proxy.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/createProxy.ts:93:29)
+          at XMLHttpRequestController.trigger (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:641:16)
+          at finalizeResponse (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:431:12)
+          at readNextResponseBodyChunk (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:447:11)
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:46:41)
+          at fetchProfile (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/profile/ProfileForm.tsx:43:24) {
+        isAxiosError: true,
+        code: 'ERR_BAD_REQUEST',
+        config: {
+          transitional: {
+            silentJSONParsing: true,
+            forcedJSONParsing: true,
+            clarifyTimeoutError: false,
+            legacyInterceptorReqResOrdering: true
+          },
+          adapter: [ 'xhr', 'http', 'fetch' ],
+          transformRequest: [ [Function: transformRequest] ],
+          transformResponse: [ [Function: transformResponse] ],
+          timeout: 15000,
+          xsrfCookieName: 'XSRF-TOKEN',
+          xsrfHeaderName: 'X-XSRF-TOKEN',
+          maxContentLength: -1,
+          maxBodyLength: -1,
+          env: { FormData: [Function], Blob: [class Blob] },
+          validateStatus: [Function: validateStatus],
+          headers: Object [AxiosHeaders] {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          baseURL: 'http://localhost:3001/api',
+          withCredentials: true,
+          method: 'get',
+          url: '/users/profile',
+          allowAbsoluteUrls: true,
+          data: undefined
+        },
+        request: XMLHttpRequest {
+          open: [Function: open],
+          setRequestHeader: [Function: setRequestHeader],
+          send: [Function: send],
+          abort: [Function: abort],
+          getResponseHeader: [Function (anonymous)],
+          getAllResponseHeaders: [Function (anonymous)],
+          overrideMimeType: [Function: overrideMimeType],
+          onreadystatechange: [Getter/Setter],
+          readyState: 4,
+          timeout: [Getter/Setter],
+          withCredentials: [Getter/Setter],
+          upload: XMLHttpRequestUpload {},
+          responseURL: 'http://localhost:3001/api/users/profile',
+          status: 404,
+          statusText: 'Not Found',
+          responseType: [Getter/Setter],
+          response: [Getter],
+          responseText: [Getter],
+          responseXML: [Getter],
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4,
+          Symbol(SameObject caches): [Object: null prototype] { upload: XMLHttpRequestUpload {} }
+        },
+        response: {
+          data: { success: false, message: 'Profile not found' },
+          status: 404,
+          statusText: 'Not Found',
+          headers: Object [AxiosHeaders] {
+            'content-length': '47',
+            'content-type': 'application/json'
+          },
+          config: {
+            transitional: [Object],
+            adapter: [Array],
+            transformRequest: [Array],
+            transformResponse: [Array],
+            timeout: 15000,
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN',
+            maxContentLength: -1,
+            maxBodyLength: -1,
+            env: [Object],
+            validateStatus: [Function: validateStatus],
+            headers: [Object [AxiosHeaders]],
+            baseURL: 'http://localhost:3001/api',
+            withCredentials: true,
+            method: 'get',
+            url: '/users/profile',
+            allowAbsoluteUrls: true,
+            data: undefined
+          },
+          request: XMLHttpRequest {
+            open: [Function: open],
+            setRequestHeader: [Function: setRequestHeader],
+            send: [Function: send],
+            abort: [Function: abort],
+            getResponseHeader: [Function (anonymous)],
+            getAllResponseHeaders: [Function (anonymous)],
+            overrideMimeType: [Function: overrideMimeType],
+            onreadystatechange: [Getter/Setter],
+            readyState: 4,
+            timeout: [Getter/Setter],
+            withCredentials: [Getter/Setter],
+            upload: XMLHttpRequestUpload {},
+            responseURL: 'http://localhost:3001/api/users/profile',
+            status: 404,
+            statusText: 'Not Found',
+            responseType: [Getter/Setter],
+            response: [Getter],
+            responseText: [Getter],
+            responseXML: [Getter],
+            UNSENT: 0,
+            OPENED: 1,
+            HEADERS_RECEIVED: 2,
+            LOADING: 3,
+            DONE: 4,
+            Symbol(SameObject caches): [Object: null prototype]
+          }
+        },
+        status: 404
+      }
+
+      49 |       });
+      50 |     } catch (error: any) {
+    > 51 |       console.error("Failed to fetch profile:", error);
+         |               ^
+      52 |       toast.error("Error", {
+      53 |         description: error.response?.data?.message || "Failed to load profile",
+      54 |       });
+
+      at fetchProfile (src/components/profile/ProfileForm.tsx:51:15)
+
+    console.error
+      Failed to save profile: AxiosError: Request failed with status code 500
+          at settle (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/settle.js:19:12)
+          at XMLHttpRequest.onloadend (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/adapters/xhr.js:59:7)
+          at XMLHttpRequest.methodCall (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:216:20)
+          at Proxy.<anonymous> (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/utils/createProxy.ts:93:29)
+          at XMLHttpRequestController.trigger (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:641:16)
+          at finalizeResponse (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:431:12)
+          at readNextResponseBodyChunk (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/@mswjs/interceptors/src/interceptors/XMLHttpRequest/XMLHttpRequestController.ts:447:11)
+          at Axios.request (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/node_modules/axios/lib/core/Axios.js:46:41)
+          at updateProfile (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/lib/store.ts:110:19)
+          at handleSaveProfile (/home/lukexodus/college/junior/se/chenda/chenda/chenda-frontend/src/components/profile/ProfileForm.tsx:70:7) {
+        isAxiosError: true,
+        code: 'ERR_BAD_RESPONSE',
+        config: {
+          transitional: {
+            silentJSONParsing: true,
+            forcedJSONParsing: true,
+            clarifyTimeoutError: false,
+            legacyInterceptorReqResOrdering: true
+          },
+          adapter: [ 'xhr', 'http', 'fetch' ],
+          transformRequest: [ [Function: transformRequest] ],
+          transformResponse: [ [Function: transformResponse] ],
+          timeout: 15000,
+          xsrfCookieName: 'XSRF-TOKEN',
+          xsrfHeaderName: 'X-XSRF-TOKEN',
+          maxContentLength: -1,
+          maxBodyLength: -1,
+          env: { FormData: [Function], Blob: [class Blob] },
+          validateStatus: [Function: validateStatus],
+          headers: Object [AxiosHeaders] {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          baseURL: 'http://localhost:3001/api',
+          withCredentials: true,
+          method: 'put',
+          url: '/users/profile',
+          data: '{"name":"Test Buyer","type":"buyer"}',
+          allowAbsoluteUrls: true
+        },
+        request: XMLHttpRequest {
+          open: [Function: open],
+          setRequestHeader: [Function: setRequestHeader],
+          send: [Function: send],
+          abort: [Function: abort],
+          getResponseHeader: [Function (anonymous)],
+          getAllResponseHeaders: [Function (anonymous)],
+          overrideMimeType: [Function: overrideMimeType],
+          onreadystatechange: [Getter/Setter],
+          readyState: 4,
+          timeout: [Getter/Setter],
+          withCredentials: [Getter/Setter],
+          upload: XMLHttpRequestUpload {},
+          responseURL: 'http://localhost:3001/api/users/profile',
+          status: 500,
+          statusText: 'Internal Server Error',
+          responseType: [Getter/Setter],
+          response: [Getter],
+          responseText: [Getter],
+          responseXML: [Getter],
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4,
+          Symbol(SameObject caches): [Object: null prototype] { upload: XMLHttpRequestUpload {} }
+        },
+        response: {
+          data: { success: false, message: 'Update failed' },
+          status: 500,
+          statusText: 'Internal Server Error',
+          headers: Object [AxiosHeaders] {
+            'content-length': '43',
+            'content-type': 'application/json'
+          },
+          config: {
+            transitional: [Object],
+            adapter: [Array],
+            transformRequest: [Array],
+            transformResponse: [Array],
+            timeout: 15000,
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN',
+            maxContentLength: -1,
+            maxBodyLength: -1,
+            env: [Object],
+            validateStatus: [Function: validateStatus],
+            headers: [Object [AxiosHeaders]],
+            baseURL: 'http://localhost:3001/api',
+            withCredentials: true,
+            method: 'put',
+            url: '/users/profile',
+            data: '{"name":"Test Buyer","type":"buyer"}',
+            allowAbsoluteUrls: true
+          },
+          request: XMLHttpRequest {
+            open: [Function: open],
+            setRequestHeader: [Function: setRequestHeader],
+            send: [Function: send],
+            abort: [Function: abort],
+            getResponseHeader: [Function (anonymous)],
+            getAllResponseHeaders: [Function (anonymous)],
+            overrideMimeType: [Function: overrideMimeType],
+            onreadystatechange: [Getter/Setter],
+            readyState: 4,
+            timeout: [Getter/Setter],
+            withCredentials: [Getter/Setter],
+            upload: XMLHttpRequestUpload {},
+            responseURL: 'http://localhost:3001/api/users/profile',
+            status: 500,
+            statusText: 'Internal Server Error',
+            responseType: [Getter/Setter],
+            response: [Getter],
+            responseText: [Getter],
+            responseXML: [Getter],
+            UNSENT: 0,
+            OPENED: 1,
+            HEADERS_RECEIVED: 2,
+            LOADING: 3,
+            DONE: 4,
+            Symbol(SameObject caches): [Object: null prototype]
+          }
+        },
+        status: 500
+      }
+
+      74 |       });
+      75 |     } catch (error: any) {
+    > 76 |       console.error("Failed to save profile:", error);
+         |               ^
+      77 |       toast.error("Failed to update profile", {
+      78 |         description: error.response?.data?.message || "Please try again later",
+      79 |       });
+
+      at handleSaveProfile (src/components/profile/ProfileForm.tsx:76:15)
+
+    console.warn
+      RadioGroup is changing from uncontrolled to controlled. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.
+
+      224 |     await user.type(screen.getByLabelText(/^password$/i), "12345");
+      225 |     await user.type(screen.getByLabelText(/confirm password/i), "12345");
+    > 226 |     await user.click(screen.getByLabelText(/buy fresh products/i));
+          |     ^
+      227 |     await user.click(screen.getByRole("checkbox"));
+      228 |     await user.click(screen.getByRole("button", { name: /create account/i }));
+      229 |
+
+      at node_modules/@radix-ui/react-use-controllable-state/src/use-controllable-state.tsx:42:17
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at flushPendingEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18358:14)
+      at flushSpawnedWork (node_modules/react-dom/cjs/react-dom-client.development.js:18323:44)
+      at commitRoot (node_modules/react-dom/cjs/react-dom-client.development.js:17955:9)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16667:15)
+      at performSyncWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:18972:7)
+      at flushSyncWorkAcrossRoots_impl (node_modules/react-dom/cjs/react-dom-client.development.js:18814:21)
+      at processRootScheduleInMicrotask (node_modules/react-dom/cjs/react-dom-client.development.js:18853:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18982:11
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at Object.eventWrapper (node_modules/@testing-library/react/dist/pure.js:106:28)
+      at Object.wrapEvent (node_modules/@testing-library/user-event/dist/cjs/event/wrapEvent.js:6:28)
+      at Object.dispatchEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:45:22)
+      at Object.dispatchUIEvent (node_modules/@testing-library/user-event/dist/cjs/event/dispatchEvent.js:22:26)
+      at Mouse.up (node_modules/@testing-library/user-event/dist/cjs/system/pointer/mouse.js:100:30)
+      at PointerHost.release (node_modules/@testing-library/user-event/dist/cjs/system/pointer/index.js:87:24)
+      at pointerAction (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:54:47)
+      at Object.pointer (node_modules/@testing-library/user-event/dist/cjs/pointer/index.js:27:9)
+      at Object.asyncWrapper (node_modules/@testing-library/react/dist/pure.js:87:22)
+      at Object.<anonymous> (src/__tests__/error-states.test.tsx:226:5)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+
+Test Suites: 9 passed, 9 total
+Tests:       1 skipped, 67 passed, 68 total
+Snapshots:   0 total
+Time:        20.344 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

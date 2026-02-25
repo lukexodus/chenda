@@ -15,10 +15,10 @@ import PaymentModal from '@/components/payment/PaymentModal';
 import { useCartStore } from '@/lib/stores/cartStore';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { api } from '@/lib/api';
-import { 
-  PAYMENT_METHODS, 
-  type PaymentMethod, 
-  type PaymentMethodOption 
+import {
+  PAYMENT_METHODS,
+  type PaymentMethod,
+  type PaymentMethodOption
 } from '@/lib/types/order';
 
 export default function CheckoutPage() {
@@ -63,7 +63,7 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     // Validate delivery address
-    if (!user.address || !user.lat || !user.lng) {
+    if (!user.address || !user.location?.lat || !user.location?.lng) {
       toast({
         variant: 'destructive',
         title: 'Delivery address required',
@@ -93,8 +93,8 @@ export default function CheckoutPage() {
         product_id: item.product.id,
         quantity: item.quantity,
         delivery_address: user.address,
-        delivery_lat: user.lat,
-        delivery_lng: user.lng,
+        delivery_lat: user.location?.lat,
+        delivery_lng: user.location?.lng,
         delivery_notes: deliveryNotes.trim() || undefined,
       };
 

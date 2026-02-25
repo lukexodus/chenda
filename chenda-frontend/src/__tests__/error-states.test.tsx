@@ -228,7 +228,7 @@ describe("Error States: Invalid Form Inputs", () => {
     await user.click(screen.getByRole("button", { name: /create account/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/at least 6 characters/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/at least 6 characters/i).length).toBeGreaterThan(0);
     });
   });
 

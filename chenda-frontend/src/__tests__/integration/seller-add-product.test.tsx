@@ -61,7 +61,7 @@ describe("Integration: Seller Add Product", () => {
   it("renders the product form with all required fields", () => {
     render(<ProductForm />);
 
-    expect(screen.getByText(/product type/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/product type/i).length).toBeGreaterThan(0);
     expect(screen.getByLabelText(/price/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/quantity/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/days already used/i)).toBeInTheDocument();

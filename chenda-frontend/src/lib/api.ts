@@ -1,4 +1,17 @@
-import axios, { AxiosError, type AxiosInstance } from "axios";
+import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
+
+// Internal event bus for auth failures – avoids circular dependency with router
+type AuthFailureListener = () => void;
+const authFailureListeners = new Set<AuthFailureListener>();
+
+export function onAuthFailure(cb: AuthFailureListener) {
+  authFailureListeners.add(cb);
+  return () => authFailureListeners.delete(cb);
+}
+
+function notifyAuthFailure() {
+  authFailureListeners.forEach((cb) => cb());
+}
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -20,14 +33,24 @@ const api: AxiosInstance = axios.create({
 
 // --------------- interceptors ---------------
 
+// REQUEST: attach a unique request ID and record start time for debugging
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const requestId = Math.random().toString(36).slice(2, 10);
+  config.headers["X-Request-ID"] = requestId;
+  (config as InternalAxiosRequestConfig & { _startTime?: number })._startTime = Date.now();
+  return config;
+});
+
+// RESPONSE: handle 401s via event bus so React components can react without
+// the API layer depending directly on Next.js router (avoids circular deps).
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    // Redirect to login on 401 (session expired)
     if (error.response?.status === 401 && typeof window !== "undefined") {
       const path = window.location.pathname;
       if (!path.startsWith("/login") && !path.startsWith("/register")) {
-        window.location.href = "/login";
+        // Notify listeners (AuthProvider will handle the redirect)
+        notifyAuthFailure();
       }
     }
     return Promise.reject(error);
