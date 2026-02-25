@@ -29,7 +29,7 @@ interface AuthState {
 
   // actions
   checkAuth: () => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User | null>;
   register: (data: {
     name: string;
     email: string;
@@ -37,7 +37,7 @@ interface AuthState {
     type: "buyer" | "seller" | "both";
     address?: string;
     location?: { lat: number; lng: number };
-  }) => Promise<void>;
+  }) => Promise<User | null>;
   logout: () => Promise<void>;
   updateProfile: (data: Record<string, unknown>) => Promise<void>;
   updatePreferences: (data: Record<string, unknown>) => Promise<void>;
@@ -68,7 +68,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true, error: null });
       const res = await authApi.login(email, password);
-      set({ user: res.data.user ?? res.data.data ?? null, loading: false });
+      const user = res.data.user ?? res.data.data ?? null;
+      set({ user, loading: false });
+      return user;
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data
@@ -82,7 +84,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true, error: null });
       const res = await authApi.register(data);
-      set({ user: res.data.user ?? res.data.data ?? null, loading: false });
+      const user = res.data.user ?? res.data.data ?? null;
+      set({ user, loading: false });
+      return user;
     } catch (err: unknown) {
       const message =
         (err as { response?: { data?: { message?: string } } })?.response?.data
