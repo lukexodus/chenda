@@ -69,7 +69,12 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--fresh-border)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-around">
         {items.map((item) => {
-          const active = pathname.startsWith(item.href);
+          // Use exact match for root-level tabs (e.g. /buyer) so sub-routes
+          // like /buyer/orders don't also highlight it.
+          const isRoot = items.some(
+            (other) => other.href !== item.href && other.href.startsWith(item.href)
+          );
+          const active = isRoot ? pathname === item.href : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
