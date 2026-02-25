@@ -32,7 +32,7 @@ export default function BuyerOrdersPage() {
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/orders', {
+      const response = await api.get('/orders', {
         params: {
           role: 'buyer',
           limit: 100,
@@ -41,7 +41,7 @@ export default function BuyerOrdersPage() {
 
       if (response.data.success) {
         // Sort orders by created_at descending (newest first)
-        const sortedOrders = response.data.data.sort(
+        const sortedOrders = (response.data.orders ?? []).sort(
           (a: Order, b: Order) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );

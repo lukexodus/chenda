@@ -47,7 +47,7 @@ export default function SellerOrdersPage() {
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
-      const response = await api.get('/api/orders', {
+      const response = await api.get('/orders', {
         params: {
           role: 'seller',
           limit: 100,

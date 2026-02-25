@@ -72,7 +72,7 @@ export function PasswordChangeForm() {
 
     try {
       setIsLoading(true);
-      await api.put("/api/auth/password", {
+      await api.put("/auth/password", {
         currentPassword: formData.current_password,
         newPassword: formData.new_password,
       });

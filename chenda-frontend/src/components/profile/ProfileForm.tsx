@@ -39,7 +39,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
   const fetchProfile = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get("/api/users/profile");
+      const response = await api.get("/users/profile");
       const profileData: UserProfile = response.data;
       setProfile(profileData);
       setFormData({

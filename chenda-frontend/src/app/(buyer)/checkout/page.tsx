@@ -98,7 +98,7 @@ export default function CheckoutPage() {
         delivery_notes: deliveryNotes.trim() || undefined,
       };
 
-      const response = await api.post('/api/orders', orderData);
+      const response = await api.post('/orders', orderData);
 
       if (response.data.success) {
         const orderId = response.data.data.id;
