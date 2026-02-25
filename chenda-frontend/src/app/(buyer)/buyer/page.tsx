@@ -5,13 +5,21 @@ import { TopHeader, BottomNav } from "@/components/layout/navigation";
 import { SearchForm } from "@/components/buyer/SearchForm";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { SortControls, type SortOption } from "@/components/products/SortControls";
-import { ProductDetail } from "@/components/products/ProductDetail";
+import { PreSearchEmpty } from "@/components/layout/states";
+import dynamic from "next/dynamic";
 import { useSearchStore, type Product } from "@/lib/stores/searchStore";
 
+const ProductDetail = dynamic(
+  () => import("@/components/products/ProductDetail").then((m) => m.ProductDetail),
+  { ssr: false }
+);
+
 export default function BuyerDashboardPage() {
-  const { results, loading } = useSearchStore();
+  const { results, loading, filters } = useSearchStore();
   const [sortBy, setSortBy] = useState<SortOption>("score");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const hasSearched = filters.location !== null;
 
   const sortedResults = [...results].sort((a, b) => {
     switch (sortBy) {
@@ -46,12 +54,17 @@ export default function BuyerDashboardPage() {
           />
         )}
 
-        {/* Product grid */}
-        <ProductGrid
-          products={sortedResults}
-          loading={loading}
-          onProductClick={setSelectedProduct}
-        />
+        {/* Pre-search empty state */}
+        {!hasSearched && !loading && <PreSearchEmpty />}
+
+        {/* Product grid (hidden until a search has been made) */}
+        {(hasSearched || loading) && (
+          <ProductGrid
+            products={sortedResults}
+            loading={loading}
+            onProductClick={setSelectedProduct}
+          />
+        )}
       </main>
 
       <BottomNav />

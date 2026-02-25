@@ -1,17 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShoppingBag, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TopHeader, BottomNav } from '@/components/layout/navigation';
+import { EmptyOrders } from '@/components/layout/states';
 import OrderCard from '@/components/orders/OrderCard';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { Order, OrderStatus } from '@/lib/types/order';
 
 export default function BuyerOrdersPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -102,22 +104,9 @@ export default function BuyerOrdersPage() {
 
           {/* Empty State */}
           {!isLoading && filteredOrders.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <ShoppingBag className="h-16 w-16 text-[var(--fresh-text-muted)] mb-4" />
-              <h3 className="text-lg font-semibold text-[var(--fresh-text-primary)] mb-2">
-                {statusFilter === 'all' ? 'No orders yet' : `No ${statusFilter} orders`}
-              </h3>
-              <p className="text-[var(--fresh-text-muted)] mb-4">
-                {statusFilter === 'all'
-                  ? 'Start shopping for fresh products from nearby sellers'
-                  : `You don't have any ${statusFilter} orders`}
-              </p>
-              {statusFilter === 'all' && (
-                <Button onClick={() => (window.location.href = '/buyer')}>
-                  Start Shopping
-                </Button>
-              )}
-            </div>
+            <EmptyOrders
+              onShop={statusFilter === 'all' ? () => router.push('/buyer') : undefined}
+            />
           )}
 
           {/* Orders List */}

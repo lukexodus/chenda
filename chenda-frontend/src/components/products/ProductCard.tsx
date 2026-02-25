@@ -48,10 +48,14 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
   return (
     <Card
       className={cn(
-        "group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--fresh-border)] bg-white shadow-[var(--shadow-small)] transition-all hover:shadow-[var(--shadow-medium)] cursor-pointer",
+        "group relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--fresh-border)] bg-white shadow-[var(--shadow-small)] transition-all hover:shadow-[var(--shadow-medium)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)]",
         inCart && "ring-2 ring-[var(--fresh-primary)]"
       )}
       onClick={() => onViewDetails?.(product)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onViewDetails?.(product); } }}
+      aria-label={`View details for ${product.name}`}
     >
       {/* Rank Badge - Top Left */}
       {product.rank && product.rank <= 10 && (
@@ -168,6 +172,7 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
               : "bg-[var(--fresh-accent)] hover:bg-[var(--fresh-accent)]/90 text-black"
           )}
           size="sm"
+          aria-label={inCart ? `${product.name} is in cart` : `Add ${product.name} to cart`}
         >
           {inCart ? (
             <>

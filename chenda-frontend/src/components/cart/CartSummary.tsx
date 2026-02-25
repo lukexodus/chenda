@@ -86,18 +86,20 @@ export default function CartSummary({
                     onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                     disabled={item.quantity <= 1}
                     className="h-7 w-7 p-0"
+                    aria-label={`Decrease quantity of ${item.product.name}`}
                   >
-                    <Minus className="h-3 w-3" />
+                    <Minus className="h-3 w-3" aria-hidden="true" />
                   </Button>
-                  <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
+                  <span className="text-sm font-medium w-8 text-center" aria-live="polite" aria-label={`Quantity: ${item.quantity}`}>{item.quantity}</span>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                     disabled={item.quantity >= item.product.quantity}
                     className="h-7 w-7 p-0"
+                    aria-label={`Increase quantity of ${item.product.name}`}
                   >
-                    <Plus className="h-3 w-3" />
+                    <Plus className="h-3 w-3" aria-hidden="true" />
                   </Button>
                 </div>
               )}
@@ -121,8 +123,9 @@ export default function CartSummary({
                   variant="ghost"
                   onClick={() => removeFromCart(item.product.id)}
                   className="text-[var(--fresh-danger)] hover:text-[var(--fresh-danger)] hover:bg-red-50"
+                  aria-label={`Remove ${item.product.name} from cart`}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-4 w-4" aria-hidden="true" />
                 </Button>
               )}
             </div>

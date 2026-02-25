@@ -34,10 +34,11 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+import { MapSkeleton } from "@/components/layout/states";
 
 const ProductMap = dynamic(
   () => import("./ProductMap").then((m) => m.ProductMap),
-  { ssr: false }
+  { ssr: false, loading: () => <MapSkeleton /> }
 );
 
 interface ProductDetailProps {

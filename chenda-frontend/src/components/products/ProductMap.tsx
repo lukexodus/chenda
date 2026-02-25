@@ -77,7 +77,9 @@ export function ProductMap({
   return (
     <div
       ref={mapContainerRef}
-      className="w-full h-[300px] rounded-[var(--radius-card)] overflow-hidden border border-[var(--fresh-border)]"
+      className="w-full h-[200px] sm:h-[300px] rounded-[var(--radius-card)] overflow-hidden border border-[var(--fresh-border)]"
+      aria-label={`Map showing location of ${productName}`}
+      role="img"
     />
   );
 }

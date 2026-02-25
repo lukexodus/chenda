@@ -16,6 +16,7 @@ import { Loader2 } from "lucide-react";
 import { LocationSettings } from "./LocationSettings";
 import { AlgorithmPreferences } from "./AlgorithmPreferences";
 import { PasswordChangeForm } from "./PasswordChangeForm";
+import { FormSkeleton } from "@/components/layout/states";
 
 interface ProfileFormProps {
   children?: React.ReactNode; // For tab content from parent
@@ -92,11 +93,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <FormSkeleton rows={4} />;
   }
 
   return (
