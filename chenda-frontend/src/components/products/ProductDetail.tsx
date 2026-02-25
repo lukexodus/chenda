@@ -32,8 +32,13 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ProductMap } from "./ProductMap";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+
+const ProductMap = dynamic(
+  () => import("./ProductMap").then((m) => m.ProductMap),
+  { ssr: false }
+);
 
 interface ProductDetailProps {
   product: Product | null;
