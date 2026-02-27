@@ -99,6 +99,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     try {
       await authApi.logout();
+    } catch (err: unknown) {
+      // 401 means session already expired — treat as already logged out
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status !== 401) throw err;
     } finally {
       set({ user: null, loading: false, error: null });
     }

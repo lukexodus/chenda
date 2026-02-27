@@ -5,6 +5,8 @@
  * Executes SQL seed files to populate database with initial data
  */
 
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+
 const { Client } = require('pg');
 const fs = require('fs').promises;
 const path = require('path');

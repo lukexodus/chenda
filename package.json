@@ -24,6 +24,7 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
+    "lightningcss": "^1.31.1",
     "pg": "^8.18.0"
   },
   "devDependencies": {
