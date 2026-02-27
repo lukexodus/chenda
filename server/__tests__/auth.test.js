@@ -18,7 +18,7 @@ let app;
 
 beforeAll(async () => {
   await globalSetup();
-  
+
   // Import app after environment is set up
   app = require('../app');
 }, 60000);
@@ -124,6 +124,73 @@ describe('POST /api/auth/register', () => {
 
     expect(response.status).toBe(201);
     expect(response.body.user.type).toBe('seller');
+  });
+
+  // --- Security Tests ---
+
+  test('should fail with password that has no digit (complexity rule)', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'passwordonly', // letters only, no digit
+        type: 'buyer'
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+    expect(response.body.message).toContain('letter and one number');
+  });
+
+  test('should fail with password that has no letter (complexity rule)', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: '12345678', // digits only, no letter
+        type: 'buyer'
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+    expect(response.body.message).toContain('letter and one number');
+  });
+
+  test('should fail with password exceeding 128 characters (bcrypt DoS prevention)', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'John Doe',
+        email: 'john@example.com',
+        password: 'Ab1' + 'x'.repeat(130), // 133 chars — over limit
+        type: 'buyer'
+      });
+
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+    expect(response.body.message).toContain('128 characters');
+  });
+
+  test('should sanitize XSS payload in name field', async () => {
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: '<script>alert(1)</script>John',
+        email: 'xss@example.com',
+        password: 'password123',
+        type: 'buyer'
+      });
+
+    // Should either succeed with sanitized name, or fail with validation
+    // but NEVER reflect <script> tags in the response
+    const responseText = JSON.stringify(response.body);
+    expect(responseText).not.toContain('<script>');
+    // If success, verify name does not contain script tags
+    if (response.status === 201) {
+      expect(response.body.user.name).not.toContain('<script>');
+    }
   });
 });
 

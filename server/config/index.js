@@ -12,7 +12,7 @@ module.exports = {
     isDevelopment: process.env.NODE_ENV !== 'production',
     isProduction: process.env.NODE_ENV === 'production',
   },
-  
+
   // Database settings
   database: {
     host: process.env.DB_HOST || 'localhost',
@@ -21,7 +21,7 @@ module.exports = {
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || '',
   },
-  
+
   // Session settings
   session: {
     secret: process.env.SESSION_SECRET || 'chenda-secret-key-change-this-in-production',
@@ -29,25 +29,31 @@ module.exports = {
     name: 'chenda.sid',
     secure: process.env.NODE_ENV === 'production', // HTTPS only in production
   },
-  
+
   // CORS settings
   cors: {
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
   },
-  
-  // Rate limiting settings
+
+  // Rate limiting settings (general API)
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 900000, // 15 minutes
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
   },
-  
+
+  // Auth-specific rate limiting (stricter — prevents brute force attacks)
+  authRateLimit: {
+    windowMs: parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS) || 900000, // 15 minutes
+    max: parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS) || 20, // 20 attempts per 15 min
+  },
+
   // Pagination defaults
   pagination: {
     defaultLimit: 20,
     maxLimit: 100,
   },
-  
+
   // File upload settings
   upload: {
     maxFileSize: 5 * 1024 * 1024, // 5MB

@@ -1,8 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const rateLimit = require('express-rate-limit');
 const passport = require('../config/passport');
 const authController = require('../controllers/authController');
 const { isAuthenticated } = require('../middleware/authenticate');
+const config = require('../config');
+
+/**
+ * Strict rate limiter for authentication endpoints.
+ * Prevents brute-force and credential stuffing attacks.
+ */
+const authLimiter = rateLimit({
+  windowMs: config.authRateLimit.windowMs,
+  max: config.authRateLimit.max,
+  message: {
+    success: false,
+    message: 'Too many authentication attempts. Please try again in 15 minutes.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true, // Only count failed attempts toward the limit
+});
 
 /**
  * Authentication Routes
@@ -14,14 +32,14 @@ const { isAuthenticated } = require('../middleware/authenticate');
  * @desc    Register a new user
  * @access  Public
  */
-router.post('/register', authController.register);
+router.post('/register', authLimiter, authController.register);
 
 /**
  * @route   POST /api/auth/login
  * @desc    Login user and create session
  * @access  Public
  */
-router.post('/login', (req, res, next) => {
+router.post('/login', authLimiter, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       return next(err);

@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   description:
     "Proximity & freshness marketplace for perishable goods. Find the freshest products near you.",
   icons: { icon: "/chenda.png" },
+  // Security: prevent browsers from MIME-sniffing responses
+  other: {
+    "X-Content-Type-Options": "nosniff",
+  },
 };
 
 export default function RootLayout({
@@ -29,6 +33,34 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Content-Security-Policy: restricts resource origins to prevent XSS */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content={[
+            "default-src 'self'",
+            // Scripts: self + Next.js inline scripts
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            // Styles: self + inline (shadcn/ui uses inline styles)
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
+            // Fonts
+            "font-src 'self' https://fonts.gstatic.com",
+            // Images: self + data URIs (Next.js image optimization) + OSM tile servers
+            "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://nominatim.openstreetmap.org",
+            // API connections: self + backend + OSM APIs
+            "connect-src 'self' http://localhost:3001 https://nominatim.openstreetmap.org",
+            // Map tiles from unpkg (Leaflet)
+            "worker-src blob:",
+            "frame-ancestors 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+          ].join("; ")}
+        />
+        {/* Prevent clickjacking */}
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        {/* Disable MIME type sniffing */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

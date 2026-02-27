@@ -1,0 +1,272 @@
+
+> chenda-server@1.0.0 test
+> cross-env NODE_ENV=test jest --runInBand --forceExit
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    
+    🧪 Setting up test environment...
+
+      at log (__tests__/setup.js:193:11)
+
+  console.error
+    ❌ Error creating test database: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+
+    [0m [90m 59 |[39m     }
+     [90m 60 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }[0m
+
+      at error (__tests__/setup.js:61:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/auth.test.js:20:3)
+
+  console.error
+    💡 Tip: Manually create the database with: createdb chenda_test
+
+    [0m [90m 60 |[39m   } [36mcatch[39m (error) {
+     [90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+    [31m[1m>[22m[39m[90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }
+     [90m 65 |[39m }[0m
+
+      at error (__tests__/setup.js:62:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/auth.test.js:20:3)
+
+  console.error
+    
+    ❌ Test environment setup failed
+
+    [0m [90m 199 |[39m     console[33m.[39mlog([32m'\n✅ Test environment ready\n'[39m)[33m;[39m
+     [90m 200 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 201 |[39m     console[33m.[39merror([32m'\n❌ Test environment setup failed\n'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 202 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 203 |[39m   }
+     [90m 204 |[39m }[0m
+
+      at error (__tests__/setup.js:201:13)
+      at Object.<anonymous> (__tests__/auth.test.js:20:3)
+
+  console.log
+    
+    🧹 Cleaning up test environment...
+
+      at log (__tests__/setup.js:210:11)
+
+  console.log
+    ✅ Test environment cleaned up
+
+      at log (__tests__/setup.js:215:13)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env.test -- tip: 🛡️ auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    
+    🧪 Setting up test environment...
+
+      at log (__tests__/setup.js:193:11)
+
+  console.error
+    ❌ Error creating test database: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+
+    [0m [90m 59 |[39m     }
+     [90m 60 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }[0m
+
+      at error (__tests__/setup.js:61:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/users.test.js:20:3)
+
+  console.error
+    💡 Tip: Manually create the database with: createdb chenda_test
+
+    [0m [90m 60 |[39m   } [36mcatch[39m (error) {
+     [90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+    [31m[1m>[22m[39m[90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }
+     [90m 65 |[39m }[0m
+
+      at error (__tests__/setup.js:62:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/users.test.js:20:3)
+
+  console.error
+    
+    ❌ Test environment setup failed
+
+    [0m [90m 199 |[39m     console[33m.[39mlog([32m'\n✅ Test environment ready\n'[39m)[33m;[39m
+     [90m 200 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 201 |[39m     console[33m.[39merror([32m'\n❌ Test environment setup failed\n'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 202 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 203 |[39m   }
+     [90m 204 |[39m }[0m
+
+      at error (__tests__/setup.js:201:13)
+      at Object.<anonymous> (__tests__/users.test.js:20:3)
+
+  console.log
+    
+    🧹 Cleaning up test environment...
+
+      at log (__tests__/setup.js:210:11)
+
+  console.log
+    ✅ Test environment cleaned up
+
+      at log (__tests__/setup.js:215:13)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env.test -- tip: ⚙️  override existing env vars with { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    
+    🧪 Setting up test environment...
+
+      at log (__tests__/setup.js:193:11)
+
+  console.error
+    ❌ Error creating test database: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+
+    [0m [90m 59 |[39m     }
+     [90m 60 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }[0m
+
+      at error (__tests__/setup.js:61:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/products.test.js:20:3)
+
+  console.error
+    💡 Tip: Manually create the database with: createdb chenda_test
+
+    [0m [90m 60 |[39m   } [36mcatch[39m (error) {
+     [90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+    [31m[1m>[22m[39m[90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }
+     [90m 65 |[39m }[0m
+
+      at error (__tests__/setup.js:62:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/products.test.js:20:3)
+
+  console.error
+    
+    ❌ Test environment setup failed
+
+    [0m [90m 199 |[39m     console[33m.[39mlog([32m'\n✅ Test environment ready\n'[39m)[33m;[39m
+     [90m 200 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 201 |[39m     console[33m.[39merror([32m'\n❌ Test environment setup failed\n'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 202 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 203 |[39m   }
+     [90m 204 |[39m }[0m
+
+      at error (__tests__/setup.js:201:13)
+      at Object.<anonymous> (__tests__/products.test.js:20:3)
+
+  console.log
+    
+    🧹 Cleaning up test environment...
+
+      at log (__tests__/setup.js:210:11)
+
+  console.log
+    ✅ Test environment cleaned up
+
+      at log (__tests__/setup.js:215:13)
+
+  console.log
+    [dotenv@17.3.1] injecting env (0) from .env.test -- tip: 🛡️ auth for agents: https://vestauth.com
+
+      at _log (node_modules/dotenv/lib/main.js:139:11)
+
+  console.log
+    
+    🧪 Setting up test environment...
+
+      at log (__tests__/setup.js:193:11)
+
+  console.error
+    ❌ Error creating test database: SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string
+
+    [0m [90m 59 |[39m     }
+     [90m 60 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }[0m
+
+      at error (__tests__/setup.js:61:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/search.test.js:17:3)
+
+  console.error
+    💡 Tip: Manually create the database with: createdb chenda_test
+
+    [0m [90m 60 |[39m   } [36mcatch[39m (error) {
+     [90m 61 |[39m     console[33m.[39merror([32m'❌ Error creating test database:'[39m[33m,[39m error[33m.[39mmessage)[33m;[39m
+    [31m[1m>[22m[39m[90m 62 |[39m     console[33m.[39merror([32m'💡 Tip: Manually create the database with: createdb chenda_test'[39m)[33m;[39m
+     [90m    |[39m             [31m[1m^[22m[39m
+     [90m 63 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 64 |[39m   }
+     [90m 65 |[39m }[0m
+
+      at error (__tests__/setup.js:62:13)
+      at globalSetup (__tests__/setup.js:196:5)
+      at Object.<anonymous> (__tests__/search.test.js:17:3)
+
+  console.error
+    
+    ❌ Test environment setup failed
+
+    [0m [90m 199 |[39m     console[33m.[39mlog([32m'\n✅ Test environment ready\n'[39m)[33m;[39m
+     [90m 200 |[39m   } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 201 |[39m     console[33m.[39merror([32m'\n❌ Test environment setup failed\n'[39m)[33m;[39m
+     [90m     |[39m             [31m[1m^[22m[39m
+     [90m 202 |[39m     [36mthrow[39m error[33m;[39m
+     [90m 203 |[39m   }
+     [90m 204 |[39m }[0m
+
+      at error (__tests__/setup.js:201:13)
+      at Object.<anonymous> (__tests__/search.test.js:17:3)
+
+  console.log
+    
+    🧹 Cleaning up test environment...
+
+      at log (__tests__/setup.js:210:11)
+
+  console.log
+    ✅ Test environment cleaned up
+
+      at log (__tests__/setup.js:215:13)
+

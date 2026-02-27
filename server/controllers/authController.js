@@ -27,10 +27,21 @@ exports.register = asyncHandler(async (req, res) => {
     throw new Error('Please provide a valid email address');
   }
 
-  // Validate password length
+  // Validate password length and complexity
   if (password.length < 8) {
     res.status(400);
     throw new Error('Password must be at least 8 characters long');
+  }
+
+  if (password.length > 128) {
+    res.status(400);
+    throw new Error('Password must not exceed 128 characters');
+  }
+
+  // Must contain at least one letter and one digit
+  if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+    res.status(400);
+    throw new Error('Password must contain at least one letter and one number');
   }
 
   // Validate user type
@@ -180,6 +191,17 @@ exports.updatePassword = asyncHandler(async (req, res) => {
   if (newPassword.length < 8) {
     res.status(400);
     throw new Error('New password must be at least 8 characters long');
+  }
+
+  if (newPassword.length > 128) {
+    res.status(400);
+    throw new Error('New password must not exceed 128 characters');
+  }
+
+  // Must contain at least one letter and one digit
+  if (!/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+    res.status(400);
+    throw new Error('New password must contain at least one letter and one number');
   }
 
   // Get user with password hash

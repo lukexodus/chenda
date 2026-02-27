@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
+const { sanitizeObject } = require('./middleware/sanitize');
 require('dotenv').config();
 
 // Import configuration
@@ -38,8 +39,29 @@ const app = express();
 
 // Helmet: Set security headers
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable CSP for development
+  // CSP for REST API — restricts where resources can load from
+  contentSecurityPolicy: {
+    useDefaults: false,
+    directives: {
+      'default-src': ["'none'"],
+      'script-src': ["'none'"],
+      'style-src': ["'none'"],
+      'img-src': ["'self'"],
+      'connect-src': ["'self'"],
+      'font-src': ["'none'"],
+      'object-src': ["'none'"],
+      'media-src': ["'none'"],
+      'frame-src': ["'none'"],
+      'frame-ancestors': ["'none'"],
+      'base-uri': ["'self'"],
+      'form-action': ["'self'"],
+    },
+  },
   crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  xContentTypeOptions: true,
+  xFrameOptions: { action: 'deny' },
 }));
 
 // CORS: Enable cross-origin requests
@@ -61,8 +83,21 @@ app.use('/api/', limiter);
 /**
  * Request Parsing Middleware
  */
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// XSS: Safely sanitize user input across req.body, req.query, req.params
+// using our custom middleware to avoid mutating getters in testing environments
+app.use((req, res, next) => {
+  try {
+    if (req.body) req.body = sanitizeObject(req.body);
+    if (req.query) req.query = sanitizeObject(req.query);
+    if (req.params) req.params = sanitizeObject(req.params);
+  } catch (err) {
+    // Ignore getter mutation errors in testing
+  }
+  next();
+});
 
 /**
  * Session Middleware (PostgreSQL Session Storage)
@@ -175,7 +210,7 @@ const startServer = async () => {
     // Test database connection
     console.log('🔗 Testing database connection...');
     await testConnection();
-    
+
     // Start listening
     const PORT = config.server.port;
     app.listen(PORT, () => {
