@@ -17,7 +17,7 @@ import {
 import OrderCard from '@/components/orders/OrderCard';
 import OrderDetail from '@/components/orders/OrderDetail';
 import { useToast } from '@/hooks/use-toast';
-import { api } from '@/lib/api';
+import api from '@/lib/api';
 import type { Order, OrderStatus } from '@/lib/types/order';
 
 export default function SellerOrdersPage() {
@@ -56,7 +56,8 @@ export default function SellerOrdersPage() {
 
       if (response.data.success) {
         // Sort orders by created_at descending (newest first)
-        const sortedOrders = response.data.data.sort(
+        const raw: Order[] = response.data.data ?? response.data.orders ?? [];
+        const sortedOrders = [...raw].sort(
           (a: Order, b: Order) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
