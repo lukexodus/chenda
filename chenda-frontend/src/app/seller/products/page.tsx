@@ -36,7 +36,7 @@ export default function SellerProductsPage() {
   }, [fetchProducts]);
 
   const handleEdit = (product: SellerProduct) => {
-    router.push(`/products/${product.id}/edit`);
+    router.push(`/seller/products/${product.id}/edit`);
   };
 
   const handleDelete = async (product: SellerProduct) => {
