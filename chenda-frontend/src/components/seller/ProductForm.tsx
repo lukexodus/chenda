@@ -99,7 +99,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
       formData.append("image", imageFile);
 
       const response = await productsApi.uploadImage(formData);
-      const imageUrl = response.data.image_url;
+      const imageUrl = response.data.data.url;
       setUploadedImageUrl(imageUrl);
       toast.success("Image uploaded successfully");
       return imageUrl;
