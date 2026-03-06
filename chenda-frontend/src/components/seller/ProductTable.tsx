@@ -1,7 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { MoreHorizontal, Pencil, Trash2, Calendar, Package } from "lucide-react";
+import Image from "next/image";
+import { MoreHorizontal, Pencil, Trash2, Package } from "lucide-react";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+function getImageSrc(image_url?: string): string | null {
+  if (!image_url) return null;
+  if (image_url.startsWith("http")) return image_url;
+  return `${API_URL}${image_url}`;
+}
+
+function getProductName(product: { name?: string; product_type?: { name: string } }): string {
+  return product.product_type?.name ?? product.name ?? "Unknown";
+}
+
+function getShelfLifeDays(product: { total_shelf_life_days?: number; product_type?: { default_shelf_life_days: number } }): number {
+  return product.product_type?.default_shelf_life_days ?? product.total_shelf_life_days ?? 0;
+}
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -73,10 +90,10 @@ export function ProductTable({ products, onEdit, onDelete, isLoading }: ProductT
 
   const sortedProducts = [...products].sort((a, b) => {
     if (sortBy === "name") {
-      return a.name.localeCompare(b.name);
+      return getProductName(a).localeCompare(getProductName(b));
     } else if (sortBy === "freshness") {
-      const aFreshness = calculateFreshness(a.days_already_used, a.total_shelf_life_days);
-      const bFreshness = calculateFreshness(b.days_already_used, b.total_shelf_life_days);
+      const aFreshness = calculateFreshness(a.days_already_used, getShelfLifeDays(a));
+      const bFreshness = calculateFreshness(b.days_already_used, getShelfLifeDays(b));
       return aFreshness - bFreshness; // Ascending (critical first)
     } else {
       return a.price - b.price;
@@ -151,27 +168,47 @@ export function ProductTable({ products, onEdit, onDelete, isLoading }: ProductT
           </TableHeader>
           <TableBody>
             {sortedProducts.map((product) => {
+              const shelfLifeDays = getShelfLifeDays(product);
               const freshnessPercent = calculateFreshness(
                 product.days_already_used,
-                product.total_shelf_life_days
+                shelfLifeDays
               );
               const daysRemaining = calculateDaysRemaining(
                 product.days_already_used,
-                product.total_shelf_life_days,
+                shelfLifeDays,
                 product.listed_date
               );
               const status = getFreshnessStatus(freshnessPercent);
+              const displayName = getProductName(product);
+              const imageSrc = getImageSrc(product.image_url);
 
               return (
                 <TableRow key={product.id}>
                   <TableCell>
-                    <div>
-                      <div className="font-medium">{product.name}</div>
-                      {product.name_subtitle && (
-                        <div className="text-xs text-[var(--fresh-text-muted)]">
-                          {product.name_subtitle}
+                    <div className="flex items-center gap-3">
+                      {imageSrc ? (
+                        <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border">
+                          <Image
+                            src={imageSrc}
+                            alt={displayName}
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md border bg-gray-50">
+                          <Package className="h-5 w-5 text-gray-300" />
                         </div>
                       )}
+                      <div>
+                        <div className="font-medium">{displayName}</div>
+                        {product.product_type?.name_subtitle && (
+                          <div className="text-xs text-[var(--fresh-text-muted)]">
+                            {product.product_type.name_subtitle}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>₱{product.price.toFixed(2)}</TableCell>
@@ -229,27 +266,47 @@ export function ProductTable({ products, onEdit, onDelete, isLoading }: ProductT
       {/* Mobile Card View */}
       <div className="space-y-3 md:hidden">
         {sortedProducts.map((product) => {
+          const shelfLifeDays = getShelfLifeDays(product);
           const freshnessPercent = calculateFreshness(
             product.days_already_used,
-            product.total_shelf_life_days
+            shelfLifeDays
           );
           const daysRemaining = calculateDaysRemaining(
             product.days_already_used,
-            product.total_shelf_life_days,
+            shelfLifeDays,
             product.listed_date
           );
           const status = getFreshnessStatus(freshnessPercent);
+          const displayName = getProductName(product);
+          const imageSrc = getImageSrc(product.image_url);
 
           return (
             <div key={product.id} className="rounded-lg border bg-white p-4">
               <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h3 className="font-medium">{product.name}</h3>
-                  {product.name_subtitle && (
-                    <p className="text-xs text-[var(--fresh-text-muted)]">
-                      {product.name_subtitle}
-                    </p>
+                <div className="flex items-start gap-3 flex-1">
+                  {imageSrc ? (
+                    <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border">
+                      <Image
+                        src={imageSrc}
+                        alt={displayName}
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md border bg-gray-50">
+                      <Package className="h-6 w-6 text-gray-300" />
+                    </div>
                   )}
+                  <div>
+                    <h3 className="font-medium">{displayName}</h3>
+                    {product.product_type?.name_subtitle && (
+                      <p className="text-xs text-[var(--fresh-text-muted)]">
+                        {product.product_type.name_subtitle}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

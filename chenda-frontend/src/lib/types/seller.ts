@@ -14,7 +14,7 @@ export interface ProductType {
 
 export interface SellerProduct {
   id: number;
-  name: string;
+  name?: string;
   name_subtitle?: string;
   seller_id: number;
   product_type_id: number;
@@ -22,7 +22,7 @@ export interface SellerProduct {
   quantity: number;
   unit: string;
   days_already_used: number;
-  total_shelf_life_days: number;
+  total_shelf_life_days?: number;
   listed_date: string;
   image_url?: string;
   description?: string;
@@ -34,6 +34,12 @@ export interface SellerProduct {
   };
   created_at: string;
   updated_at: string;
+  product_type?: {
+    id: number;
+    name: string;
+    name_subtitle?: string;
+    default_shelf_life_days: number;
+  };
 }
 
 export interface SellerAnalytics {
