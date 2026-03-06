@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store";
 import { Loader2 } from "lucide-react";
@@ -24,24 +24,27 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const router = useRouter();
   const { user, loading } = useAuthStore();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    // Still loading auth state
-    if (loading) return;
+    // Still loading auth state or already redirecting
+    if (loading || isRedirecting) return;
 
     // Not authenticated - redirect to login
     if (!user) {
-      router.push("/login");
+      setIsRedirecting(true);
+      router.replace("/login");
       return;
     }
 
     // Check required type if specified
     if (requiredType && user.type !== requiredType && user.type !== "both") {
       // User doesn't have required type - redirect to appropriate dashboard
+      setIsRedirecting(true);
       if (user.type === "buyer") {
-        router.push("/buyer");
+        router.replace("/buyer");
       } else if (user.type === "seller") {
-        router.push("/seller/dashboard");
+        router.replace("/seller/dashboard");
       }
       return;
     }
@@ -52,32 +55,33 @@ export function ProtectedRoute({
         allowedTypes.includes(user.type) || user.type === "both";
       if (!hasAccess) {
         // User doesn't have access - redirect to appropriate dashboard
+        setIsRedirecting(true);
         if (user.type === "buyer") {
-          router.push("/buyer");
+          router.replace("/buyer");
         } else if (user.type === "seller") {
-          router.push("/seller/dashboard");
+          router.replace("/seller/dashboard");
         } else {
-          router.push("/");
+          router.replace("/");
         }
       }
     }
   }, [user, loading, requiredType, allowedTypes, router]);
 
-  // Show loading spinner while checking auth
-  if (loading) {
+  // Show loading spinner while checking auth or redirecting
+  if (loading || isRedirecting) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <Loader2 className="mx-auto h-8 w-8 animate-spin text-[var(--fresh-primary)]" />
           <p className="mt-4 text-sm text-[var(--fresh-text-muted)]">
-            Loading...
+            {isRedirecting ? "Redirecting..." : "Loading..."}
           </p>
         </div>
       </div>
     );
   }
 
-  // Not authenticated - don't render children (redirect will happen)
+  // Not authenticated - shouldn't reach here but return null as fallback
   if (!user) {
     return null;
   }

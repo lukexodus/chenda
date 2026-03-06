@@ -58,11 +58,12 @@ export function LoginForm() {
         : "/buyer";
       router.push(redirectPath);
     } catch (error) {
-      console.error("Login error:", error);
+      // Extract user-friendly error message
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response
+        ?.data?.message || "Please check your credentials and try again.";
+      
       toast.error("Login failed", {
-        description:
-          (error as { response?: { data?: { message?: string } } })?.response
-            ?.data?.message || "Please check your credentials and try again.",
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);

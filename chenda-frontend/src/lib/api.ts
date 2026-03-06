@@ -48,7 +48,10 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401 && typeof window !== "undefined") {
       const path = window.location.pathname;
-      if (!path.startsWith("/login") && !path.startsWith("/register")) {
+      const url = error.config?.url || "";
+      // Don't trigger auth failure for logout endpoint (already logging out)
+      // or if we're on login/register pages
+      if (!url.includes("/auth/logout") && !path.startsWith("/login") && !path.startsWith("/register")) {
         // Notify listeners (AuthProvider will handle the redirect)
         notifyAuthFailure();
       }

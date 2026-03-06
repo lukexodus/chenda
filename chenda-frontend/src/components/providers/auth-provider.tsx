@@ -22,7 +22,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthFailure(() => {
-      logout();
+      // Only call logout API if user exists, otherwise just redirect
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser) {
+        logout();
+      }
       router.push("/login");
     });
     return () => { unsubscribe(); };
