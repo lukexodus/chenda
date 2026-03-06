@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e6]:
+      - img "Chenda Logo" [ref=e7]
+      - heading "Chenda" [level=1] [ref=e8]
+    - heading "Sign In" [level=2] [ref=e9]
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: Email
+        - textbox "Email" [ref=e13]:
+          - /placeholder: your.email@example.com
+          - text: invalid@example.com
+      - generic [ref=e14]:
+        - generic [ref=e15]: Password
+        - textbox "Password" [ref=e16]:
+          - /placeholder: ••••••••
+          - text: wrongpassword
+      - generic [ref=e17]:
+        - checkbox "Remember me" [ref=e18]
+        - checkbox
+        - generic [ref=e19] [cursor=pointer]: Remember me
+      - button "Sign In" [ref=e20]
+      - paragraph [ref=e21]:
+        - text: Don't have an account?
+        - link "Create one" [ref=e22] [cursor=pointer]:
+          - /url: /register
+  - region "Notifications alt+T"
+  - generic [ref=e27] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e28]:
+      - img [ref=e29]
+    - generic [ref=e32]:
+      - button "Open issues overlay" [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]: "0"
+          - generic [ref=e36]: "1"
+        - generic [ref=e37]: Issue
+      - button "Collapse issues badge" [ref=e38]:
+        - img [ref=e39]
+  - alert [ref=e41]
+```

@@ -6,8 +6,18 @@
   "directories": {
     "doc": "docs"
   },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "e2e:setup": "node e2e/scripts/setup-db.js",
+    "e2e:teardown": "node e2e/scripts/teardown-db.js",
+    "e2e:clean": "node e2e/scripts/clean-data.js",
+    "e2e:test": "playwright test",
+    "e2e:test:chromium": "playwright test --project=chromium",
+    "e2e:test:firefox": "playwright test --project=firefox",
+    "e2e:test:headed": "playwright test --headed",
+    "e2e:test:debug": "playwright test --debug",
+    "e2e:report": "playwright show-report e2e/test-results/html"
   },
   "repository": {
     "type": "git",
@@ -16,7 +26,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/lukexodus/chenda/issues"
   },
@@ -28,6 +37,8 @@
     "pg": "^8.18.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@playwright/test": "^1.58.2",
+    "nodemon": "^3.1.11",
+    "playwright": "^1.58.2"
   }
 }

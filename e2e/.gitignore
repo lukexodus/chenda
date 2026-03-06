@@ -1,0 +1,18 @@
+# Playwright Test Results
+test-results/
+playwright-report/
+
+# Screenshots for debugging
+screenshots/
+
+# Playwright browser binaries
+.cache/
+
+# Playwright state
+.auth/
+
+# Node modules
+node_modules/
+
+# Traces
+trace.zip

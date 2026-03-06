@@ -12,7 +12,8 @@ import { toast } from "sonner";
 import api from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
 import type { UserProfile, ProfileFormData } from "@/lib/types/profile";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { LocationSettings } from "./LocationSettings";
 import { AlgorithmPreferences } from "./AlgorithmPreferences";
 import { PasswordChangeForm } from "./PasswordChangeForm";
@@ -23,9 +24,11 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ children }: ProfileFormProps) {
-  const { user, updateProfile } = useAuthStore();
+  const { user, updateProfile, logout } = useAuthStore();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [formData, setFormData] = useState<ProfileFormData>({
     name: "",
@@ -44,8 +47,8 @@ export function ProfileForm({ children }: ProfileFormProps) {
       const profileData: UserProfile = response.data;
       setProfile(profileData);
       setFormData({
-        name: profileData.name,
-        type: profileData.type,
+        name: profileData.name ?? "",
+        type: profileData.type ?? "buyer",
       });
     } catch (error: any) {
       console.error("Failed to fetch profile:", error);
@@ -82,7 +85,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
     }
   };
 
-  // Generate initials from name
+    // Generate initials from name
   const getInitials = (name: string) => {
     if (!name) return "U";
     const parts = name.trim().split(" ");
@@ -192,6 +195,26 @@ export function ProfileForm({ children }: ProfileFormProps) {
               <Button onClick={handleSaveProfile} disabled={isSaving}>
                 {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save Changes
+              </Button>
+            </div>
+
+            {/* Logout */}
+            <div className="border-t pt-4">
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-red-500 hover:bg-red-50 hover:text-red-600"
+                onClick={async () => {
+                  setIsLoggingOut(true);
+                  await logout();
+                  toast.success("Logged out");
+                  router.push("/");
+                }}
+                disabled={isLoggingOut}
+              >
+                {isLoggingOut
+                  ? <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  : <LogOut className="mr-2 h-4 w-4" />}
+                Log Out
               </Button>
             </div>
           </CardContent>
