@@ -26,7 +26,7 @@ interface ProductFormProps {
 }
 
 const STORAGE_CONDITIONS = [
-  { value: "room_temp", label: "Room Temperature" },
+  { value: "pantry", label: "Room Temperature (Pantry)" },
   { value: "refrigerated", label: "Refrigerated" },
   { value: "frozen", label: "Frozen" },
 ];
@@ -37,6 +37,13 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
 
+  // Normalize storage condition from old "room_temp" to "pantry"
+  const normalizeStorageCondition = (condition?: string) => {
+    if (condition === "room_temp") return "pantry";
+    if (!condition) return "pantry";
+    return condition;
+  };
+
   const [selectedType, setSelectedType] = useState<ProductType | null>(null);
   const [price, setPrice] = useState(product?.price.toString() || "");
   const [quantity, setQuantity] = useState(product?.quantity.toString() || "");
@@ -44,7 +51,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const [daysUsed, setDaysUsed] = useState(product?.days_already_used.toString() || "0");
   const [description, setDescription] = useState(product?.description || "");
   const [storageCondition, setStorageCondition] = useState(
-    product?.storage_condition || "refrigerated"
+    normalizeStorageCondition(product?.storage_condition)
   );
   
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -143,6 +150,12 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
       return;
     }
 
+    // Check if user has location set
+    if (!user?.location?.lat || !user?.location?.lng) {
+      toast.error("Please set your location in Profile → Location before creating products");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -159,6 +172,11 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
         description: description.trim() || undefined,
         storage_condition: storageCondition,
         image_url: finalImageUrl || undefined,
+        location: {
+          lat: user.location.lat,
+          lng: user.location.lng,
+        },
+        address: user.address || undefined,
       };
 
       // Create or update product
@@ -366,7 +384,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
             {/* Days Used */}
             <div className="space-y-1.5">
               <Label htmlFor="daysUsed" className="text-sm font-medium">
-                Days Already Used <span className="text-red-500">*</span>
+                Days Since Harvest <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="daysUsed"
