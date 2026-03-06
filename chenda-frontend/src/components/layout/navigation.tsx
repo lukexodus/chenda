@@ -110,7 +110,7 @@ export function BottomNav() {
   const user = useAuthStore((s) => s.user);
 
   const items: NavItem[] =
-    user?.type === "seller" ? sellerNav : buyerNav;
+    user?.type === "seller" || user?.type === "both" ? sellerNav : buyerNav;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--fresh-border)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">

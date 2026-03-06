@@ -50,7 +50,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
     try {
       setIsLoading(true);
       const response = await api.get("/users/profile");
-      const profileData: UserProfile = response.data;
+      const profileData: UserProfile = response.data.data || response.data;
       setProfile(profileData);
       setFormData({
         name: profileData.name ?? "",
@@ -77,6 +77,9 @@ export function ProfileForm({ children }: ProfileFormProps) {
     try {
       setIsSaving(true);
       await updateProfile(formData as unknown as Record<string, unknown>);
+      
+      // Re-fetch profile to update UI with latest data
+      await fetchProfile();
       
       toast.success("Profile updated", {
         description: "Your changes have been saved successfully",

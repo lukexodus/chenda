@@ -958,17 +958,17 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Goal**: Secure the application
 
 #### Subtasks:
-- [ ] 3.4.1: Backend security
+- [x] 3.4.1: Backend security
   - Rate limiting (express-rate-limit)
   - Helmet.js (security headers)
   - Input sanitization
   - SQL injection prevention (parameterized queries)
   - XSS prevention
-- [ ] 3.4.2: Frontend security
+- [x] 3.4.2: Frontend security
   - Sanitize user inputs
   - HTTPS enforcement (if deploying)
   - Secure cookie settings
-- [ ] 3.4.3: Authentication security
+- [x] 3.4.3: Authentication security
   - Password complexity requirements
   - Session timeout
   - CSRF protection (if needed)
