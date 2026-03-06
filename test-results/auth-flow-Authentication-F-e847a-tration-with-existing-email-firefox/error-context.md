@@ -1,0 +1,68 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Chenda home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: Chenda
+      - generic [ref=e6]:
+        - link "Cart" [ref=e7] [cursor=pointer]:
+          - /url: /cart
+          - img [ref=e8]
+        - button "Log out" [ref=e12]:
+          - img [ref=e13]
+    - main [ref=e17]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Your Location
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - textbox "Enter address or city..." [ref=e28]
+          - generic [ref=e29]:
+            - button "Use My Location" [ref=e30]:
+              - img
+              - generic [ref=e31]: Use My Location
+            - button "Saved Location" [disabled]:
+              - img
+              - text: Saved Location
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: "Proximity Weight: 50%"
+            - slider [ref=e39]
+            - paragraph [ref=e40]: Prioritize nearby products
+          - generic [ref=e41]:
+            - generic [ref=e42]: "Freshness Weight: 50%"
+            - slider [ref=e47]
+            - paragraph [ref=e48]: Prioritize fresher products
+        - button "Advanced Options" [ref=e49]:
+          - img
+          - text: Advanced Options
+          - img
+        - button "Search Fresh Products" [disabled]:
+          - img
+          - text: Search Fresh Products
+      - status [ref=e50]:
+        - img [ref=e51]
+        - heading "Find fresh products near you" [level=3] [ref=e54]
+        - paragraph [ref=e55]: Enter your location above and press Search to discover nearby fresh products ranked by proximity and freshness.
+    - navigation [ref=e56]:
+      - generic [ref=e57]:
+        - link "Search" [ref=e58] [cursor=pointer]:
+          - /url: /buyer
+          - img [ref=e59]
+          - generic [ref=e62]: Search
+        - link "Orders" [ref=e63] [cursor=pointer]:
+          - /url: /buyer/orders
+          - img [ref=e64]
+          - generic [ref=e68]: Orders
+        - link "Profile" [ref=e69] [cursor=pointer]:
+          - /url: /buyer/profile
+          - img [ref=e70]
+          - generic [ref=e73]: Profile
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e79] [cursor=pointer]:
+    - img [ref=e80]
+  - alert [ref=e84]: Chenda — Fresh Market
+```

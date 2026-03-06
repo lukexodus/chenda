@@ -49,8 +49,8 @@ export async function registerUser(
   // Select user type by clicking the label (which is connected via htmlFor to the radio input)
   await page.click(`label[for="${userData.type}"]`);
   
-  // Accept terms
-  await page.check('input[name="terms"]');
+  // Accept terms - shadcn Checkbox is rendered as button[role="checkbox"]
+  await page.getByRole('checkbox', { name: /accept the terms/i }).click();
   
   // Submit form
   await page.click('button[type="submit"]');

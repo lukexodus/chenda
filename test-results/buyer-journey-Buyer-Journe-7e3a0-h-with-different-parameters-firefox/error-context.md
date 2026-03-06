@@ -1,0 +1,77 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Chenda home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: Chenda
+      - generic [ref=e6]:
+        - link "Cart" [ref=e7] [cursor=pointer]:
+          - /url: /cart
+          - img [ref=e8]
+        - button "Log out" [ref=e12]:
+          - img [ref=e13]
+    - main [ref=e17]:
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: Your Location
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - textbox "Enter address or city..." [ref=e28]
+          - generic [ref=e29]:
+            - button "Use My Location" [ref=e30]:
+              - img
+              - generic [ref=e31]: Use My Location
+            - button "Saved Location" [disabled]:
+              - img
+              - text: Saved Location
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: "Proximity Weight: 50%"
+            - slider [ref=e39]
+            - paragraph [ref=e40]: Prioritize nearby products
+          - generic [ref=e41]:
+            - generic [ref=e42]: "Freshness Weight: 50%"
+            - slider [ref=e47]
+            - paragraph [ref=e48]: Prioritize fresher products
+        - button "Advanced Options" [active] [ref=e49]:
+          - img
+          - text: Advanced Options
+          - img
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: "Max Search Radius: 25 km"
+            - slider [ref=e57]
+            - paragraph [ref=e58]: Search products within this distance
+          - generic [ref=e59]:
+            - generic [ref=e60]: "Min Freshness Score: 0%"
+            - slider [ref=e64]
+            - paragraph [ref=e65]: Filter out products below this freshness
+        - button "Search Fresh Products" [disabled]:
+          - img
+          - text: Search Fresh Products
+      - status [ref=e66]:
+        - img [ref=e67]
+        - heading "Find fresh products near you" [level=3] [ref=e70]
+        - paragraph [ref=e71]: Enter your location above and press Search to discover nearby fresh products ranked by proximity and freshness.
+    - navigation [ref=e72]:
+      - generic [ref=e73]:
+        - link "Search" [ref=e74] [cursor=pointer]:
+          - /url: /buyer
+          - img [ref=e75]
+          - generic [ref=e78]: Search
+        - link "Orders" [ref=e79] [cursor=pointer]:
+          - /url: /buyer/orders
+          - img [ref=e80]
+          - generic [ref=e84]: Orders
+        - link "Profile" [ref=e85] [cursor=pointer]:
+          - /url: /buyer/profile
+          - img [ref=e86]
+          - generic [ref=e89]: Profile
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e95] [cursor=pointer]:
+    - img [ref=e96]
+  - alert [ref=e100]
+```

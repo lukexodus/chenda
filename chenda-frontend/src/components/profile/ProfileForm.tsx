@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -14,10 +15,15 @@ import { useAuthStore } from "@/lib/store";
 import type { UserProfile, ProfileFormData } from "@/lib/types/profile";
 import { Loader2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { LocationSettings } from "./LocationSettings";
 import { AlgorithmPreferences } from "./AlgorithmPreferences";
 import { PasswordChangeForm } from "./PasswordChangeForm";
 import { FormSkeleton } from "@/components/layout/states";
+
+// Dynamically import LocationSettings with SSR disabled (uses Leaflet maps which require window)
+const LocationSettings = dynamic(() => import("./LocationSettings").then(mod => ({ default: mod.LocationSettings })), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center p-8"><Loader2 className="h-6 w-6 animate-spin" /></div>
+});
 
 interface ProfileFormProps {
   children?: React.ReactNode; // For tab content from parent

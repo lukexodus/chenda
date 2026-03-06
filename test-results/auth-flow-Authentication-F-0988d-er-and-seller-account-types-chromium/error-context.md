@@ -1,78 +1,68 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
-  - generic [ref=e4]:
-    - generic [ref=e6]:
-      - img "Chenda Logo" [ref=e7]
-      - heading "Chenda" [level=1] [ref=e8]
-    - heading "Create Account" [level=2] [ref=e9]
-    - generic [ref=e10]:
-      - generic [ref=e11]:
-        - generic [ref=e12]: Full Name
-        - textbox "Full Name" [ref=e13]:
-          - /placeholder: John Doe
-          - text: Test Buyer 1772178538245
-      - generic [ref=e14]:
-        - generic [ref=e15]: Email
-        - textbox "Email" [ref=e16]:
-          - /placeholder: your.email@example.com
-          - text: buyer_1772178538245_x3esim@e2etest.com
-      - generic [ref=e17]:
-        - generic [ref=e18]: Password
-        - textbox "Password" [ref=e19]:
-          - /placeholder: ••••••••
-          - text: Test123456!
-        - paragraph [ref=e20]: Must be at least 6 characters
-      - generic [ref=e21]:
-        - generic [ref=e22]: Confirm Password
-        - textbox "Confirm Password" [active] [ref=e23]:
-          - /placeholder: ••••••••
-          - text: Test123456!
-      - generic [ref=e24]:
-        - generic [ref=e25]: "I want to:"
-        - radiogroup [ref=e26]:
-          - generic [ref=e27]:
-            - radio "Buy Fresh Products Search for fresh produce near you" [ref=e28]
-            - radio
-            - generic [ref=e29] [cursor=pointer]:
-              - img [ref=e30]
-              - generic [ref=e33]:
-                - generic [ref=e34]: Buy Fresh Products
-                - generic [ref=e35]: Search for fresh produce near you
-          - generic [ref=e36]:
-            - radio "Sell Products List your fresh produce for sale" [ref=e37]
-            - radio
-            - generic [ref=e38] [cursor=pointer]:
-              - img [ref=e39]
-              - generic [ref=e43]:
-                - generic [ref=e44]: Sell Products
-                - generic [ref=e45]: List your fresh produce for sale
-          - generic [ref=e46]:
-            - radio "Both Buy & Sell Access all features as buyer and seller" [ref=e47]
-            - radio
-            - generic [ref=e48] [cursor=pointer]:
-              - img [ref=e49]
-              - generic [ref=e54]:
-                - generic [ref=e55]: Both Buy & Sell
-                - generic [ref=e56]: Access all features as buyer and seller
-      - generic [ref=e57]:
-        - checkbox "I accept the Terms & Conditions and Privacy Policy" [ref=e58]
-        - checkbox
-        - generic [ref=e60] [cursor=pointer]:
-          - text: I accept the
-          - link "Terms & Conditions" [ref=e61]:
-            - /url: /terms
-          - text: and
-          - link "Privacy Policy" [ref=e62]:
-            - /url: /privacy
-      - button "Create Account" [ref=e63]
-      - paragraph [ref=e64]:
-        - text: Already have an account?
-        - link "Sign in" [ref=e65] [cursor=pointer]:
-          - /url: /login
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Chenda home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: Chenda
+      - generic [ref=e6]:
+        - link "Cart" [ref=e7] [cursor=pointer]:
+          - /url: /cart
+          - img [ref=e8]
+        - button "Log out" [ref=e12]:
+          - img [ref=e13]
+    - main [ref=e16]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Your Location
+          - generic [ref=e23]:
+            - img [ref=e24]
+            - textbox "Enter address or city..." [ref=e27]
+          - generic [ref=e28]:
+            - button "Use My Location" [ref=e29]:
+              - img
+              - generic [ref=e30]: Use My Location
+            - button "Saved Location" [disabled]:
+              - img
+              - text: Saved Location
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e33]: "Proximity Weight: 50%"
+            - slider [ref=e38]
+            - paragraph [ref=e39]: Prioritize nearby products
+          - generic [ref=e40]:
+            - generic [ref=e41]: "Freshness Weight: 50%"
+            - slider [ref=e46]
+            - paragraph [ref=e47]: Prioritize fresher products
+        - button "Advanced Options" [ref=e48]:
+          - img
+          - text: Advanced Options
+          - img
+        - button "Search Fresh Products" [disabled]:
+          - img
+          - text: Search Fresh Products
+      - status [ref=e49]:
+        - img [ref=e50]
+        - heading "Find fresh products near you" [level=3] [ref=e53]
+        - paragraph [ref=e54]: Enter your location above and press Search to discover nearby fresh products ranked by proximity and freshness.
+    - navigation [ref=e55]:
+      - generic [ref=e56]:
+        - link "Search" [ref=e57] [cursor=pointer]:
+          - /url: /buyer
+          - img [ref=e58]
+          - generic [ref=e61]: Search
+        - link "Orders" [ref=e62] [cursor=pointer]:
+          - /url: /buyer/orders
+          - img [ref=e63]
+          - generic [ref=e67]: Orders
+        - link "Profile" [ref=e68] [cursor=pointer]:
+          - /url: /buyer/profile
+          - img [ref=e69]
+          - generic [ref=e72]: Profile
   - region "Notifications alt+T"
-  - button "Open Next.js Dev Tools" [ref=e71] [cursor=pointer]:
-    - img [ref=e72]
-  - alert [ref=e75]
+  - button "Open Next.js Dev Tools" [ref=e78] [cursor=pointer]:
+    - img [ref=e79]
+  - alert [ref=e82]: Chenda — Fresh Market
 ```

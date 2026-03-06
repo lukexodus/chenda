@@ -1,78 +1,103 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
-  - generic [ref=e4]:
-    - generic [ref=e6]:
-      - img "Chenda Logo" [ref=e7]
-      - heading "Chenda" [level=1] [ref=e8]
-    - heading "Create Account" [level=2] [ref=e9]
-    - generic [ref=e10]:
-      - generic [ref=e11]:
-        - generic [ref=e12]: Full Name
-        - textbox "Full Name" [ref=e13]:
-          - /placeholder: John Doe
-          - text: Test Seller 1772178647027
-      - generic [ref=e14]:
-        - generic [ref=e15]: Email
-        - textbox "Email" [ref=e16]:
-          - /placeholder: your.email@example.com
-          - text: seller_1772178647027_kvqu5@e2etest.com
-      - generic [ref=e17]:
-        - generic [ref=e18]: Password
-        - textbox "Password" [ref=e19]:
-          - /placeholder: ••••••••
-          - text: Test123456!
-        - paragraph [ref=e20]: Must be at least 6 characters
-      - generic [ref=e21]:
-        - generic [ref=e22]: Confirm Password
-        - textbox "Confirm Password" [active] [ref=e23]:
-          - /placeholder: ••••••••
-          - text: Test123456!
-      - generic [ref=e24]:
-        - generic [ref=e25]: "I want to:"
-        - radiogroup [ref=e26]:
-          - generic [ref=e27]:
-            - radio "Buy Fresh Products Search for fresh produce near you" [ref=e28]
-            - radio
-            - generic [ref=e29] [cursor=pointer]:
-              - img [ref=e30]
-              - generic [ref=e33]:
-                - generic [ref=e34]: Buy Fresh Products
-                - generic [ref=e35]: Search for fresh produce near you
-          - generic [ref=e36]:
-            - radio "Sell Products List your fresh produce for sale" [ref=e37]
-            - radio
-            - generic [ref=e38] [cursor=pointer]:
-              - img [ref=e39]
-              - generic [ref=e43]:
-                - generic [ref=e44]: Sell Products
-                - generic [ref=e45]: List your fresh produce for sale
-          - generic [ref=e46]:
-            - radio "Both Buy & Sell Access all features as buyer and seller" [ref=e47]
-            - radio
-            - generic [ref=e48] [cursor=pointer]:
-              - img [ref=e49]
-              - generic [ref=e54]:
-                - generic [ref=e55]: Both Buy & Sell
-                - generic [ref=e56]: Access all features as buyer and seller
-      - generic [ref=e57]:
-        - checkbox "I accept the Terms & Conditions and Privacy Policy" [ref=e58]
-        - checkbox
-        - generic [ref=e60] [cursor=pointer]:
-          - text: I accept the
-          - link "Terms & Conditions" [ref=e61]:
-            - /url: /terms
-          - text: and
-          - link "Privacy Policy" [ref=e62]:
-            - /url: /privacy
-      - button "Create Account" [ref=e63]
-      - paragraph [ref=e64]:
-        - text: Already have an account?
-        - link "Sign in" [ref=e65] [cursor=pointer]:
-          - /url: /login
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Chenda home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: Chenda
+      - button "Log out" [ref=e7]:
+        - img [ref=e8]
+    - main [ref=e11]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - button [ref=e15]:
+            - img [ref=e16]
+          - generic [ref=e18]:
+            - heading "Add Product" [level=1] [ref=e19]
+            - paragraph [ref=e20]: Create a new listing for buyers
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - heading "Product Details" [level=2] [ref=e23]
+            - generic [ref=e24]:
+              - generic [ref=e25]:
+                - generic [ref=e26]:
+                  - text: Product Type
+                  - generic [ref=e27]: "*"
+                - combobox [ref=e28]:
+                  - generic [ref=e29]: Select product type...
+                  - img
+              - generic [ref=e30]:
+                - generic [ref=e31]: Description
+                - textbox "Description" [ref=e32]:
+                  - /placeholder: Describe your product — variety, origin, condition...
+          - generic [ref=e33]:
+            - heading "Pricing & Quantity" [level=2] [ref=e34]
+            - generic [ref=e35]:
+              - generic [ref=e36]:
+                - generic [ref=e37]:
+                  - text: Price (₱)
+                  - generic [ref=e38]: "*"
+                - generic [ref=e39]:
+                  - generic: ₱
+                  - spinbutton "Price (₱) *" [ref=e40]
+              - generic [ref=e41]:
+                - generic [ref=e42]:
+                  - text: Quantity
+                  - generic [ref=e43]: "*"
+                - generic [ref=e44]:
+                  - spinbutton "Quantity *" [ref=e45]
+                  - combobox [ref=e46]:
+                    - generic: kg
+                    - img
+                  - combobox [ref=e47]
+          - generic [ref=e48]:
+            - heading "Freshness & Storage" [level=2] [ref=e49]
+            - generic [ref=e50]:
+              - generic [ref=e51]:
+                - generic [ref=e52]:
+                  - text: Days Already Used
+                  - generic [ref=e53]: "*"
+                - spinbutton "Days Already Used *" [ref=e54]: "0"
+                - paragraph [ref=e55]: How many days has this product been stored or aged already?
+              - generic [ref=e56]:
+                - generic [ref=e57]: Storage Condition
+                - combobox [ref=e58]:
+                  - generic: Refrigerated
+                  - img
+                - combobox [ref=e59]
+          - generic [ref=e60]:
+            - heading "Photo" [level=2] [ref=e61]
+            - generic [ref=e62] [cursor=pointer]:
+              - img [ref=e64]
+              - generic [ref=e67]:
+                - paragraph [ref=e68]: Upload a photo
+                - paragraph [ref=e69]: JPEG, PNG, WebP up to 5 MB
+              - button "Upload a photo JPEG, PNG, WebP up to 5 MB" [ref=e70]
+          - generic [ref=e71]:
+            - button "Cancel" [ref=e72]
+            - button "List Product" [ref=e73]
+    - navigation [ref=e74]:
+      - generic [ref=e75]:
+        - link "Dashboard" [ref=e76] [cursor=pointer]:
+          - /url: /seller/dashboard
+          - img [ref=e77]
+          - generic [ref=e82]: Dashboard
+        - link "Products" [ref=e83] [cursor=pointer]:
+          - /url: /seller/products
+          - img [ref=e84]
+          - generic [ref=e88]: Products
+        - link "Orders" [ref=e89] [cursor=pointer]:
+          - /url: /seller/orders
+          - img [ref=e90]
+          - generic [ref=e94]: Orders
+        - link "Profile" [ref=e95] [cursor=pointer]:
+          - /url: /seller/profile
+          - img [ref=e96]
+          - generic [ref=e99]: Profile
   - region "Notifications alt+T"
-  - button "Open Next.js Dev Tools" [ref=e71] [cursor=pointer]:
-    - img [ref=e72]
-  - alert [ref=e75]
+  - button "Open Next.js Dev Tools" [ref=e105] [cursor=pointer]:
+    - img [ref=e106]
+  - alert [ref=e109]
 ```

@@ -1,0 +1,81 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Chenda home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: Chenda
+      - button "Log out" [ref=e7]:
+        - img [ref=e8]
+    - main [ref=e11]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - heading "My Profile" [level=1] [ref=e15]
+          - paragraph [ref=e16]: Manage your account settings and preferences
+        - generic [ref=e17]:
+          - tablist [ref=e18]:
+            - tab "Profile" [selected] [ref=e19]
+            - tab "Location" [ref=e20]
+            - tab "Preferences" [ref=e21]
+            - tab "Security" [ref=e22]
+          - tabpanel "Profile" [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e25]:
+                - generic [ref=e26]: Profile Information
+                - generic [ref=e27]: Update your personal information and account settings
+              - generic [ref=e28]:
+                - generic [ref=e29]:
+                  - generic [ref=e31]: U
+                  - generic [ref=e32]:
+                    - paragraph [ref=e33]: Profile Picture
+                    - paragraph [ref=e34]: Initials are displayed as your avatar
+                - generic [ref=e35]:
+                  - generic [ref=e36]: Full Name
+                  - textbox "Full Name" [ref=e37]:
+                    - /placeholder: Enter your full name
+                - generic [ref=e38]:
+                  - generic [ref=e39]: Email Address
+                  - textbox "Email Address" [disabled]
+                  - paragraph [ref=e40]: Email cannot be changed
+                - generic [ref=e41]:
+                  - generic [ref=e42]: Account Type
+                  - radiogroup [ref=e43]:
+                    - generic [ref=e44]:
+                      - radio "Buyer - I want to buy fresh products" [checked] [ref=e45]:
+                        - img [ref=e47]
+                      - generic [ref=e49]: Buyer - I want to buy fresh products
+                    - generic [ref=e50]:
+                      - radio "Seller - I want to sell fresh products" [ref=e51]
+                      - generic [ref=e52]: Seller - I want to sell fresh products
+                    - generic [ref=e53]:
+                      - radio "Both - I want to buy and sell" [ref=e54]
+                      - generic [ref=e55]: Both - I want to buy and sell
+                - button "Save Changes" [ref=e57]
+                - button "Log Out" [ref=e59]:
+                  - img
+                  - text: Log Out
+    - navigation [ref=e60]:
+      - generic [ref=e61]:
+        - link "Dashboard" [ref=e62] [cursor=pointer]:
+          - /url: /seller/dashboard
+          - img [ref=e63]
+          - generic [ref=e68]: Dashboard
+        - link "Products" [ref=e69] [cursor=pointer]:
+          - /url: /seller/products
+          - img [ref=e70]
+          - generic [ref=e74]: Products
+        - link "Orders" [ref=e75] [cursor=pointer]:
+          - /url: /seller/orders
+          - img [ref=e76]
+          - generic [ref=e80]: Orders
+        - link "Profile" [ref=e81] [cursor=pointer]:
+          - /url: /seller/profile
+          - img [ref=e82]
+          - generic [ref=e85]: Profile
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e91] [cursor=pointer]:
+    - img [ref=e92]
+  - alert [ref=e95]
+```
