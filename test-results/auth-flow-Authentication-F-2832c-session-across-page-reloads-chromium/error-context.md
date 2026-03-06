@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e6]:
+      - img "Chenda Logo" [ref=e7]
+      - heading "Chenda" [level=1] [ref=e8]
+    - heading "Create Account" [level=2] [ref=e9]
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: Full Name
+        - textbox "Full Name" [ref=e13]:
+          - /placeholder: John Doe
+          - text: Test Buyer 1772178520974
+      - generic [ref=e14]:
+        - generic [ref=e15]: Email
+        - textbox "Email" [ref=e16]:
+          - /placeholder: your.email@example.com
+          - text: buyer_1772178520974_3gquur@e2etest.com
+      - generic [ref=e17]:
+        - generic [ref=e18]: Password
+        - textbox "Password" [ref=e19]:
+          - /placeholder: ••••••••
+          - text: Test123456!
+        - paragraph [ref=e20]: Must be at least 6 characters
+      - generic [ref=e21]:
+        - generic [ref=e22]: Confirm Password
+        - textbox "Confirm Password" [active] [ref=e23]:
+          - /placeholder: ••••••••
+          - text: Test123456!
+      - generic [ref=e24]:
+        - generic [ref=e25]: "I want to:"
+        - radiogroup [ref=e26]:
+          - generic [ref=e27]:
+            - radio "Buy Fresh Products Search for fresh produce near you" [ref=e28]
+            - radio
+            - generic [ref=e29] [cursor=pointer]:
+              - img [ref=e30]
+              - generic [ref=e33]:
+                - generic [ref=e34]: Buy Fresh Products
+                - generic [ref=e35]: Search for fresh produce near you
+          - generic [ref=e36]:
+            - radio "Sell Products List your fresh produce for sale" [ref=e37]
+            - radio
+            - generic [ref=e38] [cursor=pointer]:
+              - img [ref=e39]
+              - generic [ref=e43]:
+                - generic [ref=e44]: Sell Products
+                - generic [ref=e45]: List your fresh produce for sale
+          - generic [ref=e46]:
+            - radio "Both Buy & Sell Access all features as buyer and seller" [ref=e47]
+            - radio
+            - generic [ref=e48] [cursor=pointer]:
+              - img [ref=e49]
+              - generic [ref=e54]:
+                - generic [ref=e55]: Both Buy & Sell
+                - generic [ref=e56]: Access all features as buyer and seller
+      - generic [ref=e57]:
+        - checkbox "I accept the Terms & Conditions and Privacy Policy" [ref=e58]
+        - checkbox
+        - generic [ref=e60] [cursor=pointer]:
+          - text: I accept the
+          - link "Terms & Conditions" [ref=e61]:
+            - /url: /terms
+          - text: and
+          - link "Privacy Policy" [ref=e62]:
+            - /url: /privacy
+      - button "Create Account" [ref=e63]
+      - paragraph [ref=e64]:
+        - text: Already have an account?
+        - link "Sign in" [ref=e65] [cursor=pointer]:
+          - /url: /login
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e71] [cursor=pointer]:
+    - img [ref=e72]
+  - alert [ref=e75]
+```

@@ -1,0 +1,65 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Chenda home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: Chenda
+      - link "Cart" [ref=e6] [cursor=pointer]:
+        - /url: /cart
+        - img [ref=e7]
+    - main [ref=e11]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: Your Location
+          - generic [ref=e18]:
+            - img [ref=e19]
+            - textbox "Enter address or city..." [ref=e22]
+          - generic [ref=e23]:
+            - button "Use My Location" [ref=e24]:
+              - img
+              - generic [ref=e25]: Use My Location
+            - button "Saved Location" [disabled]:
+              - img
+              - text: Saved Location
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]: "Proximity Weight: 50%"
+            - slider [ref=e33]
+            - paragraph [ref=e34]: Prioritize nearby products
+          - generic [ref=e35]:
+            - generic [ref=e36]: "Freshness Weight: 50%"
+            - slider [ref=e41]
+            - paragraph [ref=e42]: Prioritize fresher products
+        - button "Advanced Options" [ref=e43]:
+          - img
+          - text: Advanced Options
+          - img
+        - button "Search Fresh Products" [disabled]:
+          - img
+          - text: Search Fresh Products
+      - status [ref=e44]:
+        - img [ref=e45]
+        - heading "Find fresh products near you" [level=3] [ref=e48]
+        - paragraph [ref=e49]: Enter your location above and press Search to discover nearby fresh products ranked by proximity and freshness.
+    - navigation [ref=e50]:
+      - generic [ref=e51]:
+        - link "Search" [ref=e52] [cursor=pointer]:
+          - /url: /buyer
+          - img [ref=e53]
+          - generic [ref=e56]: Search
+        - link "Orders" [ref=e57] [cursor=pointer]:
+          - /url: /buyer/orders
+          - img [ref=e58]
+          - generic [ref=e62]: Orders
+        - link "Profile" [ref=e63] [cursor=pointer]:
+          - /url: /buyer/profile
+          - img [ref=e64]
+          - generic [ref=e67]: Profile
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e73] [cursor=pointer]:
+    - img [ref=e74]
+  - alert [ref=e77]
+```

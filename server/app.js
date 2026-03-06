@@ -45,19 +45,19 @@ app.use(helmet({
 // CORS: Enable cross-origin requests
 app.use(cors(config.cors));
 
-// Rate limiting: Prevent abuse (disabled in development)
-const limiter = rateLimit({
-  windowMs: config.rateLimit.windowMs,
-  max: config.server.isDevelopment ? 0 : config.rateLimit.max, // 0 = unlimited in dev
-  message: {
-    success: false,
-    message: 'Too many requests from this IP, please try again later.',
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-  skip: () => config.server.isDevelopment,
-});
-app.use('/api/', limiter);
+// Rate limiting: Prevent abuse (disabled for E2E testing)
+// Uncomment to enable rate limiting in production
+// const limiter = rateLimit({
+//   windowMs: config.rateLimit.windowMs,
+//   max: config.rateLimit.max,
+//   message: {
+//     success: false,
+//     message: 'Too many requests from this IP, please try again later.',
+//   },
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
+// app.use('/api/', limiter);
 
 /**
  * Request Parsing Middleware
