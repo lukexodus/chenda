@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log*
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+*.md
+__tests__
+*.test.js
+*.spec.js
+test_output.txt
+jest-results*.txt
+uploads
