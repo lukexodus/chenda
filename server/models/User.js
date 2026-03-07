@@ -13,10 +13,20 @@ class User {
    */
   static async findById(id) {
     const result = await query(
-      'SELECT id, name, email, type, address, preferences, email_verified, created_at FROM users WHERE id = $1',
+      `SELECT id, name, email, type, address, preferences, email_verified, created_at,
+              CASE WHEN location IS NOT NULL THEN ST_Y(location) END AS lat,
+              CASE WHEN location IS NOT NULL THEN ST_X(location) END AS lng
+       FROM users WHERE id = $1`,
       [id]
     );
-    return result.rows[0] || null;
+    const row = result.rows[0];
+    if (!row) return null;
+    if (row.lat !== null && row.lat !== undefined && row.lng !== null && row.lng !== undefined) {
+      row.location = { lat: parseFloat(row.lat), lng: parseFloat(row.lng) };
+    }
+    delete row.lat;
+    delete row.lng;
+    return row;
   }
 
   /**
