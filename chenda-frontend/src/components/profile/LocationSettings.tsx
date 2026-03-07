@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import AddressAutocomplete from "@/components/maps/AddressAutocomplete";
 import GeolocationButton from "@/components/maps/GeolocationButton";
 import { useAuthStore } from "@/lib/store";
+import { usersApi } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader2, MapPin } from "lucide-react";
 import "leaflet/dist/leaflet.css";
@@ -65,30 +66,49 @@ function DraggableMarker({ position, onPositionChange }: DraggableMarkerProps) {
 export function LocationSettings() {
   const { user, updateLocation } = useAuthStore();
   const [isSaving, setIsSaving] = useState(false);
-  const [address, setAddress] = useState("");
-  const [coordinates, setCoordinates] = useState<[number, number]>([
-    14.5995, 120.9842, // Default: Manila, Philippines
-  ]);
+  // address = the value that gets saved (shown in "Current Address" and sent to API)
+  const [address, setAddress] = useState(user?.address ?? "");
+  // searchInput = only what the user types in the search bar (starts empty — no auto-dropdown)
+  const [searchInput, setSearchInput] = useState("");
+  // Initialize coordinates directly from the store to avoid a Manila flash
+  const [coordinates, setCoordinates] = useState<[number, number]>(() =>
+    user?.location ? [user.location.lat, user.location.lng] : [14.5995, 120.9842]
+  );
 
-  // Initialize with user's location
+  // If location is missing from the store (stale session before fix),
+  // silently fetch the profile and update only the user object — no loading flash.
   useEffect(() => {
-    if (user?.address) {
-      setAddress(user.address);
+    if (user && !user.location) {
+      usersApi.getProfile().then((res) => {
+        const fresh = res.data.user ?? res.data.data ?? null;
+        if (fresh?.location) {
+          useAuthStore.setState({ user: { ...user, ...fresh } });
+        }
+      }).catch(() => {/* silent */});
     }
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // When the user object updates (e.g. after silent fetch), sync coordinates and address
+  useEffect(() => {
     if (user?.location) {
       setCoordinates([user.location.lat, user.location.lng]);
+    }
+    if (user?.address) {
+      setAddress(user.address);
     }
   }, [user]);
 
   const handleAddressSelect = (lat: number, lng: number, selectedAddress: string) => {
     setAddress(selectedAddress);
+    setSearchInput(selectedAddress);
     setCoordinates([lat, lng]);
   };
 
-  const handleGeolocation = (lat: number, lng: number, address?: string) => {
+  const handleGeolocation = (lat: number, lng: number, addr?: string) => {
     setCoordinates([lat, lng]);
-    if (address) {
-      setAddress(address);
+    if (addr) {
+      setAddress(addr);
+      setSearchInput(addr);
     }
   };
 
@@ -147,8 +167,8 @@ export function LocationSettings() {
           <div className="flex gap-2">
             <div className="flex-1">
               <AddressAutocomplete
-                value={address}
-                onChange={setAddress}
+                value={searchInput}
+                onChange={setSearchInput}
                 onSelect={handleAddressSelect}
                 placeholder="Search for an address..."
               />
