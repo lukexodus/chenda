@@ -116,7 +116,20 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
 
   try {
     // Step 1: Get products from database with metrics
-    const products = await Product.getProductsWithMetrics(buyerLocation, filters);
+    let products = await Product.getProductsWithMetrics(buyerLocation, filters);
+
+    // Fallback: if no products found within the radius, search globally (all active products)
+    // This handles cases where the buyer's location is outside the product coverage area
+    if (products.length === 0 && filters.max_radius_km !== null) {
+      products = await Product.getProductsWithMetrics(buyerLocation, {
+        ...filters,
+        max_radius_km: null
+      });
+      if (products.length > 0) {
+        // Disable the algorithm's internal radius filter too — show all products ranked by score
+        config.max_radius = 50000;
+      }
+    }
 
     if (products.length === 0) {
       // Track empty search results
