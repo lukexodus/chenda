@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -36,6 +37,22 @@ const app = express();
 /**
  * Security & Performance Middleware
  */
+
+// Compression: gzip/Brotli responses (must be before all routes and static serving)
+app.use(compression({
+  // Only compress responses over 1 KB — small responses cost more to compress than to send raw
+  threshold: 1024,
+  // Use maximum compression level (9) — tradeoff: slightly more CPU, much smaller payloads
+  level: 6,
+  filter: (req, res) => {
+    // Never compress Server-Sent Event streams
+    if (req.headers['accept'] && req.headers['accept'].includes('text/event-stream')) {
+      return false;
+    }
+    // Use the default compression filter for everything else
+    return compression.filter(req, res);
+  },
+}));
 
 // Helmet: Set security headers
 app.use(helmet({

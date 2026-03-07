@@ -15,7 +15,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import OrderCard from '@/components/orders/OrderCard';
-import OrderDetail from '@/components/orders/OrderDetail';
+import dynamic from 'next/dynamic';
+
+// Lazy load OrderDetail — the full detail modal is only opened on demand, so
+// defer loading its code until the user actually clicks an order row.
+const OrderDetail = dynamic(() => import('@/components/orders/OrderDetail'), {
+  ssr: false,
+});
 import { useToast } from '@/hooks/use-toast';
 import api from '@/lib/api';
 import type { Order, OrderStatus } from '@/lib/types/order';

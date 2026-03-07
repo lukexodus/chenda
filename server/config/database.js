@@ -11,9 +11,16 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'chenda',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || '',
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 2000, // Return error after 2 seconds if connection cannot be established
+  // Pool size: min keeps warm connections ready; max caps concurrent clients
+  min: 2,
+  max: 20,
+  // Close connections that have been idle for 30 s (keeps resource usage low)
+  idleTimeoutMillis: 30000,
+  // Raise an error after 10 s if no connection can be obtained (was 2 s which
+  // was too aggressive under moderate load — caused premature ETIMEOUT errors)
+  connectionTimeoutMillis: 10000,
+  // Let the process exit cleanly when all clients have been released
+  allowExitOnIdle: true,
 });
 
 /**

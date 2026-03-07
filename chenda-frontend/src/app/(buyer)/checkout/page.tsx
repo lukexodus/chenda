@@ -11,7 +11,13 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import CartSummary from '@/components/cart/CartSummary';
-import PaymentModal from '@/components/payment/PaymentModal';
+import dynamic from 'next/dynamic';
+
+// Lazy load PaymentModal — it is only rendered when the user submits the order,
+// so there is no benefit in including it in the initial checkout bundle.
+const PaymentModal = dynamic(() => import('@/components/payment/PaymentModal'), {
+  ssr: false,
+});
 import { useCartStore } from '@/lib/stores/cartStore';
 import { useAuthStore } from '@/lib/stores/authStore';
 import { api } from '@/lib/api';

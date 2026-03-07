@@ -4,7 +4,14 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SellerAnalytics } from "@/components/seller/SellerAnalytics";
+import dynamic from "next/dynamic";
+
+// Lazy load SellerAnalytics — it renders chart-heavy metric cards that are not
+// needed until after the product list has loaded, so split it into its own chunk.
+const SellerAnalytics = dynamic(
+  () => import("@/components/seller/SellerAnalytics").then((m) => m.SellerAnalytics),
+  { ssr: false }
+);
 import { productsApi } from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
 import type { SellerProduct } from "@/lib/types/seller";
