@@ -66,8 +66,7 @@ const validateCreateProduct = [
     .optional()
     .isString()
     .trim()
-    .isURL()
-    .withMessage('image_url must be a valid URL')
+    .withMessage('image_url must be a string')
 ];
 
 // Validation rules for updating a product
@@ -127,8 +126,7 @@ const validateUpdateProduct = [
     .optional()
     .isString()
     .trim()
-    .isURL()
-    .withMessage('image_url must be a valid URL'),
+    .withMessage('image_url must be a string'),
   
   body('status')
     .optional()
