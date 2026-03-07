@@ -33,6 +33,12 @@ const STORAGE_CONDITIONS = [
 
 const UNITS = ["kg", "g", "lb", "oz", "pcs", "dozen", "bundle"];
 
+function getFullImageUrl(imageUrl?: string | null): string | null {
+  if (!imageUrl) return null;
+  // Relative /uploads/ paths are proxied by Next.js to the backend
+  return imageUrl;
+}
+
 export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
@@ -55,7 +61,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   );
   
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(product?.image_url || null);
+  const [imagePreview, setImagePreview] = useState<string | null>(getFullImageUrl(product?.image_url));
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(product?.image_url || null);
 
   const [isUploading, setIsUploading] = useState(false);

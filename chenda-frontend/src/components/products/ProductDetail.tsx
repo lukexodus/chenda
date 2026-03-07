@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+function getImageSrc(url?: string | null): string | null {
+  if (!url) return null;
+  // Relative /uploads/ paths are proxied by Next.js to the backend
+  return url;
+}
 import {
   MapPin,
   Clock,
@@ -134,13 +138,11 @@ export function ProductDetail({
           <div className="space-y-4">
             {/* Product Image */}
             <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-card)] border border-[var(--fresh-border)] bg-gray-100">
-              {product.image_url ? (
-                <Image
-                  src={product.image_url}
+              {getImageSrc(product.image_url) ? (
+                <img
+                  src={getImageSrc(product.image_url)!}
                   alt={product.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-gray-400">
