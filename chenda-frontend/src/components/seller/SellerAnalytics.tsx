@@ -37,7 +37,8 @@ interface SellerAnalyticsProps {
 /**
  * Calculate freshness percentage
  */
-function calculateFreshness(daysUsed: number, totalDays: number, listedDate: string): number {
+function calculateFreshness(daysUsed: number, totalDays: number | undefined, listedDate: string): number {
+  if (!totalDays) return 0;
   const daysPassedSinceListing = Math.floor(
     (Date.now() - new Date(listedDate).getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -49,7 +50,8 @@ function calculateFreshness(daysUsed: number, totalDays: number, listedDate: str
 /**
  * Calculate days remaining
  */
-function calculateDaysRemaining(daysUsed: number, totalDays: number, listedDate: string): number {
+function calculateDaysRemaining(daysUsed: number, totalDays: number | undefined, listedDate: string): number {
+  if (!totalDays) return 0;
   const daysPassedSinceListing = Math.floor(
     (Date.now() - new Date(listedDate).getTime()) / (1000 * 60 * 60 * 24)
   );
@@ -66,15 +68,17 @@ export function SellerAnalytics({ products }: SellerAnalyticsProps) {
   const avgFreshness =
     totalProducts > 0
       ? activeProducts.reduce((sum, p) => {
-          return sum + calculateFreshness(p.days_already_used, p.total_shelf_life_days, p.listed_date);
+          const shelfLife = p.product_type?.default_shelf_life_days ?? p.total_shelf_life_days ?? 0;
+          return sum + calculateFreshness(p.days_already_used, shelfLife, p.listed_date);
         }, 0) / totalProducts
       : 0;
 
   // Products expiring within 3 days
   const expiringSoon = activeProducts.filter((p) => {
+    const shelfLife = p.product_type?.default_shelf_life_days ?? p.total_shelf_life_days ?? 0;
     const daysRemaining = calculateDaysRemaining(
       p.days_already_used,
-      p.total_shelf_life_days,
+      shelfLife,
       p.listed_date
     );
     return daysRemaining <= 3;
@@ -82,7 +86,7 @@ export function SellerAnalytics({ products }: SellerAnalyticsProps) {
 
   // Most popular product types (by count)
   const productTypeCounts = activeProducts.reduce((acc, p) => {
-    const typeName = p.name;
+    const typeName = p.product_type?.name ?? p.name ?? "Unknown";
     acc[typeName] = (acc[typeName] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
@@ -178,9 +182,10 @@ export function SellerAnalytics({ products }: SellerAnalyticsProps) {
               { label: "Critical (<30%)", color: "bg-red-500", range: [0, 30] },
             ].map(({ label, color, range }) => {
               const count = activeProducts.filter((p) => {
+                const shelfLife = p.product_type?.default_shelf_life_days ?? p.total_shelf_life_days ?? 0;
                 const freshness = calculateFreshness(
                   p.days_already_used,
-                  p.total_shelf_life_days,
+                  shelfLife,
                   p.listed_date
                 );
                 return freshness >= range[0] && freshness < range[1];

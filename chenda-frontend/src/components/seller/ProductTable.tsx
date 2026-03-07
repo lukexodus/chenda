@@ -1,24 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { MoreHorizontal, Pencil, Trash2, Package } from "lucide-react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-function getImageSrc(image_url?: string): string | null {
-  if (!image_url) return null;
-  if (image_url.startsWith("http")) return image_url;
-  return `${API_URL}${image_url}`;
-}
-
-function getProductName(product: { name?: string; product_type?: { name: string } }): string {
-  return product.product_type?.name ?? product.name ?? "Unknown";
-}
-
-function getShelfLifeDays(product: { total_shelf_life_days?: number; product_type?: { default_shelf_life_days: number } }): number {
-  return product.product_type?.default_shelf_life_days ?? product.total_shelf_life_days ?? 0;
-}
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -37,6 +20,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { SellerProduct } from "@/lib/types/seller";
 import { cn } from "@/lib/utils";
+
+function getImageSrc(image_url?: string): string | null {
+  if (!image_url) return null;
+  if (image_url.startsWith("http")) return image_url;
+  // Relative /uploads/ paths are proxied by Next.js to the backend
+  return image_url;
+}
+
+function getProductName(product: { name?: string; product_type?: { name: string } }): string {
+  return product.product_type?.name ?? product.name ?? "Unknown";
+}
+
+function getShelfLifeDays(product: { total_shelf_life_days?: number; product_type?: { default_shelf_life_days: number } }): number {
+  return product.product_type?.default_shelf_life_days ?? product.total_shelf_life_days ?? 0;
+}
 
 interface ProductTableProps {
   products: SellerProduct[];
@@ -188,12 +186,10 @@ export function ProductTable({ products, onEdit, onDelete, isLoading }: ProductT
                     <div className="flex items-center gap-3">
                       {imageSrc ? (
                         <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border">
-                          <Image
+                          <img
                             src={imageSrc}
                             alt={displayName}
-                            fill
-                            className="object-cover"
-                            sizes="40px"
+                            className="h-full w-full object-cover"
                           />
                         </div>
                       ) : (
@@ -286,12 +282,10 @@ export function ProductTable({ products, onEdit, onDelete, isLoading }: ProductT
                 <div className="flex items-start gap-3 flex-1">
                   {imageSrc ? (
                     <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border">
-                      <Image
+                      <img
                         src={imageSrc}
                         alt={displayName}
-                        fill
-                        className="object-cover"
-                        sizes="48px"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                   ) : (

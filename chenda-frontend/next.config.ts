@@ -19,6 +19,16 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
 
+  // Proxy /uploads/* requests to the backend so images are same-origin
+  async rewrites() {
+    return [
+      {
+        source: "/uploads/:path*",
+        destination: "http://localhost:3001/uploads/:path*",
+      },
+    ];
+  },
+
   // Allow images from the API server
   images: {
     remotePatterns: [

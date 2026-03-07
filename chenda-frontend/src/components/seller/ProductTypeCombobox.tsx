@@ -42,7 +42,10 @@ export function ProductTypeCombobox({ value, onSelect, disabled }: ProductTypeCo
         // If value is provided, find and set the selected type
         if (value) {
           const selected = types.find((t: ProductType) => t.id === value);
-          if (selected) setSelectedType(selected);
+          if (selected) {
+            setSelectedType(selected);
+            onSelect(selected);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch product types:", error);
