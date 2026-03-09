@@ -25,7 +25,7 @@ export function ProductGrid({
 
   return (
     <section aria-label={`${products.length} product${products.length !== 1 ? 's' : ''} found`}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         {products.map((product) => (
           <ProductCard
             key={product.id}

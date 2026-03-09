@@ -54,8 +54,8 @@ export function TopHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-[var(--fresh-border)] bg-white/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">
-      <Link href="/" className="flex items-center gap-2" aria-label="Chenda home">
+    <header className="sticky top-0 z-40 flex h-14 w-full max-w-[100vw] overflow-x-hidden items-center justify-between border-b border-[var(--fresh-border)] bg-white/95 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">
+      <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="Chenda home">
         <Image
           src="/chenda.png"
           alt=""
@@ -91,7 +91,7 @@ export function TopHeader() {
         {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="rounded-md p-2 text-[var(--fresh-text-muted)] hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)]"
+          className="rounded-md p-1.5 sm:p-2 text-[var(--fresh-text-muted)] hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)] shrink-0"
           aria-label="Log out"
           title="Log out"
         >
@@ -113,8 +113,8 @@ export function BottomNav() {
     user?.type === "seller" || user?.type === "both" ? sellerNav : buyerNav;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--fresh-border)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">
-      <div className="mx-auto flex h-16 max-w-lg items-center justify-around">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--fresh-border)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95 w-full max-w-[100vw] overflow-x-hidden">
+      <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
         {items.map((item) => {
           // Use exact match for root-level tabs (e.g. /buyer) so sub-routes
           // like /buyer/orders don't also highlight it.
@@ -127,15 +127,15 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center gap-1 px-3 py-1 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)] rounded-md",
+                "flex flex-col items-center gap-1 px-1 sm:px-3 py-1 text-[10px] sm:text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)] rounded-md min-w-0 shrink-1 w-full text-center overflow-hidden",
                 active
                   ? "text-[var(--fresh-primary)] font-medium"
                   : "text-[var(--fresh-text-muted)] hover:text-[var(--fresh-text-primary)]"
               )}
               aria-current={active ? "page" : undefined}
             >
-              <item.icon className="h-5 w-5" aria-hidden="true" />
-              <span>{item.label}</span>
+              <item.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" aria-hidden="true" />
+              <span className="truncate w-full">{item.label}</span>
             </Link>
           );
         })}

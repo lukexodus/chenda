@@ -38,10 +38,10 @@ export default function BuyerDashboardPage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--fresh-surface)]">
+    <div className="flex min-h-screen flex-col bg-[var(--fresh-surface)] overflow-x-hidden w-full max-w-[100vw]">
       <TopHeader />
 
-      <main className="flex-1 overflow-y-auto pb-20 px-4 pt-4 space-y-4 max-w-5xl mx-auto w-full">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto pb-20 px-2 sm:px-4 pt-3 sm:pt-4 space-y-3 sm:space-y-4 max-w-5xl mx-auto w-full">
         {/* Search & filters */}
         <SearchForm />
 

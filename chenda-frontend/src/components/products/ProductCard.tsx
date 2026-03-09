@@ -104,23 +104,23 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
       </div>
 
       {/* Card Content */}
-      <div className="p-3 space-y-2">
+      <div className="p-2 sm:p-3 space-y-1 sm:space-y-2">
         {/* Product Type Badge */}
         {product.product_type_name && (
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className="text-[10px] sm:text-xs">
             {product.product_type_name}
           </Badge>
         )}
 
         {/* Product Name */}
-        <h3 className="font-medium text-[var(--fresh-text-primary)] line-clamp-2 min-h-[2.5rem]">
+        <h3 className="font-medium text-xs sm:text-base text-[var(--fresh-text-primary)] line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem]">
           {product.name}
         </h3>
 
         {/* Price */}
-        <p className="text-lg font-semibold text-[var(--fresh-primary)]">
+        <p className="text-base sm:text-lg font-semibold text-[var(--fresh-primary)]">
           ₱{product.price.toFixed(2)}
-          <span className="text-xs text-[var(--fresh-text-muted)] font-normal ml-1">
+          <span className="text-[10px] sm:text-xs text-[var(--fresh-text-muted)] font-normal ml-1">
             / {product.unit}
           </span>
         </p>
@@ -128,7 +128,7 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
         {/* Freshness Indicator */}
         {product.freshness_score !== undefined && (
           <div className="space-y-1">
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-[10px] sm:text-xs">
               <span className="text-[var(--fresh-text-muted)]">Freshness</span>
               <span className="font-medium">
                 {Math.round(product.freshness_score)}%
@@ -136,11 +136,11 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
             </div>
             <Progress
               value={product.freshness_score}
-              className={cn("h-2", getFreshnessColor(product.freshness_score))}
+              className={cn("h-1.5 sm:h-2", getFreshnessColor(product.freshness_score))}
             />
             {product.days_remaining !== undefined && (
-              <p className="text-xs text-[var(--fresh-text-muted)]">
-                <Clock className="inline h-3 w-3 mr-1" />
+              <p className="text-[10px] sm:text-xs text-[var(--fresh-text-muted)] truncate">
+                <Clock className="inline h-2.5 w-2.5 sm:h-3 sm:w-3 mr-1" />
                 {product.days_remaining > 0
                   ? `${product.days_remaining} days left`
                   : "Expires soon"}
@@ -150,16 +150,16 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
         )}
 
         {/* Distance & Score */}
-        <div className="flex items-center justify-between text-xs text-[var(--fresh-text-muted)]">
+        <div className="flex items-center justify-between text-[10px] sm:text-xs text-[var(--fresh-text-muted)]">
           {product.distance_km !== undefined && (
-            <span className="flex items-center">
-              <MapPin className="mr-1 h-3 w-3" />
-              {formatDistance(product.distance_km)}
+            <span className="flex items-center truncate max-w-[50%]">
+              <MapPin className="mr-0.5 sm:mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />
+              <span className="truncate">{formatDistance(product.distance_km)}</span>
             </span>
           )}
           {product.combined_score !== undefined && (
-            <span className="flex items-center font-medium">
-              <Star className="mr-1 h-3 w-3 fill-[var(--fresh-accent)] text-[var(--fresh-accent)]" />
+            <span className="flex items-center font-medium shrink-0">
+              <Star className="mr-0.5 sm:mr-1 h-2.5 w-2.5 sm:h-3 sm:w-3 fill-[var(--fresh-accent)] text-[var(--fresh-accent)]" />
               {Math.round(product.combined_score)}
             </span>
           )}
@@ -169,7 +169,7 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
         <Button
           onClick={handleAddToCart}
           className={cn(
-            "w-full mt-2",
+            "w-full mt-2 h-8 sm:h-9 text-xs sm:text-sm px-2",
             inCart
               ? "bg-[var(--fresh-primary)] hover:bg-[var(--fresh-primary)]/90"
               : "bg-[var(--fresh-accent)] hover:bg-[var(--fresh-accent)]/90 text-black"
@@ -179,13 +179,14 @@ export function ProductCard({ product, onViewDetails }: ProductCardProps) {
         >
           {inCart ? (
             <>
-              <Check className="mr-2 h-4 w-4" />
-              In Cart
+              <Check className="mr-1 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline sm:inline">In Cart</span>
             </>
           ) : (
             <>
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              Add to Cart
+              <ShoppingCart className="mr-1 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline sm:inline">Add</span>
+              <span className="hidden sm:inline">&nbsp;to Cart</span>
             </>
           )}
         </Button>

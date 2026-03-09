@@ -62,17 +62,26 @@ export function SortControls({
   resultCount,
 }: SortControlsProps) {
   return (
-    <div className="flex items-center justify-between gap-4 p-4 rounded-[var(--radius-card)] border border-[var(--fresh-border)] bg-white">
-      <div className="flex items-center gap-2">
-        <ArrowUpDown className="h-5 w-5 text-[var(--fresh-text-muted)]" />
-        <Label htmlFor="sort" className="text-sm font-medium whitespace-nowrap">
-          Sort by:
-        </Label>
+    <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4 p-3 md:p-4 rounded-[var(--radius-card)] border border-[var(--fresh-border)] bg-white w-full overflow-hidden">
+      <div className="flex items-center justify-between md:justify-start gap-2 min-w-0">
+        <div className="flex items-center gap-2 shrink-0">
+          <ArrowUpDown className="h-4 w-4 md:h-5 md:w-5 text-[var(--fresh-text-muted)] shrink-0" />
+          <Label htmlFor="sort" className="text-xs md:text-sm font-medium whitespace-nowrap">
+            Sort by:
+          </Label>
+        </div>
+        
+        {/* Count moved here for mobile, hidden on desktop */}
+        {resultCount !== undefined && (
+          <span className="md:hidden text-xs text-[var(--fresh-text-muted)] truncate">
+            {resultCount} {resultCount === 1 ? "result" : "results"}
+          </span>
+        )}
       </div>
 
-      <div className="flex items-center gap-4 flex-1">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger id="sort" className="w-full max-w-xs !h-auto !py-3 !px-4">
+          <SelectTrigger id="sort" className="w-full md:max-w-xs !h-auto py-2 md:!py-3 px-3 md:!px-4 truncate">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -96,7 +105,7 @@ export function SortControls({
         </Select>
 
         {resultCount !== undefined && (
-          <span className="text-sm text-[var(--fresh-text-muted)] whitespace-nowrap">
+          <span className="hidden sm:inline text-sm text-[var(--fresh-text-muted)] whitespace-nowrap">
             {resultCount} {resultCount === 1 ? "result" : "results"}
           </span>
         )}

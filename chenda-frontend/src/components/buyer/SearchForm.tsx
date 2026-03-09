@@ -84,7 +84,7 @@ export function SearchForm() {
   };
 
   return (
-    <Card className="p-4 sm:p-6 border-[var(--fresh-border)] shadow-[var(--shadow-small)]">
+    <Card className="p-3 sm:p-6 border-[var(--fresh-border)] shadow-[var(--shadow-small)] w-full overflow-hidden">
       {/* Location Input */}
       <div className="space-y-4">
         <div>
@@ -101,11 +101,11 @@ export function SearchForm() {
           </div>
 
           {/* Quick Location Buttons */}
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex flex-col md:flex-row gap-2">
             <GeolocationButton
               onLocationFound={handleGeolocationFound}
               size="sm"
-              className="flex-1"
+              className="w-full md:flex-1"
             />
             <Button
               type="button"
@@ -113,7 +113,7 @@ export function SearchForm() {
               size="sm"
               onClick={handleUseMyLocation}
               disabled={!user?.location || loading}
-              className="flex-1"
+              className="w-full md:flex-1"
             >
               <MapPin className="mr-2 h-4 w-4" />
               Saved Location
@@ -121,16 +121,16 @@ export function SearchForm() {
           </div>
 
           {filters.location && (
-            <p className="mt-2 text-xs text-[var(--fresh-text-muted)]">
+            <p className="mt-2 text-xs text-[var(--fresh-text-muted)] line-clamp-2 break-words">
               📍 {filters.location.address || "Location set"}
             </p>
           )}
         </div>
 
         {/* Weight Sliders */}
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           {/* Proximity Weight */}
-          <div>
+          <div className="min-w-0 w-full">
             <Label htmlFor="proximity-slider" className="text-sm font-medium">
               Proximity Weight: {filters.proximityWeight}%
             </Label>
@@ -141,15 +141,15 @@ export function SearchForm() {
               max={100}
               step={5}
               disabled={loading}
-              className="mt-2"
+              className="mt-2 w-full"
             />
-            <p className="mt-1 text-xs text-[var(--fresh-text-muted)]">
+            <p className="mt-1 text-xs text-[var(--fresh-text-muted)] truncate">
               Prioritize nearby products
             </p>
           </div>
 
           {/* Freshness Weight */}
-          <div>
+          <div className="min-w-0 w-full">
             <Label htmlFor="freshness-slider" className="text-sm font-medium">
               Freshness Weight: {filters.freshnessWeight}%
             </Label>
@@ -160,9 +160,9 @@ export function SearchForm() {
               max={100}
               step={5}
               disabled={loading}
-              className="mt-2"
+              className="mt-2 w-full"
             />
-            <p className="mt-1 text-xs text-[var(--fresh-text-muted)]">
+            <p className="mt-1 text-xs text-[var(--fresh-text-muted)] truncate">
               Prioritize fresher products
             </p>
           </div>
@@ -194,9 +194,9 @@ export function SearchForm() {
 
         {/* Advanced Options Panel */}
         {showAdvanced && (
-          <div className="space-y-4 rounded-lg border border-[var(--fresh-border)] bg-[var(--fresh-surface)] p-4">
+          <div className="space-y-4 rounded-lg border border-[var(--fresh-border)] bg-[var(--fresh-surface)] p-4 w-full">
             {/* Max Radius */}
-            <div>
+            <div className="min-w-0 w-full">
               <Label htmlFor="radius-slider" className="text-sm font-medium">
                 Max Search Radius: {filters.maxRadius} km
               </Label>
@@ -210,15 +210,15 @@ export function SearchForm() {
                 max={100}
                 step={5}
                 disabled={loading}
-                className="mt-2"
+                className="mt-2 w-full"
               />
-              <p className="mt-1 text-xs text-[var(--fresh-text-muted)]">
+              <p className="mt-1 text-xs text-[var(--fresh-text-muted)] truncate">
                 Search products within this distance
               </p>
             </div>
 
             {/* Min Freshness Score */}
-            <div>
+            <div className="min-w-0 w-full">
               <Label htmlFor="freshness-threshold" className="text-sm font-medium">
                 Min Freshness Score: {filters.minFreshnessScore}%
               </Label>
@@ -231,9 +231,9 @@ export function SearchForm() {
                 max={100}
                 step={5}
                 disabled={loading}
-                className="mt-2"
+                className="mt-2 w-full"
               />
-              <p className="mt-1 text-xs text-[var(--fresh-text-muted)]">
+              <p className="mt-1 text-xs text-[var(--fresh-text-muted)] truncate">
                 Filter out products below this freshness
               </p>
             </div>
