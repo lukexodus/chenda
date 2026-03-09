@@ -60,7 +60,7 @@ async function getSeedFiles() {
   const files = await fs.readdir(seedsDir);
   
   // Return seed files in specific order
-  const order = ['product_types.sql', 'mock_users.sql', 'mock_products.sql'];
+  const order = ['product_types.sql', 'mock_users.sql', 'mock_products.sql', 'nationwide_products.sql'];
   return order.filter(f => files.includes(f));
 }
 
