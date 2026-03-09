@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { toast } from "sonner";
 import { searchApi } from "@/lib/api";
 
 // ────────────────────────────────────────────
@@ -142,21 +143,21 @@ export const useSearchStore = create<SearchState>()(
 
         try {
           const response = await searchApi.search({
-            buyer: {
+            location: {
               lat: filters.location.lat,
               lng: filters.location.lng,
             },
             config: {
               max_radius: filters.maxRadius,
               weights: {
-                proximity_weight: filters.proximityWeight,
-                freshness_weight: filters.freshnessWeight,
+                proximity_weight: filters.proximityWeight / 100,
+                freshness_weight: filters.freshnessWeight / 100,
               },
               min_freshness_score: filters.minFreshnessScore,
             },
           });
 
-          const products = response.data.data?.products || response.data.products || [];
+          const products = response.data.results || response.data.data?.products || response.data.products || [];
 
           // Add rank to products
           const rankedProducts = products.map((p: Product, index: number) => ({
@@ -173,6 +174,7 @@ export const useSearchStore = create<SearchState>()(
             (err as { response?: { data?: { message?: string } } })?.response?.data
               ?.message || "Search failed. Please try again.";
           set({ error: message, loading: false, results: [] });
+          toast.error(message);
         }
       },
 

@@ -105,7 +105,7 @@ export const authApi = {
 
 export const searchApi = {
   search: (data: {
-    buyer: { lat: number; lng: number };
+    location: { lat: number; lng: number };
     config?: {
       max_radius?: number;
       weights?: { proximity_weight: number; freshness_weight: number };

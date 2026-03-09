@@ -1,16 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { TopHeader, BottomNav } from '@/components/layout/navigation';
 import OrderDetail from '@/components/orders/OrderDetail';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import type { Order } from '@/lib/types/order';
 
-export default function OrderConfirmationPage({ params }: { params: { id: string } }) {
+export default function OrderConfirmationPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
+  const params = use(paramsPromise);
   const router = useRouter();
   const { toast } = useToast();
   const [order, setOrder] = useState<Order | null>(null);
@@ -26,10 +28,10 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
     setError(null);
 
     try {
-      const response = await api.get(`/api/orders/${params.id}`);
+      const response = await api.get(`/orders/${params.id}`);
 
       if (response.data.success) {
-        setOrder(response.data.data);
+        setOrder(response.data.order ?? response.data.data);
       } else {
         throw new Error(response.data.message || 'Failed to fetch order');
       }
@@ -51,17 +53,20 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
   };
 
   const handleBackToDashboard = () => {
-    router.push('/');
+    router.push('/buyer');
   };
 
   const handleViewOrders = () => {
-    router.push('/orders');
+    router.push('/buyer/orders');
   };
 
   return (
-    <div className="container max-w-4xl mx-auto py-6 px-4">
+    <div className="flex min-h-screen flex-col bg-[var(--fresh-surface)]">
+      <TopHeader />
+      <main className="flex-1 overflow-y-auto pb-20 px-4 pt-4">
+      <div className="container max-w-4xl mx-auto py-6 px-0 space-y-4">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="sm"
@@ -118,6 +123,9 @@ export default function OrderConfirmationPage({ params }: { params: { id: string
           </div>
         </div>
       )}
+        </div>
+      </main>
+      <BottomNav />
     </div>
   );
 }

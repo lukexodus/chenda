@@ -88,9 +88,9 @@ export default function SellerOrdersPage() {
   const handleOrderClick = async (orderId: number) => {
     // Fetch full order details
     try {
-      const response = await api.get(`/api/orders/${orderId}`);
+      const response = await api.get(`/orders/${orderId}`);
       if (response.data.success) {
-        setSelectedOrder(response.data.data);
+        setSelectedOrder(response.data.order ?? response.data.data);
         setShowDetailModal(true);
       }
     } catch (error: any) {
@@ -106,7 +106,7 @@ export default function SellerOrdersPage() {
   const handleMarkAsCompleted = async (orderId: number) => {
     setIsUpdating(true);
     try {
-      const response = await api.put(`/api/orders/${orderId}/status`, {
+      const response = await api.put(`/orders/${orderId}/status`, {
         status: 'completed',
         notes: 'Order has been fulfilled and delivered',
       });
@@ -204,9 +204,12 @@ export default function SellerOrdersPage() {
         {!isLoading && filteredOrders.length > 0 && (
           <div className="space-y-4">
             {filteredOrders.map((order) => (
-              <div key={order.id} onClick={() => handleOrderClick(order.id)}>
-                <OrderCard order={order} viewAs="seller" />
-              </div>
+              <OrderCard
+                key={order.id}
+                order={order}
+                viewAs="seller"
+                onClick={() => handleOrderClick(order.id)}
+              />
             ))}
           </div>
         )}

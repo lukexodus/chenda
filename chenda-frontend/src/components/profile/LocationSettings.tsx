@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { Icon } from "leaflet";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AddressAutocomplete from "@/components/maps/AddressAutocomplete";
 import GeolocationButton from "@/components/maps/GeolocationButton";
@@ -99,16 +100,17 @@ export function LocationSettings() {
   }, [user]);
 
   const handleAddressSelect = (lat: number, lng: number, selectedAddress: string) => {
-    setAddress(selectedAddress);
-    setSearchInput(selectedAddress);
+    // Only populate address field if it is currently empty
+    if (!address.trim()) {
+      setAddress(selectedAddress);
+    }
     setCoordinates([lat, lng]);
   };
 
   const handleGeolocation = (lat: number, lng: number, addr?: string) => {
     setCoordinates([lat, lng]);
-    if (addr) {
+    if (addr && !address.trim()) {
       setAddress(addr);
-      setSearchInput(addr);
     }
   };
 
@@ -150,14 +152,18 @@ export function LocationSettings() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Current Address Display */}
+        {/* Current Address (editable) */}
         <div className="space-y-2">
-          <Label>Current Address</Label>
-          <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
-            <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="text-sm">
-              {user?.address || "No address set"}
-            </span>
+          <Label htmlFor="current-address">Current Address</Label>
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="current-address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Enter your address"
+              className="pl-10"
+            />
           </div>
         </div>
 
@@ -176,7 +182,7 @@ export function LocationSettings() {
             <GeolocationButton onLocationFound={handleGeolocation} />
           </div>
           <p className="text-sm text-muted-foreground">
-            Search for an address or use your current location
+            Search for suggestions or use your current location. Selecting a suggestion will only fill the address above if it is empty.
           </p>
         </div>
 

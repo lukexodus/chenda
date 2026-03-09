@@ -180,9 +180,9 @@ export default function OrderDetail({ order, viewAs = 'buyer' }: OrderDetailProp
               </h3>
               <div className="mt-2 space-y-1 text-sm text-[var(--fresh-text-muted)]">
                 <p>Quantity: {order.quantity}</p>
-                <p>Unit Price: ₱{order.unit_price.toFixed(2)}</p>
+                <p>Unit Price: ₱{parseFloat(order.unit_price as any).toFixed(2)}</p>
                 <p className="text-base font-semibold text-[var(--fresh-text-primary)] mt-2">
-                  Subtotal: ₱{order.total_amount.toFixed(2)}
+                  Subtotal: ₱{parseFloat(order.total_amount as any).toFixed(2)}
                 </p>
               </div>
             </div>
@@ -296,7 +296,7 @@ export default function OrderDetail({ order, viewAs = 'buyer' }: OrderDetailProp
           <div className="flex justify-between">
             <span className="text-[var(--fresh-text-muted)]">Subtotal</span>
             <span className="text-[var(--fresh-text-primary)]">
-              ₱{order.total_amount.toFixed(2)}
+              ₱{parseFloat(order.total_amount as any).toFixed(2)}
             </span>
           </div>
           <div className="flex justify-between">
@@ -309,7 +309,7 @@ export default function OrderDetail({ order, viewAs = 'buyer' }: OrderDetailProp
               Total
             </span>
             <span className="text-2xl font-bold text-[var(--fresh-text-primary)]">
-              ₱{order.total_amount.toFixed(2)}
+              ₱{parseFloat(order.total_amount as any).toFixed(2)}
             </span>
           </div>
         </CardContent>

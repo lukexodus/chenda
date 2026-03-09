@@ -153,7 +153,7 @@ const processPayment = async (req, res) => {
     // Process payment using payment service
     const paymentData = {
       orderId: order.id,
-      amount: order.total_amount,
+      amount: parseFloat(order.total_amount),
       method: order.payment_method,
       buyer: {
         id: order.buyer_id,

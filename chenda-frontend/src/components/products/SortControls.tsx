@@ -72,7 +72,7 @@ export function SortControls({
 
       <div className="flex items-center gap-4 flex-1">
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger id="sort" className="w-full max-w-xs">
+          <SelectTrigger id="sort" className="w-full max-w-xs h-auto py-3 px-4">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

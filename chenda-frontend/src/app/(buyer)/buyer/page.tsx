@@ -15,7 +15,7 @@ const ProductDetail = dynamic(
 );
 
 export default function BuyerDashboardPage() {
-  const { results, loading, filters } = useSearchStore();
+  const { results, loading, filters, error } = useSearchStore();
   const [sortBy, setSortBy] = useState<SortOption>("score");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -52,6 +52,13 @@ export default function BuyerDashboardPage() {
             onChange={setSortBy}
             resultCount={results.length}
           />
+        )}
+
+        {/* Search error */}
+        {error && !loading && (
+          <div className="rounded-lg border border-[var(--fresh-danger)] bg-red-50 p-4 text-sm text-[var(--fresh-danger)]">
+            ⚠️ {error}
+          </div>
         )}
 
         {/* Pre-search empty state */}

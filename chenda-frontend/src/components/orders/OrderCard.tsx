@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Package, Calendar, MapPin, ChevronRight, User } from 'lucide-react';
@@ -13,25 +12,24 @@ import { ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/lib/types/order';
 interface OrderCardProps {
   order: Order;
   viewAs?: 'buyer' | 'seller';
+  onClick?: () => void;
 }
 
-export default function OrderCard({ order, viewAs = 'buyer' }: OrderCardProps) {
+export default function OrderCard({ order, viewAs = 'buyer', onClick }: OrderCardProps) {
   const orderDate = format(new Date(order.created_at), 'MMM dd, yyyy');
   const orderTime = format(new Date(order.created_at), 'h:mm a');
 
-  return (
-    <Link href={`/orders/${order.id}`}>
+  const inner = (
       <Card className="hover:shadow-md transition-shadow cursor-pointer">
         <CardContent className="p-4">
           <div className="flex gap-4">
             {/* Product Image */}
             <div className="relative h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden bg-[var(--fresh-surface)]">
               {order.product_image ? (
-                <Image
+                <img
                   src={order.product_image}
                   alt={order.product_name || 'Product'}
-                  fill
-                  className="object-cover"
+                  className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="h-full w-full flex items-center justify-center">
@@ -103,7 +101,7 @@ export default function OrderCard({ order, viewAs = 'buyer' }: OrderCardProps) {
                 <div>
                   <p className="text-sm text-[var(--fresh-text-muted)]">Total Amount</p>
                   <p className="text-lg font-bold text-[var(--fresh-text-primary)]">
-                    ₱{order.total_amount.toFixed(2)}
+                    ₱{parseFloat(order.total_amount as any).toFixed(2)}
                   </p>
                 </div>
                 <Button variant="ghost" size="sm" className="gap-2">
@@ -115,6 +113,15 @@ export default function OrderCard({ order, viewAs = 'buyer' }: OrderCardProps) {
           </div>
         </CardContent>
       </Card>
-    </Link>
   );
+
+  if (onClick) {
+    return (
+      <div onClick={onClick} className="cursor-pointer">
+        {inner}
+      </div>
+    );
+  }
+
+  return <Link href={`/orders/${order.id}`}>{inner}</Link>;
 }

@@ -98,6 +98,7 @@ export default function CheckoutPage() {
       const orderData = {
         product_id: item.product.id,
         quantity: item.quantity,
+        payment_method: selectedPaymentMethod,
         delivery_address: user.address,
         delivery_lat: user.location?.lat,
         delivery_lng: user.location?.lng,
@@ -107,7 +108,7 @@ export default function CheckoutPage() {
       const response = await api.post('/orders', orderData);
 
       if (response.data.success) {
-        const orderId = response.data.data.id;
+        const orderId = response.data.order?.id ?? response.data.data?.id;
         setCurrentOrderId(orderId);
 
         // Show payment modal
@@ -202,10 +203,9 @@ export default function CheckoutPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="rounded-lg border bg-[var(--fresh-surface)] p-4">
-                    <p className="font-medium text-[var(--fresh-text-primary)] mb-1">
-                      {user.name}
+                    <p className="text-sm text-[var(--fresh-text-muted)]">
+                      {user.address || 'No address set — please update your profile'}
                     </p>
-                    <p className="text-sm text-[var(--fresh-text-muted)]">{user.address}</p>
                   </div>
 
                   <div>
@@ -224,7 +224,7 @@ export default function CheckoutPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => router.push('/profile')}
+                    onClick={() => router.push('/buyer/profile')}
                     disabled={isSubmitting}
                   >
                     Change Address

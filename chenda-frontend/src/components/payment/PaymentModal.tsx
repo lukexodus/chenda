@@ -71,10 +71,10 @@ export default function PaymentModal({
         payment_details: {},
       };
 
-      const response = await api.post(`/api/orders/${orderId}/payment`, paymentData);
+      const response = await api.post(`/orders/${orderId}/payment`, paymentData);
 
       if (response.data.success) {
-        setTransactionId(response.data.data.transaction_id);
+        setTransactionId(response.data.payment?.transactionId ?? '');
         setPaymentState('success');
 
         // Call success callback after 1 second

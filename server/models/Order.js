@@ -52,6 +52,12 @@ class Order {
         o.payment_method,
         o.payment_status,
         o.order_status,
+        CASE
+          WHEN o.order_status = 'cancelled' THEN 'cancelled'
+          WHEN o.order_status = 'completed' THEN 'completed'
+          WHEN o.payment_status = 'paid' THEN 'paid'
+          ELSE 'pending'
+        END AS status,
         o.transaction_id,
         o.created_at,
         o.updated_at,
@@ -59,11 +65,13 @@ class Order {
         -- Product details
         p.price as product_price,
         p.status as product_status,
+        p.image_url as product_image,
         pt.name as product_name,
         pt.default_shelf_life_days as product_shelf_life,
         -- Buyer details
         u_buyer.name as buyer_name,
         u_buyer.email as buyer_email,
+        u_buyer.address as delivery_address,
         -- Seller details
         u_seller.name as seller_name,
         u_seller.email as seller_email
@@ -92,15 +100,24 @@ class Order {
         o.payment_method,
         o.payment_status,
         o.order_status,
+        CASE
+          WHEN o.order_status = 'cancelled' THEN 'cancelled'
+          WHEN o.order_status = 'completed' THEN 'completed'
+          WHEN o.payment_status = 'paid' THEN 'paid'
+          ELSE 'pending'
+        END AS status,
         o.transaction_id,
         o.created_at,
         o.completed_at,
+        p.image_url as product_image,
         pt.name as product_name,
-        u_seller.name as seller_name
+        u_seller.name as seller_name,
+        u_buyer.address as delivery_address
       FROM orders o
       INNER JOIN products p ON o.product_id = p.id
       INNER JOIN product_types pt ON p.product_type_id = pt.id
       INNER JOIN users u_seller ON o.seller_id = u_seller.id
+      INNER JOIN users u_buyer ON o.buyer_id = u_buyer.id
       WHERE o.buyer_id = $1
     `;
 
@@ -147,11 +164,19 @@ class Order {
         o.payment_method,
         o.payment_status,
         o.order_status,
+        CASE
+          WHEN o.order_status = 'cancelled' THEN 'cancelled'
+          WHEN o.order_status = 'completed' THEN 'completed'
+          WHEN o.payment_status = 'paid' THEN 'paid'
+          ELSE 'pending'
+        END AS status,
         o.transaction_id,
         o.created_at,
         o.completed_at,
+        p.image_url as product_image,
         pt.name as product_name,
-        u_buyer.name as buyer_name
+        u_buyer.name as buyer_name,
+        u_buyer.address as delivery_address
       FROM orders o
       INNER JOIN products p ON o.product_id = p.id
       INNER JOIN product_types pt ON p.product_type_id = pt.id

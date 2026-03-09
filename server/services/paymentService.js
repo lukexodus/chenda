@@ -165,18 +165,8 @@ class PaymentService {
    * @returns {boolean} Whether payment succeeds
    */
   _determinePaymentSuccess(method) {
-    const random = Math.random();
-    
-    switch (method) {
-      case 'cash':
-        return random < 0.99; // 99% success rate (almost always works)
-      case 'gcash':
-        return random < 0.95; // 95% success rate
-      case 'card':
-        return random < 0.90; // 90% success rate (cards can fail more often)
-      default:
-        return random < 0.95;
-    }
+    // Always succeed in demo/mock mode
+    return true;
   }
 
   /**
