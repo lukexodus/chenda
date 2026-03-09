@@ -50,15 +50,15 @@ Product.getProductsWithMetrics = async (buyerLocation, filters = {}) => {
       p.status,
       p.address,
       
-      -- PostGIS distance calculation in kilometers
+      -- PostGIS distance calculation in kilometers (use seller's current location, not stale product location)
       ST_Distance(
-        p.location::geography,
+        COALESCE(u.location, p.location)::geography,
         ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography
       ) / 1000 AS distance_km,
       
-      -- Extract lat/lng for algorithm
-      ST_Y(p.location::geometry) AS latitude,
-      ST_X(p.location::geometry) AS longitude,
+      -- Extract lat/lng for algorithm (use seller's current location)
+      ST_Y(COALESCE(u.location, p.location)::geometry) AS latitude,
+      ST_X(COALESCE(u.location, p.location)::geometry) AS longitude,
       
       -- Product type data (for shelf life calculation)
       pt.name AS product_name,
@@ -93,7 +93,7 @@ Product.getProductsWithMetrics = async (buyerLocation, filters = {}) => {
   if (max_radius_km !== null) {
     paramCount++;
     queryText += ` AND ST_DWithin(
-      p.location::geography,
+      COALESCE(u.location, p.location)::geography,
       ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography,
       $${paramCount} * 1000
     )`;

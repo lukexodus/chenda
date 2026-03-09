@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Sliders, ChevronDown, ChevronUp, MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,6 +30,17 @@ export function SearchForm() {
     filters.location?.address || ""
   );
   const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Auto-populate from saved profile location and search if no location is set yet
+  useEffect(() => {
+    if (!filters.location && user?.location) {
+      setLocation(user.location.lat, user.location.lng, user.address);
+      setAddressInput(user.address || "");
+      // Trigger search immediately using the store's search action
+      // (it reads filters from the store, which setLocation just updated)
+      useSearchStore.getState().search();
+    }
+  }, [user?.location?.lat, user?.location?.lng]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle address selection from autocomplete
   const handleAddressSelect = (lat: number, lng: number, address: string) => {
