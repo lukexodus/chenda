@@ -55,12 +55,14 @@ async function checkMigrations(client) {
   return true;
 }
 
-async function getSeedFiles() {
+async function getSeedFiles(productsOnly = false) {
   const seedsDir = __dirname;
   const files = await fs.readdir(seedsDir);
   
   // Return seed files in specific order
-  const order = ['product_types.sql', 'mock_users.sql', 'mock_products.sql', 'nationwide_products.sql'];
+  const order = productsOnly
+    ? ['mock_products.sql', 'nationwide_products.sql']
+    : ['product_types.sql', 'mock_users.sql', 'mock_products.sql', 'nationwide_products.sql'];
   return order.filter(f => files.includes(f));
 }
 
@@ -95,11 +97,11 @@ async function checkExistingData(client) {
   return counts;
 }
 
-async function seed(force = false) {
+async function seed(force = false, productsOnly = false) {
   const client = new Client(DB_CONFIG);
   
   try {
-    log('\n🌱 Starting Database Seeding\n', 'blue');
+    log(productsOnly ? '\n🌱 Seeding Products Only\n' : '\n🌱 Starting Database Seeding\n', 'blue');
     log('━'.repeat(50), 'cyan');
     
     log('\n🔗 Connecting to database...', 'blue');
@@ -121,15 +123,26 @@ async function seed(force = false) {
     log(`   Products: ${existingData.products}`);
     
     const hasData = Object.values(existingData).some(count => count > 0);
-    
-    if (hasData && !force) {
+
+    if (productsOnly) {
+      // Delete & reseed only products — users/product_types must already exist
+      if (existingData.users === 0 || existingData.product_types === 0) {
+        log('\n❌ --products-only requires users and product_types to already exist.', 'red');
+        log('Run a full seed first: node seed.js --force', 'yellow');
+        process.exit(1);
+      }
+      log('\n🗑️  Clearing products (and orders)...', 'yellow');
+      await client.query('DELETE FROM orders');
+      await client.query('DELETE FROM products');
+      await client.query("SELECT setval('products_id_seq', 1, false)");
+      log('✓ Products cleared', 'green');
+      log('➕ Reseeding products...', 'cyan');
+    } else if (hasData && !force) {
       log('\n⚠️  Warning: Database already contains data!', 'yellow');
       log('Use --force to clear and re-seed', 'yellow');
       log('\nCurrent data will be preserved.', 'cyan');
       process.exit(0);
-    }
-    
-    if (force && hasData) {
+    } else if (force && hasData) {
       log('\n🗑️  Clearing existing data...', 'yellow');
       
       // Clear in reverse order due to foreign keys
@@ -141,7 +154,7 @@ async function seed(force = false) {
     }
     
     // Run seed files
-    const seedFiles = await getSeedFiles();
+    const seedFiles = await getSeedFiles(productsOnly);
     
     log(`\n🚀 Seeding database with ${seedFiles.length} files...`, 'blue');
     
@@ -178,16 +191,18 @@ async function seed(force = false) {
 // Command line interface
 const args = process.argv.slice(2);
 const force = args.includes('--force') || args.includes('-f');
+const productsOnly = args.includes('--products-only') || args.includes('-p');
 
 if (args.includes('--help') || args.includes('-h')) {
   log('\n🌱 Database Seeder', 'blue');
   log('\nUsage:', 'cyan');
-  log('  node seed.js           - Seed database (fails if data exists)');
-  log('  node seed.js --force   - Clear and re-seed database');
-  log('  node seed.js --help    - Show this help message');
+  log('  node seed.js                  - Seed database (fails if data exists)');
+  log('  node seed.js --force          - Clear everything and re-seed');
+  log('  node seed.js --products-only  - Delete & reseed only products (keeps users)');
+  log('  node seed.js --help           - Show this help message');
   log('');
   process.exit(0);
 }
 
 // Run seeder
-seed(force);
+seed(force, productsOnly);
