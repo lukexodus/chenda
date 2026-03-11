@@ -16,8 +16,8 @@ export function AlgorithmPreferences() {
   const { user, updatePreferences } = useAuthStore();
   const [isSaving, setIsSaving] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<string>("");
-  const [proximityWeight, setProximityWeight] = useState(50);
-  const [freshnessWeight, setFreshnessWeight] = useState(50);
+  const [proximityWeight, setProximityWeight] = useState(60);
+  const [freshnessWeight, setFreshnessWeight] = useState(40);
   const [maxRadius, setMaxRadius] = useState(30);
   const [minFreshness, setMinFreshness] = useState(50);
   const [displayMode, setDisplayMode] = useState<"ranking" | "filter">("ranking");
@@ -27,10 +27,19 @@ export function AlgorithmPreferences() {
   useEffect(() => {
     if (user?.preferences) {
       const prefs = user.preferences;
-      setProximityWeight(prefs.proximity_weight || 50);
-      setFreshnessWeight(prefs.freshness_weight || 50);
-      setMaxRadius(prefs.max_radius || 30);
-      setMinFreshness(prefs.min_freshness_score || 50);
+      
+      // Ensure weights sum to 100, prioritizing proximity
+      const prox = prefs.proximity_weight ?? 60;
+      let fresh = prefs.freshness_weight ?? 40;
+      
+      if (prox + fresh !== 100) {
+        fresh = 100 - prox;
+      }
+      
+      setProximityWeight(prox);
+      setFreshnessWeight(fresh);
+      setMaxRadius(prefs.max_radius ?? 30);
+      setMinFreshness(prefs.min_freshness_score ?? 50);
       setDisplayMode((prefs as any).display_mode || "ranking");
       
       // Parse storage conditions if stored as string
