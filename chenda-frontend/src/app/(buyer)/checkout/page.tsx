@@ -68,8 +68,10 @@ export default function CheckoutPage() {
   )!;
 
   const handlePlaceOrder = async () => {
-    // Validate delivery address
-    if (!user.address || !user.location?.lat || !user.location?.lng) {
+    // Validate delivery address — only the text address is required;
+    // the backend derives the address from the buyer's profile row directly
+    // and does not use lat/lng from the request body.
+    if (!user.address) {
       toast({
         variant: 'destructive',
         title: 'Delivery address required',
