@@ -37,6 +37,14 @@ const sellerNav: NavItem[] = [
   { href: "/seller/profile", label: "Profile", icon: User },
 ];
 
+const bothNav: NavItem[] = [
+  { href: "/buyer", label: "Search", icon: Search },
+  { href: "/seller/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/seller/products", label: "Products", icon: Package },
+  { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/buyer/profile", label: "Profile", icon: User },
+];
+
 /**
  * Top header bar – logo + app name.
  */
@@ -109,8 +117,12 @@ export function BottomNav() {
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
 
-  const items: NavItem[] =
-    user?.type === "seller" || user?.type === "both" ? sellerNav : buyerNav;
+  let items: NavItem[] = buyerNav;
+  if (user?.type === "both") {
+    items = bothNav;
+  } else if (user?.type === "seller") {
+    items = sellerNav;
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--fresh-border)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95 w-full max-w-[100vw] overflow-x-hidden">
