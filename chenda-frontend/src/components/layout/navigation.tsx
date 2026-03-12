@@ -55,6 +55,12 @@ export function TopHeader() {
   const isBuyer = user?.type !== "seller";
   const router = useRouter();
 
+  const homeHref = user?.type === "buyer"
+    ? "/buyer"
+    : user?.type === "seller" || user?.type === "both"
+      ? "/seller/dashboard"
+      : "/";
+
   const handleLogout = async () => {
     await logout();
     toast.success("Logged out");
@@ -63,7 +69,7 @@ export function TopHeader() {
 
   return (
     <header className="sticky top-0 z-40 flex h-14 w-full max-w-[100vw] overflow-x-hidden items-center justify-between border-b border-[var(--fresh-border)] bg-white/95 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">
-      <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="Chenda home">
+      <Link href={homeHref} className="flex items-center gap-2 shrink-0" aria-label="Chenda home">
         <Image
           src="/chenda.png"
           alt=""
