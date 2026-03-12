@@ -18,7 +18,7 @@ import { api } from '@/lib/api';
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  orderId: number;
+  orderIds: number[];
   paymentMethod: PaymentMethodOption;
   totalAmount: number;
   onSuccess?: (orderId: number) => void;
@@ -29,7 +29,7 @@ type PaymentState = 'idle' | 'processing' | 'success' | 'error';
 export default function PaymentModal({
   isOpen,
   onClose,
-  orderId,
+  orderIds,
   paymentMethod,
   totalAmount,
   onSuccess,
@@ -65,25 +65,28 @@ export default function PaymentModal({
       // Mock 2-second delay for payment processing
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Call backend API to process mock payment
       const paymentData: PayOrderRequest = {
         payment_method: paymentMethod.id,
         payment_details: {},
       };
 
-      const response = await api.post(`/orders/${orderId}/payment`, paymentData);
-
-      if (response.data.success) {
-        setTransactionId(response.data.payment?.transactionId ?? '');
-        setPaymentState('success');
-
-        // Call success callback after 1 second
-        setTimeout(() => {
-          onSuccess?.(orderId);
-        }, 1000);
-      } else {
-        throw new Error(response.data.message || 'Payment failed');
+      // Process payment for each order sequentially
+      let lastTransactionId = '';
+      for (const id of orderIds) {
+        const response = await api.post(`/orders/${id}/payment`, paymentData);
+        if (!response.data.success) {
+          throw new Error(response.data.message || 'Payment failed');
+        }
+        lastTransactionId = response.data.payment?.transactionId ?? '';
       }
+
+      setTransactionId(lastTransactionId);
+      setPaymentState('success');
+
+      // Call success callback after 1 second
+      setTimeout(() => {
+        onSuccess?.(orderIds[0]);
+      }, 1000);
     } catch (error: any) {
       console.error('Payment error:', error);
       setPaymentState('error');
@@ -101,7 +104,11 @@ export default function PaymentModal({
   };
 
   const handleViewOrder = () => {
-    router.push(`/orders/${orderId}`);
+    if (orderIds.length === 1) {
+      router.push(`/orders/${orderIds[0]}`);
+    } else {
+      router.push('/buyer/orders');
+    }
     onClose();
   };
 
@@ -207,7 +214,7 @@ export default function PaymentModal({
             {paymentState === 'success' && (
               <>
                 <Button onClick={handleViewOrder} className="flex-1">
-                  View Order
+                  {orderIds.length === 1 ? 'View Order' : 'View Orders'}
                 </Button>
                 <Button onClick={handleClose} variant="secondary" className="flex-1">
                   Close

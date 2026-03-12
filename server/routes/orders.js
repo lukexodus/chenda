@@ -9,6 +9,7 @@ const { isAuthenticated, isBuyer, isSeller } = require('../middleware/authentica
 const asyncHandler = require('../middleware/asyncHandler');
 const {
   createOrder,
+  createBatchOrders,
   processPayment,
   getOrder,
   listOrders,
@@ -64,6 +65,16 @@ const validateListOrders = [
  * Get supported payment methods (public information)
  */
 router.get('/payment-methods', asyncHandler(getPaymentMethods));
+
+/**
+ * POST /api/orders/batch
+ * Create multiple orders at once (buyers only)
+ */
+router.post('/batch',
+  isAuthenticated,
+  isBuyer,
+  asyncHandler(createBatchOrders)
+);
 
 /**
  * POST /api/orders

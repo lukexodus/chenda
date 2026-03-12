@@ -37,7 +37,7 @@ export default function CheckoutPage() {
   const [deliveryNotes, setDeliveryNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [currentOrderId, setCurrentOrderId] = useState<number | null>(null);
+  const [currentOrderIds, setCurrentOrderIds] = useState<number[]>([]);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -80,43 +80,27 @@ export default function CheckoutPage() {
       return;
     }
 
-    // For MVP, we only support single product orders
-    // Backend expects one product per order
-    if (items.length > 1) {
-      toast({
-        variant: 'destructive',
-        title: 'Multiple products not supported',
-        description: 'Please order one product at a time in this demo version',
-      });
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
-      const item = items[0];
-
-      // Create order
-      const orderData = {
-        product_id: item.product.id,
-        quantity: item.quantity,
+      const response = await api.post('/orders/batch', {
+        items: items.map((item) => ({
+          product_id: item.product.id,
+          quantity: item.quantity,
+        })),
         payment_method: selectedPaymentMethod,
         delivery_address: user.address,
         delivery_lat: user.location?.lat,
         delivery_lng: user.location?.lng,
         delivery_notes: deliveryNotes.trim() || undefined,
-      };
-
-      const response = await api.post('/orders', orderData);
+      });
 
       if (response.data.success) {
-        const orderId = response.data.order?.id ?? response.data.data?.id;
-        setCurrentOrderId(orderId);
-
-        // Show payment modal
+        const orderIds = (response.data.orders as { id: number }[]).map((o) => o.id);
+        setCurrentOrderIds(orderIds);
         setShowPaymentModal(true);
       } else {
-        throw new Error(response.data.message || 'Failed to create order');
+        throw new Error(response.data.message || 'Failed to create orders');
       }
     } catch (error: any) {
       console.error('Order creation error:', error);
@@ -133,22 +117,21 @@ export default function CheckoutPage() {
   };
 
   const handlePaymentSuccess = (orderId: number) => {
-    // Clear cart
     clearCart();
-
-    // Close payment modal
     setShowPaymentModal(false);
     setIsSubmitting(false);
 
-    // Show success toast
     toast({
-      title: 'Order placed successfully!',
-      description: 'Redirecting to order details...',
+      title: currentOrderIds.length > 1 ? 'Orders placed successfully!' : 'Order placed successfully!',
+      description: 'Redirecting to your orders...',
     });
 
-    // Redirect to order confirmation page
     setTimeout(() => {
-      router.push(`/orders/${orderId}`);
+      if (currentOrderIds.length > 1) {
+        router.push('/buyer/orders');
+      } else {
+        router.push(`/orders/${orderId}`);
+      }
     }, 1000);
   };
 
@@ -311,11 +294,11 @@ export default function CheckoutPage() {
       </div>
 
       {/* Payment Modal */}
-      {showPaymentModal && currentOrderId && (
+      {showPaymentModal && currentOrderIds.length > 0 && (
         <PaymentModal
           isOpen={showPaymentModal}
           onClose={handlePaymentClose}
-          orderId={currentOrderId}
+          orderIds={currentOrderIds}
           paymentMethod={selectedMethodOption}
           totalAmount={getTotalPrice()}
           onSuccess={handlePaymentSuccess}

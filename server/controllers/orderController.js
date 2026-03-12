@@ -366,8 +366,111 @@ const getPaymentMethods = async (req, res) => {
   });
 };
 
+/**
+ * Create multiple orders in one request (buyers only)
+ * POST /api/orders/batch
+ * Body: { items: [{ product_id, quantity }], payment_method }
+ */
+const createBatchOrders = async (req, res) => {
+  const { items, payment_method = 'cash' } = req.body;
+  const buyer_id = req.user.id;
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'items must be a non-empty array'
+    });
+  }
+
+  if (!['cash', 'gcash', 'card'].includes(payment_method)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid payment method. Must be cash, gcash, or card'
+    });
+  }
+
+  const createdOrders = [];
+
+  for (const item of items) {
+    const { product_id, quantity } = item;
+
+    if (!product_id || !quantity || quantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Each item must have a valid product_id and quantity > 0`
+      });
+    }
+
+    const product = await Product.findById(product_id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: `Product ${product_id} not found`
+      });
+    }
+
+    if (product.status !== 'active') {
+      return res.status(400).json({
+        success: false,
+        message: `Product "${product.name || product_id}" is not available for purchase`
+      });
+    }
+
+    if (product.quantity < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: `Insufficient quantity for product ${product_id}. Only ${product.quantity} ${product.unit} available`
+      });
+    }
+
+    if (product.seller_id === buyer_id) {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot purchase your own product (${product_id})`
+      });
+    }
+
+    const unit_price = parseFloat(product.price);
+    const total_amount = unit_price * quantity;
+
+    const order = await Order.create({
+      buyer_id,
+      seller_id: product.seller_id,
+      product_id,
+      quantity: parseFloat(quantity),
+      unit_price,
+      total_amount,
+      payment_method
+    });
+
+    const orderDetails = await Order.getById(order.id);
+
+    if (req.analytics) {
+      req.analytics.track('order_created', {
+        order_id: orderDetails.id,
+        product_id: orderDetails.product_id,
+        seller_id: orderDetails.seller_id,
+        buyer_id: orderDetails.buyer_id,
+        quantity: orderDetails.quantity,
+        unit_price: orderDetails.unit_price,
+        total_amount: orderDetails.total_amount,
+        payment_method: orderDetails.payment_method
+      }, buyer_id).catch(err => console.error('Order creation analytics error:', err));
+    }
+
+    createdOrders.push(orderDetails);
+  }
+
+  res.status(201).json({
+    success: true,
+    message: `${createdOrders.length} order(s) created successfully`,
+    orders: createdOrders
+  });
+};
+
 module.exports = {
   createOrder,
+  createBatchOrders,
   processPayment,
   getOrder,
   listOrders,
