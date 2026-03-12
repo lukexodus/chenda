@@ -156,8 +156,8 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
       return;
     }
 
-    // Check if user has location set
-    if (!user?.location?.lat || !user?.location?.lng) {
+    // For new products, location is required
+    if (!isEdit && (!user?.location?.lat || !user?.location?.lng)) {
       toast.error("Please set your location in Profile → Location before creating products");
       return;
     }
@@ -169,7 +169,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
       const finalImageUrl = imageFile ? await uploadImage() : uploadedImageUrl;
 
       // Prepare product data
-      const productData = {
+      const productData: Record<string, unknown> = {
         product_type_id: selectedType!.id,
         price: parseFloat(price),
         quantity: parseFloat(quantity),
@@ -178,12 +178,16 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
         description: description.trim() || undefined,
         storage_condition: storageCondition,
         image_url: finalImageUrl || undefined,
-        location: {
+        address: user?.address || undefined,
+      };
+
+      // Only include location if the user has GPS coordinates
+      if (user?.location?.lat && user?.location?.lng) {
+        productData.location = {
           lat: user.location.lat,
           lng: user.location.lng,
-        },
-        address: user.address || undefined,
-      };
+        };
+      }
 
       // Create or update product
       if (isEdit && product) {
