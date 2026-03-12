@@ -6,12 +6,12 @@ import "leaflet/dist/leaflet.css";
 import { Product } from "@/lib/stores/searchStore";
 import GeolocationButton from "./GeolocationButton";
 
-// Fix Leaflet default marker icon issue
+// Fix Leaflet default marker icon issue with local assets
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconRetinaUrl: "/marker-icon-2x.png",
+  iconUrl: "/marker-icon.png",
+  shadowUrl: "/marker-shadow.png",
 });
 
 interface SearchResultsMapProps {

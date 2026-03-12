@@ -15,11 +15,11 @@ import { toast } from "sonner";
 import { Loader2, MapPin } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
-// Fix for default marker icon in Leaflet
+// Fix for default marker icon in Leaflet with local assets
 const defaultIcon = new Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconUrl: "/marker-icon.png",
+  iconRetinaUrl: "/marker-icon-2x.png",
+  shadowUrl: "/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
