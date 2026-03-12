@@ -10,9 +10,15 @@
  *   node seeds/clear-products.js --confirm  -- actually deletes
  */
 
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+import dotenv from 'dotenv';
+import pg from 'pg';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const { Client } = require('pg');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { Client } = pg;
+
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const DB_CONFIG = {
   host:     process.env.DB_HOST     || 'localhost',
