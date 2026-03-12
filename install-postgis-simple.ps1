@@ -179,13 +179,13 @@ $psqlPath = "$pgPath\bin\psql.exe"
 $createCmd = "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
 
 try {
-    $output = & $psqlPath -U postgres -d chenda_db -c $createCmd 2>&1
+    $output = & $psqlPath -U postgres -d chenda -c $createCmd 2>&1
     
     if ($LASTEXITCODE -eq 0) {
         Write-Host "PostGIS extension enabled!" -ForegroundColor Green
         Write-Host ""
         Write-Host "Checking version:" -ForegroundColor Gray
-        & $psqlPath -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+        & $psqlPath -U postgres -d chenda -c "SELECT PostGIS_Version();"
         Write-Host ""
         Write-Host "========================================" -ForegroundColor Green
         Write-Host " PostGIS Installation COMPLETE!" -ForegroundColor Green

@@ -17,7 +17,7 @@ if [ ! -f .env ]; then
 # Database Configuration
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=chenda_db
+DB_NAME=chenda
 DB_USER=postgres
 DB_PASSWORD=postgres
 
@@ -62,8 +62,8 @@ if [ $? -ne 0 ]; then
     echo "  net start postgresql-x64-15"
     echo ""
     echo "To create the database (after PostgreSQL is running):"
-    echo "  psql -U postgres -c \"CREATE DATABASE chenda_db;\""
-    echo "  psql -U postgres -d chenda_db -c \"CREATE EXTENSION postgis;\""
+    echo "  psql -U postgres -c \"CREATE DATABASE chenda;\""
+    echo "  psql -U postgres -d chenda -c \"CREATE EXTENSION postgis;\""
     echo ""
     exit 1
 fi

@@ -51,10 +51,10 @@ After the setup script completes, create the Chenda database:
 cd "C:\Program Files\PostgreSQL\15\bin"
 
 # Create database
-.\psql.exe -U postgres -c "CREATE DATABASE chenda_db;"
+.\psql.exe -U postgres -c "CREATE DATABASE chenda;"
 
 # Enable PostGIS extension
-.\psql.exe -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+.\psql.exe -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 ```
 
 **Note:** You'll be prompted for the postgres password. This is the password you set during PostgreSQL installation.
@@ -124,11 +124,11 @@ Update `server/.env`:
 DB_PASSWORD=your_actual_postgres_password
 ```
 
-### "Database chenda_db does not exist"
+### "Database chenda does not exist"
 
 ```powershell
 cd "C:\Program Files\PostgreSQL\15\bin"
-.\psql.exe -U postgres -c "CREATE DATABASE chenda_db;"
+.\psql.exe -U postgres -c "CREATE DATABASE chenda;"
 ```
 
 ### "Extension postgis not found"
@@ -141,7 +141,7 @@ Install PostGIS:
 
 Then enable in database:
 ```powershell
-.\psql.exe -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+.\psql.exe -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 ```
 
 ### "Cannot open service manager"
@@ -168,8 +168,8 @@ cd "C:\Program Files\PostgreSQL\15\bin"
 net start postgresql-x64-15
 
 # Create database
-.\psql.exe -U postgres -c "CREATE DATABASE chenda_db;"
-.\psql.exe -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+.\psql.exe -U postgres -c "CREATE DATABASE chenda;"
+.\psql.exe -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 ```
 
 ---

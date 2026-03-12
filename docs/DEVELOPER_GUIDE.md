@@ -101,7 +101,7 @@ Open `server/.env` and set at minimum `DB_PASSWORD` and `SESSION_SECRET`.
 |----------|---------|----------|-------------|
 | `DB_HOST` | `localhost` | Yes | PostgreSQL host |
 | `DB_PORT` | `5432` | Yes | PostgreSQL port |
-| `DB_NAME` | `chenda_db` | Yes | Main database name |
+| `DB_NAME` | `chenda` | Yes | Main database name |
 | `DB_USER` | `postgres` | Yes | Database user |
 | `DB_PASSWORD` | _(none)_ | **Yes** | Database password — must be set |
 | `PORT` | `3001` | Yes | API server port |
@@ -143,8 +143,8 @@ This is the only frontend environment variable. It tells the Axios client where 
 psql -U postgres
 
 # Inside psql:
-CREATE DATABASE chenda_db;
-\c chenda_db
+CREATE DATABASE chenda;
+\c chenda
 CREATE EXTENSION postgis;
 \q
 ```
@@ -519,7 +519,7 @@ sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'yourpassword';"
 PostGIS is not installed, or needs to be enabled:
 
 ```sql
--- Run inside psql connected to chenda_db
+-- Run inside psql connected to chenda
 CREATE EXTENSION IF NOT EXISTS postgis;
 ```
 

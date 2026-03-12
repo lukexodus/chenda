@@ -43,7 +43,7 @@ if not exist .env (
         echo # Database Configuration
         echo DB_HOST=localhost
         echo DB_PORT=5432
-        echo DB_NAME=chenda_db
+        echo DB_NAME=chenda
         echo DB_USER=postgres
         echo DB_PASSWORD=postgres
         echo.
@@ -83,8 +83,8 @@ if errorlevel 1 (
     echo    powershell -ExecutionPolicy Bypass -File setup-postgresql.ps1
     echo.
     echo 3. Create the database manually:
-    echo    "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"
-    echo    "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+    echo    "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda;"
+    echo    "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"
     echo.
     echo 4. Update DB_PASSWORD in server\.env if needed
     echo.

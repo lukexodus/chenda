@@ -75,7 +75,7 @@ echo.
 
 echo Step 6: Enabling PostGIS extension...
 echo.
-"%PG_PATH%\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
+"%PG_PATH%\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
 
 if %errorLevel% EQU 0 (
     echo.
@@ -84,7 +84,7 @@ if %errorLevel% EQU 0 (
     echo ========================================
     echo.
     echo Verifying version:
-    "%PG_PATH%\bin\psql.exe" -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+    "%PG_PATH%\bin\psql.exe" -U postgres -d chenda -c "SELECT PostGIS_Version();"
     echo.
     echo Next: Start the backend server
     echo   cd server

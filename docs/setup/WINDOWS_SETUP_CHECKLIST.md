@@ -135,11 +135,11 @@ cd ..
 ### Step 7: Database Setup
 ```bash
 # Create database
-psql -U postgres -c "CREATE DATABASE chenda_db;"
+psql -U postgres -c "CREATE DATABASE chenda;"
 # Enter password when prompted
 
 # Verify PostGIS (should already be enabled from Step 4)
-psql -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+psql -U postgres -d chenda -c "SELECT PostGIS_Version();"
 # Should show: 3.6 USE_GEOS=1...
 ```
 
@@ -154,7 +154,7 @@ node migrations/migrate.js up
 **Expected output:**
 ```
 🔗 Connecting to database...
-✅ Connected to database: chenda_db
+✅ Connected to database: chenda
 
 📋 Found 3 pending migrations
   ✓ 001_create_tables.sql (Applied in Xms)
@@ -279,7 +279,7 @@ Try searching:
 - [ ] PostgreSQL service running ✅
 
 ### Database
-- [ ] Database `chenda_db` created ✅
+- [ ] Database `chenda` created ✅
 - [ ] PostGIS extension enabled ✅
 - [ ] Migrations applied (3) ✅
 - [ ] Data seeded (180 types, 10 users, 30 products) ✅
@@ -342,10 +342,10 @@ npm run dev
 **Database errors:**
 ```bash
 # Check database exists
-psql -U postgres -l | grep chenda_db
+psql -U postgres -l | grep chenda
 
 # Check PostGIS
-psql -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+psql -U postgres -d chenda -c "SELECT PostGIS_Version();"
 ```
 
 ### Get Help
@@ -382,9 +382,9 @@ npm run dev
 ### Reset Database
 ```bash
 # Drop and recreate
-psql -U postgres -c "DROP DATABASE chenda_db;"
-psql -U postgres -c "CREATE DATABASE chenda_db;"
-psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis CASCADE;"
+psql -U postgres -c "DROP DATABASE chenda;"
+psql -U postgres -c "CREATE DATABASE chenda;"
+psql -U postgres -d chenda -c "CREATE EXTENSION postgis CASCADE;"
 
 # Re-run migrations and seeds
 node migrations/migrate.js up

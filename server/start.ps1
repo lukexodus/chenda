@@ -19,7 +19,7 @@ if (-Not (Test-Path ".env")) {
 # Database Configuration
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=chenda_db
+DB_NAME=chenda
 DB_USER=postgres
 DB_PASSWORD=postgres
 
@@ -95,11 +95,11 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "Please ensure:" -ForegroundColor Yellow
     Write-Host "  1. PostgreSQL service is running (check above)" -ForegroundColor White
     Write-Host "  2. Database credentials in .env are correct" -ForegroundColor White
-    Write-Host "  3. Database chenda_db exists" -ForegroundColor White
+    Write-Host "  3. Database chenda exists" -ForegroundColor White
     Write-Host ""
     Write-Host "To create the database:" -ForegroundColor Yellow
-    Write-Host '  psql -U postgres -c "CREATE DATABASE chenda_db;"' -ForegroundColor White
-    Write-Host '  psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"' -ForegroundColor White
+    Write-Host '  psql -U postgres -c "CREATE DATABASE chenda;"' -ForegroundColor White
+    Write-Host '  psql -U postgres -d chenda -c "CREATE EXTENSION postgis;"' -ForegroundColor White
     Write-Host ""
     Write-Host "If you get a password error, update DB_PASSWORD in .env" -ForegroundColor Yellow
     Write-Host ""

@@ -130,8 +130,8 @@ echo    Next Steps
 echo ================================================================
 echo.
 echo 1. Create Chenda database:
-echo    "%PG_BIN%\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"
-echo    "%PG_BIN%\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+echo    "%PG_BIN%\psql.exe" -U postgres -c "CREATE DATABASE chenda;"
+echo    "%PG_BIN%\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 echo.
 echo 2. Update server\.env if you set a postgres password:
 echo    DB_PASSWORD=your_password

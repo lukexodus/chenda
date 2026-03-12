@@ -126,16 +126,16 @@ psql --version
 & "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres
 
 # Inside psql prompt:
-CREATE DATABASE chenda_db;
-\c chenda_db
+CREATE DATABASE chenda;
+\c chenda
 CREATE EXTENSION postgis;
 \q
 ```
 
 **Or as one-liner:**
 ```powershell
-& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"
-& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda;"
+& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 ```
 
 ### 4. Update Chenda Configuration
@@ -144,7 +144,7 @@ Edit `server/.env`:
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=chenda_db
+DB_NAME=chenda
 DB_USER=postgres
 DB_PASSWORD=your_password_here  ← UPDATE THIS!
 ```
@@ -195,8 +195,8 @@ PostgreSQL bin directory not in PATH. Use full path:
 Start-Service postgresql-x64-15
 
 # 2. Create database
-& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"
-& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda;"
+& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 
 # 3. Configure Chenda
 cd C:\Users\ACER\Documents\CHENDA\chenda\server
@@ -215,7 +215,7 @@ Before running Chenda backend:
 - [ ] PostgreSQL 15+ installed
 - [ ] PostgreSQL service running
 - [ ] PostGIS extension available
-- [ ] Database `chenda_db` created
+- [ ] Database `chenda` created
 - [ ] PostGIS extension enabled in database
 - [ ] `server/.env` configured with correct password
 - [ ] psql accessible (in PATH or via full path)

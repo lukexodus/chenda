@@ -180,8 +180,8 @@ Write-Host '   .\psql.exe -U postgres' -ForegroundColor White
 Write-Host "   ALTER USER postgres WITH PASSWORD 'your_password';" -ForegroundColor White
 Write-Host ""
 Write-Host "2. Create Chenda database:" -ForegroundColor Yellow
-Write-Host '   .\psql.exe -U postgres -c "CREATE DATABASE chenda_db;"' -ForegroundColor White
-Write-Host '   .\psql.exe -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"' -ForegroundColor White
+Write-Host '   .\psql.exe -U postgres -c "CREATE DATABASE chenda;"' -ForegroundColor White
+Write-Host '   .\psql.exe -U postgres -d chenda -c "CREATE EXTENSION postgis;"' -ForegroundColor White
 Write-Host ""
 Write-Host "3. Update server/.env with your postgres password" -ForegroundColor Yellow
 Write-Host ""

@@ -26,8 +26,8 @@ if ($pgService) {
     
     Write-Host "Next steps:" -ForegroundColor Yellow
     Write-Host "1. Ensure PostGIS extension is installed (via Stack Builder)" -ForegroundColor White
-    Write-Host "2. Create database: psql -U postgres -c `"CREATE DATABASE chenda_db;`"" -ForegroundColor White
-    Write-Host "3. Enable PostGIS: psql -U postgres -d chenda_db -c `"CREATE EXTENSION postgis;`"" -ForegroundColor White
+    Write-Host "2. Create database: psql -U postgres -c `"CREATE DATABASE chenda;`"" -ForegroundColor White
+    Write-Host "3. Enable PostGIS: psql -U postgres -d chenda -c `"CREATE EXTENSION postgis;`"" -ForegroundColor White
     Write-Host "4. Update password in server/.env" -ForegroundColor White
     Write-Host "5. Run: start.bat`n" -ForegroundColor White
     
@@ -59,8 +59,8 @@ if (Get-Command winget -ErrorAction SilentlyContinue) {
         Write-Host "   Start-Service postgresql-x64-15`n" -ForegroundColor Gray
         
         Write-Host "3. Create Chenda database:" -ForegroundColor White
-        Write-Host '   & "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"' -ForegroundColor Gray
-        Write-Host '   & "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"' -ForegroundColor Gray
+        Write-Host '   & "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda;"' -ForegroundColor Gray
+        Write-Host '   & "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"' -ForegroundColor Gray
         Write-Host ""
         
         Write-Host "4. Configure Chenda:" -ForegroundColor White

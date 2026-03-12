@@ -29,3 +29,40 @@
 2. **Algorithm Documentation** — the core differentiator of this project, least documented
 3. **Environment & Configuration Guide** — critical for onboarding/deployment
 4. **Test Plan** — you have E2E specs and Jest tests but no overview document
+
+---
+
+## AI Thread Context Guide
+
+It depends on the task. Here's a practical guide:
+
+---
+
+### Always include (project-wide context)
+- architecture.md — stack, folder structure, how pieces connect
+- TASK_BREAKDOWN.md — what's been built and what phase you're in
+
+---
+
+### By task type
+
+| Task | Documents to attach |
+|---|---|
+| **Backend / API work** | architecture.md + API_DOCUMENTATION.md + DATABASE_SCHEMA.md |
+| **Frontend UI / components** | architecture.md + DESIGN_SYSTEM.md |
+| **Database / migrations** | DATABASE_SCHEMA.md only |
+| **Bug fixing** | bug-fixes.md + relevant schema or API doc |
+| **Testing** | MANUAL_E2E_TESTING_GUIDE.md + API_DOCUMENTATION.md |
+| **New feature** | architecture.md + TASK_BREAKDOWN.md + whichever domain doc applies |
+
+---
+
+### Avoid attaching unless specifically needed
+- DEPLOYMENT_GUIDE.md, SETUP_GUIDE.md, WINDOWS_SETUP_CHECKLIST.md — setup-only, not useful for coding tasks
+- The `docs/TASK_*.md` completion files — too granular, just noise as context
+- FRONTEND_DESIGN.md (root) — superseded by DESIGN_SYSTEM.md for most purposes
+
+---
+
+**Smallest useful set for most coding sessions:**  
+architecture.md + `DATABASE_SCHEMA.md` + API_DOCUMENTATION.md + `DESIGN_SYSTEM.md`

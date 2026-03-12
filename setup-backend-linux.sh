@@ -81,17 +81,17 @@ echo ""
 # Create database
 echo -e "${YELLOW}[5/6] Creating database...${NC}"
 echo ""
-echo "Creating 'chenda_db' database..."
+echo "Creating 'chenda' database..."
 echo "You may be prompted for PostgreSQL password."
 echo ""
-sudo -u postgres psql -c "CREATE DATABASE chenda_db;" 2>/dev/null || echo "[INFO] Database may already exist"
+sudo -u postgres psql -c "CREATE DATABASE chenda;" 2>/dev/null || echo "[INFO] Database may already exist"
 echo -e "${GREEN}[OK] Database ready${NC}"
 echo ""
 
 # Install PostGIS extension
 echo -e "${YELLOW}[6/6] Enabling PostGIS extension...${NC}"
 echo ""
-sudo -u postgres psql -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
+sudo -u postgres psql -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
 if [ $? -ne 0 ]; then
     echo ""
     echo -e "${YELLOW}[WARNING] PostGIS extension failed to enable${NC}"

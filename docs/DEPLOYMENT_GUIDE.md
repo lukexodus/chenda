@@ -60,8 +60,8 @@ echo "NEXT_PUBLIC_API_URL=http://localhost:3001" > chenda-frontend/.env.local
 Open **psql** (or pgAdmin) as the `postgres` user:
 
 ```sql
-CREATE DATABASE chenda_db;
-\c chenda_db
+CREATE DATABASE chenda;
+\c chenda
 CREATE EXTENSION postgis;
 \q
 ```
@@ -152,8 +152,8 @@ echo "NEXT_PUBLIC_API_URL=http://localhost:3001" > chenda-frontend/.env.local
 
 ```bash
 sudo -u postgres psql <<EOF
-CREATE DATABASE chenda_db;
-\c chenda_db
+CREATE DATABASE chenda;
+\c chenda
 CREATE EXTENSION postgis;
 EOF
 ```
@@ -185,7 +185,7 @@ cd chenda-frontend && npm run dev
 |----------|-------------|-----------------|
 | `DB_HOST` | `localhost` | Set to DB host or 127.0.0.1 |
 | `DB_PORT` | `5432` | Default PostgreSQL port |
-| `DB_NAME` | `chenda_db` | Create before running migrations |
+| `DB_NAME` | `chenda` | Create before running migrations |
 | `DB_USER` | `postgres` | Use a dedicated database user in production |
 | `DB_PASSWORD` | _(your password)_ | **Required.** Use a strong password in production |
 | `PORT` | `3001` | The port the API server listens on |
@@ -270,8 +270,8 @@ ufw enable
 ```bash
 sudo -u postgres psql <<EOF
 CREATE ROLE chenda_user WITH LOGIN PASSWORD 'strong_db_password';
-CREATE DATABASE chenda_db OWNER chenda_user;
-\c chenda_db
+CREATE DATABASE chenda OWNER chenda_user;
+\c chenda
 CREATE EXTENSION postgis;
 EOF
 ```
@@ -301,7 +301,7 @@ Set production values:
 ```env
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=chenda_db
+DB_NAME=chenda
 DB_USER=chenda_user
 DB_PASSWORD=strong_db_password
 PORT=3001
@@ -456,9 +456,9 @@ node seeds/seed.js
 
 ```sql
 -- Drops and recreates the database entirely
-DROP DATABASE chenda_db;
-CREATE DATABASE chenda_db;
-\c chenda_db
+DROP DATABASE chenda;
+CREATE DATABASE chenda;
+\c chenda
 CREATE EXTENSION postgis;
 ```
 

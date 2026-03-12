@@ -81,7 +81,7 @@ if ($pgService -and $pgService.Status -eq "Running") {
         } else {
             Write-Host "      [X] Database connection failed" -ForegroundColor Red
             Write-Host "          Check:" -ForegroundColor Gray
-            Write-Host "          - Database 'chenda_db' exists" -ForegroundColor Gray
+            Write-Host "          - Database 'chenda' exists" -ForegroundColor Gray
             Write-Host "          - Password in .env is correct" -ForegroundColor Gray
             Write-Host "          - PostgreSQL is accepting connections" -ForegroundColor Gray
             $allOk = $false
@@ -136,8 +136,8 @@ if ($allOk) {
     }
     
     Write-Host "  2. Create database (if not exists):" -ForegroundColor Cyan
-    Write-Host '     psql -U postgres -c "CREATE DATABASE chenda_db;"' -ForegroundColor Gray
-    Write-Host '     psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"' -ForegroundColor Gray
+    Write-Host '     psql -U postgres -c "CREATE DATABASE chenda;"' -ForegroundColor Gray
+    Write-Host '     psql -U postgres -d chenda -c "CREATE EXTENSION postgis;"' -ForegroundColor Gray
     
     Write-Host "  3. Update server/.env with correct DB_PASSWORD" -ForegroundColor Cyan
     

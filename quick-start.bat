@@ -76,11 +76,11 @@ if errorlevel 1 (
     echo Possible fixes:
     echo   1. Create database:
     echo      "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres ^
-    echo        -c "CREATE DATABASE chenda_db;"
+    echo        -c "CREATE DATABASE chenda;"
     echo.
     echo   2. Enable PostGIS:
     echo      "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres ^
-    echo        -d chenda_db -c "CREATE EXTENSION postgis;"
+    echo        -d chenda -c "CREATE EXTENSION postgis;"
     echo.
     echo   3. Update DB_PASSWORD in server\.env
     echo.

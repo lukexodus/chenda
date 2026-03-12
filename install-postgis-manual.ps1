@@ -176,13 +176,13 @@ Write-Host "STEP 6: Enable PostGIS Extension" -ForegroundColor Yellow
 Write-Host "----------------------------------------" -ForegroundColor Gray
 Write-Host ""
 
-$result = & "$pgPath\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis;" 2>&1
+$result = & "$pgPath\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis;" 2>&1
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "✓ PostGIS extension enabled!" -ForegroundColor Green
     Write-Host ""
     Write-Host "Verifying PostGIS version:" -ForegroundColor Gray
-    & "$pgPath\bin\psql.exe" -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+    & "$pgPath\bin\psql.exe" -U postgres -d chenda -c "SELECT PostGIS_Version();"
     Write-Host ""
     Write-Host "================================================================" -ForegroundColor Green
     Write-Host "   PostGIS Installation SUCCESS!" -ForegroundColor Green

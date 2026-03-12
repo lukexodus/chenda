@@ -107,7 +107,7 @@ Complete guide for setting up the Chenda backend on Windows and Linux.
       ```
    6. Enable extension:
       ```bash
-      psql -U postgres -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
+      psql -U postgres -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
       ```
 
 #### Step 2: Setup Environment
@@ -138,17 +138,17 @@ Complete guide for setting up the Chenda backend on Windows and Linux.
 
 1. **Create Database**
    ```bash
-   psql -U postgres -c "CREATE DATABASE chenda_db;"
+   psql -U postgres -c "CREATE DATABASE chenda;"
    ```
 
 2. **Enable PostGIS**
    ```bash
-   psql -U postgres -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
+   psql -U postgres -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
    ```
    
    **Verify PostGIS**:
    ```bash
-   psql -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+   psql -U postgres -d chenda -c "SELECT PostGIS_Version();"
    ```
    Expected output: `3.6 USE_GEOS=1 USE_PROJ=1 USE_STATS=1`
 
@@ -257,13 +257,13 @@ cd server && npm install && cd ..
 sudo -u postgres psql
 
 # In psql:
-CREATE DATABASE chenda_db;
+CREATE DATABASE chenda;
 CREATE EXTENSION IF NOT EXISTS postgis CASCADE;
 \q
 
 # Or as one-liner:
-sudo -u postgres psql -c "CREATE DATABASE chenda_db;"
-sudo -u postgres psql -d chenda_db -c "CREATE EXTENSION postgis CASCADE;"
+sudo -u postgres psql -c "CREATE DATABASE chenda;"
+sudo -u postgres psql -d chenda -c "CREATE EXTENSION postgis CASCADE;"
 
 # Run migrations
 node migrations/migrate.js up
@@ -327,7 +327,7 @@ ERROR: could not load library "postgis-3.dll": The specified module could not be
 "C:\Program Files\PostgreSQL\15\bin\pg_ctl.exe" start -D "C:\Program Files\PostgreSQL\15\data" -w
 
 # Enable extension
-psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis CASCADE;"
+psql -U postgres -d chenda -c "CREATE EXTENSION postgis CASCADE;"
 ```
 
 ---
@@ -418,13 +418,13 @@ cd server && npm install
 ### 3. Database Setup
 ```bash
 # Create database
-psql -U postgres -c "CREATE DATABASE chenda_db;"
+psql -U postgres -c "CREATE DATABASE chenda;"
 
 # Enable PostGIS
-psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis CASCADE;"
+psql -U postgres -d chenda -c "CREATE EXTENSION postgis CASCADE;"
 
 # Verify
-psql -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+psql -U postgres -d chenda -c "SELECT PostGIS_Version();"
 ```
 
 ### 4. Run Migrations
@@ -470,14 +470,14 @@ Expected response:
 
 ### Test Database Connection
 ```bash
-psql -U postgres -d chenda_db -c "SELECT COUNT(*) FROM products;"
+psql -U postgres -d chenda -c "SELECT COUNT(*) FROM products;"
 ```
 
 Expected: `30` (if seeded)
 
 ### Test PostGIS
 ```bash
-psql -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+psql -U postgres -d chenda -c "SELECT PostGIS_Version();"
 ```
 
 Expected: `3.6 USE_GEOS=1 USE_PROJ=1 USE_STATS=1`

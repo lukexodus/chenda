@@ -132,11 +132,11 @@ if (Test-Path "$pgPath\lib\postgis-3.dll") {
 }
 Write-Host ""
 
-# Enable PostGIS in chenda_db
-Write-Host "[6/6] Enabling PostGIS in chenda_db..." -ForegroundColor Yellow
+# Enable PostGIS in chenda
+Write-Host "[6/6] Enabling PostGIS in chenda..." -ForegroundColor Yellow
 
 try {
-    $result = & "$pgPath\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis;" 2>&1
+    $result = & "$pgPath\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis;" 2>&1
     
     if ($LASTEXITCODE -eq 0) {
         Write-Host "      ✓ PostGIS extension enabled!" -ForegroundColor Green
@@ -144,7 +144,7 @@ try {
         
         # Verify PostGIS version
         Write-Host "      Verifying installation..." -ForegroundColor Gray
-        & "$pgPath\bin\psql.exe" -U postgres -d chenda_db -c "SELECT PostGIS_Version();"
+        & "$pgPath\bin\psql.exe" -U postgres -d chenda -c "SELECT PostGIS_Version();"
     } else {
         Write-Host "      ✗ Failed to enable extension" -ForegroundColor Red
         Write-Host "      $result" -ForegroundColor Red

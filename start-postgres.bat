@@ -34,18 +34,18 @@ echo PostgreSQL started successfully!
 echo.
 
 :database_setup
-echo Checking if chenda_db exists...
-"%PG_BIN%\psql.exe" -U postgres -lqt 2>nul | find "chenda_db" >nul
+echo Checking if chenda exists...
+"%PG_BIN%\psql.exe" -U postgres -lqt 2>nul | find "chenda" >nul
 if %errorLevel% EQU 0 (
-    echo Database chenda_db already exists
+    echo Database chenda already exists
 ) else (
-    echo Creating chenda_db database...
-    "%PG_BIN%\createdb.exe" -U postgres chenda_db
+    echo Creating chenda database...
+    "%PG_BIN%\createdb.exe" -U postgres chenda
     if %errorLevel% NEQ 0 (
         echo ERROR: Failed to create database
         echo.
         echo Manual command:
-        echo "%PG_BIN%\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"
+        echo "%PG_BIN%\psql.exe" -U postgres -c "CREATE DATABASE chenda;"
         pause
         exit /b 1
     )
@@ -54,12 +54,12 @@ if %errorLevel% EQU 0 (
 echo.
 
 echo Checking if PostGIS extension is installed...
-"%PG_BIN%\psql.exe" -U postgres -d chenda_db -c "SELECT extname FROM pg_extension WHERE extname='postgis';" 2>nul | find "postgis" >nul
+"%PG_BIN%\psql.exe" -U postgres -d chenda -c "SELECT extname FROM pg_extension WHERE extname='postgis';" 2>nul | find "postgis" >nul
 if %errorLevel% EQU 0 (
     echo PostGIS extension already installed
 ) else (
     echo Installing PostGIS extension...
-    "%PG_BIN%\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+    "%PG_BIN%\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"
     if %errorLevel% NEQ 0 (
         echo WARNING: Failed to install PostGIS extension
         echo You may need to install PostGIS using Stack Builder
@@ -73,7 +73,7 @@ echo ================================================================
 echo    PostgreSQL is Ready!
 echo ================================================================
 echo.
-echo Database: chenda_db
+echo Database: chenda
 echo Host: localhost:5432
 echo User: postgres
 echo.

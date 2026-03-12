@@ -77,10 +77,10 @@ echo.
 REM Create database
 echo [5/6] Creating database...
 echo.
-echo This will create the 'chenda_db' database.
+echo This will create the 'chenda' database.
 echo You will be prompted for your PostgreSQL password.
 echo.
-psql -U postgres -c "CREATE DATABASE chenda_db;" 2>nul
+psql -U postgres -c "CREATE DATABASE chenda;" 2>nul
 REM Ignore error if database already exists
 echo [OK] Database ready
 echo.
@@ -90,7 +90,7 @@ echo [6/6] Enabling PostGIS extension...
 echo.
 echo You will be prompted for your PostgreSQL password.
 echo.
-psql -U postgres -d chenda_db -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
+psql -U postgres -d chenda -c "CREATE EXTENSION IF NOT EXISTS postgis CASCADE;"
 if %errorLevel% NEQ 0 (
     echo.
     echo [WARNING] PostGIS extension failed to enable
@@ -102,7 +102,7 @@ if %errorLevel% NEQ 0 (
     echo   2. Extract the ZIP file
     echo   3. Copy bin, lib, and share folders to your PostgreSQL installation directory
     echo   4. Restart PostgreSQL
-    echo   5. Run: psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis CASCADE;"
+    echo   5. Run: psql -U postgres -d chenda -c "CREATE EXTENSION postgis CASCADE;"
     echo.
     pause
 )

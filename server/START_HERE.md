@@ -60,12 +60,12 @@ net start postgresql-x64-15
 
 ```powershell
 # Using psql (add to PATH or use full path)
-psql -U postgres -c "CREATE DATABASE chenda_db;"
-psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+psql -U postgres -c "CREATE DATABASE chenda;"
+psql -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 
 # Or with full path if psql not in PATH:
-& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda_db;"
-& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -c "CREATE DATABASE chenda;"
+& "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 ```
 
 **Default password**: What you set during installation (default user: `postgres`)
@@ -145,11 +145,11 @@ Download and install from: https://www.postgresql.org/download/windows/
 ### "Password Authentication Failed"
 Update the `DB_PASSWORD` in `server/.env` file to match your PostgreSQL password.
 
-### "Database chenda_db does not exist"
+### "Database chenda does not exist"
 Run this command:
 ```cmd
-psql -U postgres -c "CREATE DATABASE chenda_db;"
-psql -U postgres -d chenda_db -c "CREATE EXTENSION postgis;"
+psql -U postgres -c "CREATE DATABASE chenda;"
+psql -U postgres -d chenda -c "CREATE EXTENSION postgis;"
 ```
 
 ### "psql command not found"
