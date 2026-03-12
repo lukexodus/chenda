@@ -1,0 +1,408 @@
+@startuml Chenda High-Level Class Diagram
+
+' ──────────────────────────────────────────
+' Styling
+' ──────────────────────────────────────────
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+' ──────────────────────────────────────────
+' DATABASE LAYER
+' ──────────────────────────────────────────
+package "Database (PostgreSQL + PostGIS)" {
+
+  class users {
+    +id : SERIAL
+    +name : VARCHAR
+    +email : VARCHAR <<unique>>
+    +password_hash : VARCHAR
+    +type : VARCHAR <<buyer|seller|both>>
+    +location : GEOMETRY(Point,4326)
+    +address : TEXT
+    +preferences : JSONB
+    +email_verified : BOOLEAN
+    +created_at : TIMESTAMP
+    +updated_at : TIMESTAMP
+  }
+
+  class products {
+    +id : SERIAL
+    +seller_id : INTEGER <<FK>>
+    +product_type_id : INTEGER <<FK>>
+    +days_already_used : INTEGER
+    +listed_date : TIMESTAMP
+    +price : DECIMAL
+    +quantity : DECIMAL
+    +unit : VARCHAR
+    +location : GEOMETRY(Point,4326)
+    +address : TEXT
+    +storage_condition : VARCHAR
+    +image_url : TEXT
+    +status : VARCHAR <<active|sold|expired|removed>>
+    +created_at : TIMESTAMP
+  }
+
+  class product_types {
+    +id : INTEGER
+    +name : VARCHAR
+    +name_subtitle : TEXT
+    +category_id : INTEGER
+    +keywords : TEXT
+    +default_shelf_life_days : INTEGER
+    +default_storage_condition : VARCHAR
+    +shelf_life_source : JSONB
+  }
+
+  class orders {
+    +id : SERIAL
+    +buyer_id : INTEGER <<FK>>
+    +seller_id : INTEGER <<FK>>
+    +product_id : INTEGER <<FK>>
+    +quantity : DECIMAL
+    +unit_price : DECIMAL
+    +total_amount : DECIMAL
+    +payment_method : VARCHAR
+    +payment_status : VARCHAR <<pending|paid|failed|refunded>>
+    +order_status : VARCHAR <<pending|confirmed|completed|cancelled>>
+    +transaction_id : VARCHAR
+    +created_at : TIMESTAMP
+    +completed_at : TIMESTAMP
+  }
+
+  class analytics_events {
+    +id : SERIAL
+    +user_id : INTEGER <<FK>>
+    +event_name : VARCHAR
+    +event_properties : JSONB
+    +session_id : VARCHAR
+    +timestamp : TIMESTAMP
+    +ip_address : INET
+  }
+
+  class session {
+    +sid : VARCHAR <<PK>>
+    +sess : JSON
+    +expire : TIMESTAMP
+  }
+
+  users "1" -- "0..*" products : sells >
+  users "1" -- "0..*" orders : places as buyer >
+  users "1" -- "0..*" orders : receives as seller >
+  product_types "1" -- "0..*" products : typed by >
+  products "1" -- "0..*" orders : ordered in >
+  users "1" -- "0..*" analytics_events : triggers >
+}
+
+' ──────────────────────────────────────────
+' BACKEND MODELS
+' ──────────────────────────────────────────
+package "Backend — Models" {
+
+  class User <<ActiveRecord>> {
+    +{static} findById(id)
+    +{static} findByEmail(email)
+    +{static} create(userData)
+    +{static} update(id, updates)
+    +{static} updateLocation(id, lat, lng, address)
+    +{static} updatePreferences(id, preferences)
+    +{static} verifyPassword(plain, hash) : bool
+  }
+
+  class Product <<ActiveRecord>> {
+    +{static} getProductsWithMetrics(buyerLocation, filters)
+    +{static} findById(id)
+    +{static} findBySeller(sellerId, filters)
+    +{static} create(productData)
+    +{static} update(id, updates)
+    +{static} updateStatus(id, status)
+    +{static} delete(id)
+  }
+
+  class ProductType <<ActiveRecord>> {
+    +{static} findAll(filters)
+    +{static} findById(id)
+    +{static} search(query)
+  }
+
+  class Order <<ActiveRecord>> {
+    +{static} create(orderData)
+    +{static} getById(orderId)
+    +{static} getByBuyer(buyerId, opts)
+    +{static} getBySeller(sellerId, opts)
+    +{static} updateStatus(id, status)
+    +{static} updatePaymentStatus(id, status, txId)
+  }
+}
+
+' ──────────────────────────────────────────
+' BACKEND SERVICES
+' ──────────────────────────────────────────
+package "Backend — Services" {
+
+  class PaymentService <<Singleton>> {
+    +processPayment(orderId, amount, method)
+    +refundPayment(transactionId)
+    +getPaymentMethods()
+    -simulateProcessing(method)
+  }
+
+  class GeocodingService <<Module>> {
+    +geocodeAddress(address) : {lat, lng}
+    +reverseGeocode(lat, lng) : string
+    -rateLimitedRequest(url)
+    -cache : Map
+  }
+
+  class AnalyticsService {
+    +track(eventName, properties, userId)
+    +getStats(eventName, dateRange)
+    +getDashboardMetrics()
+    +getUserActivity(userId)
+  }
+}
+
+' ──────────────────────────────────────────
+' BACKEND ALGORITHM
+' ──────────────────────────────────────────
+package "Backend — Algorithm" {
+
+  class ChendaAlgorithm <<Module>> {
+    +chendaAlgorithm(buyer, products, config) : Result
+    -validateInputs(buyer, products)
+  }
+
+  class ProductFilter <<Module>> {
+    +filterProducts(products, buyer, constraints)
+    -filterByRadius(products, maxRadius)
+    -filterByFreshness(products, minScore)
+    -filterByStorage(products, condition)
+  }
+
+  class ProductRanker <<Module>> {
+    +rankProducts(products, weights)
+    -calculateCombinedScore(product, weights)
+  }
+
+  class ShelfLifeCalculations <<Module>> {
+    +calculateShelfLifeMetrics(product)
+    +getFreshnessScore(daysUsed, totalDays) : float
+    +getExpirationDate(listedDate, remaining) : Date
+  }
+
+  class HaversineCalculations <<Module>> {
+    +calculateDistance(lat1, lng1, lat2, lng2) : float
+  }
+
+  ChendaAlgorithm --> ProductFilter : uses
+  ChendaAlgorithm --> ProductRanker : uses
+  ChendaAlgorithm --> ShelfLifeCalculations : uses
+  ChendaAlgorithm --> HaversineCalculations : uses
+}
+
+' ──────────────────────────────────────────
+' BACKEND MIDDLEWARE
+' ──────────────────────────────────────────
+package "Backend — Middleware" {
+
+  class AuthMiddleware <<Module>> {
+    +requireAuth(req, res, next)
+    +requireRole(role)
+    +optionalAuth(req, res, next)
+  }
+
+  class RateLimiter <<Module>> {
+    +generalLimiter
+    +authLimiter
+  }
+
+  class ErrorHandler <<Module>> {
+    +asyncHandler(fn)
+    +notFound(req, res, next)
+    +errorHandler(err, req, res, next)
+  }
+
+  class InputSanitizer <<Module>> {
+    +sanitizeObject(obj)
+    +sanitizeString(str)
+  }
+}
+
+' ──────────────────────────────────────────
+' BACKEND CONTROLLERS → Services/Models
+' ──────────────────────────────────────────
+package "Backend — Controllers" {
+  class AuthController {
+    +login(req, res)
+    +register(req, res)
+    +logout(req, res)
+    +me(req, res)
+  }
+  class UserController {
+    +getProfile(req, res)
+    +updateProfile(req, res)
+    +updateLocation(req, res)
+    +updatePreferences(req, res)
+    +geocode(req, res)
+  }
+  class ProductController {
+    +getProducts(req, res)
+    +getProduct(req, res)
+    +createProduct(req, res)
+    +updateProduct(req, res)
+    +deleteProduct(req, res)
+    +getMyProducts(req, res)
+  }
+  class SearchController {
+    +search(req, res)
+  }
+  class OrderController {
+    +createOrder(req, res)
+    +getOrder(req, res)
+    +getBuyerOrders(req, res)
+    +getSellerOrders(req, res)
+    +updateOrderStatus(req, res)
+    +processPayment(req, res)
+  }
+  class AnalyticsController {
+    +getDashboard(req, res)
+    +getEvents(req, res)
+  }
+}
+
+AuthController --> User
+UserController --> User
+UserController --> GeocodingService
+ProductController --> Product
+SearchController --> Product
+SearchController --> ChendaAlgorithm
+OrderController --> Order
+OrderController --> Product
+OrderController --> PaymentService
+AnalyticsController --> AnalyticsService
+
+' ──────────────────────────────────────────
+' FRONTEND STORES (Zustand)
+' ──────────────────────────────────────────
+package "Frontend — Stores (Zustand)" {
+
+  class AuthStore <<Zustand>> {
+    +user : User | null
+    +loading : boolean
+    +error : string | null
+    +checkAuth()
+    +login(email, password)
+    +register(data)
+    +logout()
+    +updateProfile(data)
+    +updateLocation(lat, lng, address)
+    +updatePreferences(data)
+  }
+
+  class SearchStore <<Zustand>> {
+    +filters : SearchFilters
+    +results : Product[]
+    +loading : boolean
+    +history : SearchHistory[]
+    +search(filters)
+    +setFilters(filters)
+    +clearResults()
+  }
+
+  class CartStore <<Zustand + persist>> {
+    +items : CartItem[]
+    +addToCart(product, qty)
+    +removeFromCart(productId)
+    +updateQuantity(productId, qty)
+    +clearCart()
+    +getTotalPrice() : number
+    +getTotalItems() : number
+  }
+}
+
+' ──────────────────────────────────────────
+' FRONTEND API CLIENT
+' ──────────────────────────────────────────
+package "Frontend — API Client" {
+  class ApiClient <<Axios>> {
+    +baseURL : string
+    +withCredentials : bool
+    +get(path, params)
+    +post(path, body)
+    +put(path, body)
+    +delete(path)
+  }
+
+  class AuthApi {
+    +login(email, password)
+    +register(data)
+    +logout()
+    +me()
+  }
+
+  class UsersApi {
+    +getProfile()
+    +updateProfile(data)
+    +updateLocation(data)
+    +updatePreferences(data)
+    +geocode(address)
+    +reverseGeocode(lat, lng)
+  }
+
+  class SearchApi {
+    +search(params)
+  }
+
+  class ProductsApi {
+    +getProducts(filters)
+    +getProduct(id)
+    +createProduct(data)
+    +updateProduct(id, data)
+    +deleteProduct(id)
+    +getMyProducts()
+  }
+
+  class OrdersApi {
+    +createOrder(data)
+    +getOrder(id)
+    +getMyOrders()
+    +updateOrderStatus(id, status)
+    +processPayment(orderId, method)
+    +getPaymentMethods()
+  }
+
+  AuthApi --> ApiClient
+  UsersApi --> ApiClient
+  SearchApi --> ApiClient
+  ProductsApi --> ApiClient
+  OrdersApi --> ApiClient
+}
+
+' ──────────────────────────────────────────
+' FRONTEND → STORE → API dependencies
+' ──────────────────────────────────────────
+AuthStore --> AuthApi
+AuthStore --> UsersApi
+SearchStore --> SearchApi
+CartStore ..> ProductsApi : (product data sourced via SearchStore)
+
+' ──────────────────────────────────────────
+' API boundary
+' ──────────────────────────────────────────
+ApiClient ..[#888]..> AuthController   : HTTP /api/auth
+ApiClient ..[#888]..> UserController   : HTTP /api/users
+ApiClient ..[#888]..> ProductController: HTTP /api/products
+ApiClient ..[#888]..> SearchController : HTTP /api/search
+ApiClient ..[#888]..> OrderController  : HTTP /api/orders
+
+' ──────────────────────────────────────────
+' Model → DB table mappings
+' ──────────────────────────────────────────
+User       ..[#aaa]..> users             : queries
+Product    ..[#aaa]..> products          : queries
+ProductType..[#aaa]..> product_types     : queries
+Order      ..[#aaa]..> orders            : queries
+AnalyticsService ..[#aaa]..> analytics_events : queries
+
+@enduml

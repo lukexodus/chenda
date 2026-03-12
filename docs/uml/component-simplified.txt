@@ -1,0 +1,76 @@
+@startuml Chenda Component Diagram
+
+skinparam component {
+  BackgroundColor #ddeeff
+  BorderColor #336699
+}
+skinparam package {
+  BackgroundColor #f9f9f9
+  BorderColor #aaaaaa
+  FontStyle bold
+}
+skinparam linetype ortho
+
+package "Browser" {
+  component [Next.js Frontend] as Frontend
+}
+
+package "Frontend Internals" {
+  component [Pages & UI Components] as Pages
+  component [Zustand Stores\n(Auth / Search / Cart)] as Stores
+  component [Axios API Client] as ApiClient
+}
+
+package "Backend (Express.js)" {
+  component [Middleware\n(Auth / Rate Limit / Sanitize)] as Middleware
+  component [REST Controllers\n(/auth /users /search /products /orders)] as Controllers
+  component [Chenda Algorithm\n(Filter → Score → Rank)] as Algorithm
+  component [Services\n(Geocoding / Payment / Analytics)] as Services
+  component [Models\n(User / Product / Order)] as Models
+}
+
+package "Data" {
+  database "PostgreSQL + PostGIS" as DB
+  component [uploads/ (disk)] as Disk
+}
+
+package "External" {
+  component [Nominatim\n(Geocoding)] as Nominatim
+  component [OSM Tiles\n(Maps)] as OSM
+}
+
+' ── Internal arrows (no interface clutter) ─
+Frontend    --> Pages
+Pages       --> Stores
+Stores      --> ApiClient
+Middleware  --> Controllers
+Controllers --> Algorithm
+Controllers --> Models
+Controllers ..> Disk : image uploads
+
+' ── Boundary 1: HTTP REST API ──────────────
+' ApiClient requires it, Middleware provides it
+ApiClient -() IREST
+IREST )- Middleware : "HTTP :3001/api"
+
+' ── Boundary 2: Database ───────────────────
+' Models requires it, PostgreSQL provides it
+Models -() IDB
+IDB )- DB
+
+' ── Boundary 3: Geocoding ──────────────────
+' Services requires it, Nominatim provides it
+Services -() IGeo
+IGeo )- Nominatim : HTTPS
+
+' ── Boundary 4: Map Tiles ──────────────────
+' Frontend requires it, OSM provides it
+Frontend -() ITiles
+ITiles )- OSM : HTTPS
+
+' ── Boundary 5: Business Services ──────────
+' Controllers requires it, Services provides it
+Controllers -() ISvc
+ISvc )- Services
+
+@enduml

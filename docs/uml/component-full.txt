@@ -1,0 +1,203 @@
+@startuml Chenda Component Diagram
+
+skinparam component {
+  BackgroundColor #ddeeff
+  BorderColor #336699
+  FontSize 12
+}
+skinparam package {
+  BackgroundColor #f9f9f9
+  BorderColor #aaaaaa
+  FontStyle bold
+}
+skinparam interface {
+  BackgroundColor #ffffff
+  BorderColor #888888
+}
+skinparam linetype ortho
+
+' ══════════════════════════════════════════
+' FRONTEND
+' ══════════════════════════════════════════
+package "Frontend (Next.js 16)" {
+
+  package "Pages / Routes" {
+    component [Login / Register] as AuthPages
+    component [Buyer Search] as BuyerPage
+    component [Cart] as CartPage
+    component [Checkout] as CheckoutPage
+    component [Order History] as OrdersPage
+    component [Seller Dashboard] as SellerDash
+    component [Seller Products] as SellerProducts
+    component [Seller Orders] as SellerOrders
+  }
+
+  package "UI Components" {
+    component [SearchForm] as SearchForm
+    component [ProductGrid\nProductCard\nProductDetail] as ProductComponents
+    component [SearchResultsMap\nAddressAutocomplete\nGeolocationButton] as MapComponents
+    component [CartSummary] as CartSummary
+    component [PaymentModal] as PaymentModal
+    component [OrderCard\nOrderDetail] as OrderComponents
+    component [ProductForm\nProductTable\nProductTypeCombobox] as SellerComponents
+    component [SellerAnalytics] as SellerAnalytics
+    component [Navigation] as Navigation
+  }
+
+  package "State (Zustand)" {
+    component [AuthStore] as AuthStore
+    component [SearchStore] as SearchStore
+    component [CartStore\n(persisted)] as CartStore
+  }
+
+  package "API Client (Axios)" {
+    component [authApi] as AuthApi
+    component [usersApi] as UsersApi
+    component [searchApi] as SearchApi
+    component [productsApi] as ProductsApi
+    component [ordersApi] as OrdersApi
+  }
+}
+
+' ══════════════════════════════════════════
+' BACKEND
+' ══════════════════════════════════════════
+package "Backend (Express.js 5)" {
+
+  package "Middleware" {
+    component [RateLimiter] as RateLimit
+    component [AuthMiddleware\n(Passport.js)] as AuthMW
+    component [InputSanitizer] as Sanitizer
+    component [ErrorHandler] as ErrHandler
+    component [Logger] as Logger
+    component [UploadImage\n(Multer)] as Upload
+  }
+
+  package "Routes → Controllers" {
+    component [/api/auth] as AuthRoute
+    component [/api/users] as UserRoute
+    component [/api/search] as SearchRoute
+    component [/api/products] as ProductRoute
+    component [/api/orders] as OrderRoute
+    component [/api/analytics] as AnalyticsRoute
+    component [/api/health] as HealthRoute
+  }
+
+  package "Services" {
+    component [GeocodingService\n(Nominatim)] as GeoSvc
+    component [PaymentService\n(mock)] as PaySvc
+    component [AnalyticsService] as AnalyticsSvc
+  }
+
+  package "Algorithm" {
+    component [ChendaAlgorithm] as Algo
+    component [ProductFilter] as Filter
+    component [ProductRanker] as Ranker
+    component [ShelfLifeCalc] as ShelfCalc
+    component [HaversineCalc] as Haversine
+  }
+
+  package "Models" {
+    component [User] as UserModel
+    component [Product] as ProductModel
+    component [ProductType] as PTModel
+    component [Order] as OrderModel
+  }
+}
+
+' ══════════════════════════════════════════
+' DATA
+' ══════════════════════════════════════════
+package "Data Layer" {
+  database "PostgreSQL\n+ PostGIS" as DB
+  component [uploads/\n(disk)] as Disk
+}
+
+' ══════════════════════════════════════════
+' EXTERNAL
+' ══════════════════════════════════════════
+package "External Services" {
+  component [Nominatim API\n(OpenStreetMap)] as Nominatim
+  component [OSM Tile Server] as OSMTiles
+}
+
+' ══════════════════════════════════════════
+' FRONTEND INTERNAL WIRING
+' ══════════════════════════════════════════
+AuthPages --> AuthStore
+BuyerPage --> SearchStore
+BuyerPage --> CartStore
+BuyerPage --> SearchForm
+BuyerPage --> ProductComponents
+BuyerPage --> MapComponents
+CartPage --> CartStore
+CartPage --> CartSummary
+CheckoutPage --> CartStore
+CheckoutPage --> AuthStore
+CheckoutPage --> PaymentModal
+OrdersPage --> OrderComponents
+SellerDash --> SellerAnalytics
+SellerProducts --> SellerComponents
+SellerOrders --> OrderComponents
+
+AuthStore --> AuthApi
+AuthStore --> UsersApi
+SearchStore --> SearchApi
+CartStore ..> ProductsApi : (product data)
+
+MapComponents --> OSMTiles : HTTPS tile requests
+
+' ══════════════════════════════════════════
+' API BOUNDARY
+' ══════════════════════════════════════════
+interface "HTTP REST\n:3001/api" as HTTPAPI
+
+AuthApi --> HTTPAPI
+UsersApi --> HTTPAPI
+SearchApi --> HTTPAPI
+ProductsApi --> HTTPAPI
+OrdersApi --> HTTPAPI
+
+HTTPAPI --> RateLimit
+RateLimit --> AuthMW
+AuthMW --> Sanitizer
+Sanitizer --> AuthRoute
+Sanitizer --> UserRoute
+Sanitizer --> SearchRoute
+Sanitizer --> ProductRoute
+Sanitizer --> OrderRoute
+Sanitizer --> AnalyticsRoute
+
+' ══════════════════════════════════════════
+' BACKEND INTERNAL WIRING
+' ══════════════════════════════════════════
+SearchRoute --> Algo
+SearchRoute --> ProductModel
+Algo --> Filter
+Algo --> Ranker
+Algo --> ShelfCalc
+Algo --> Haversine
+
+UserRoute --> GeoSvc
+GeoSvc --> Nominatim : HTTPS
+
+ProductRoute --> Upload
+Upload --> Disk
+
+OrderRoute --> PaySvc
+AnalyticsRoute --> AnalyticsSvc
+
+AuthRoute --> UserModel
+UserRoute --> UserModel
+ProductRoute --> ProductModel
+SearchRoute --> PTModel
+OrderRoute --> OrderModel
+AnalyticsRoute --> AnalyticsSvc
+
+UserModel --> DB
+ProductModel --> DB
+PTModel --> DB
+OrderModel --> DB
+AnalyticsSvc --> DB
+
+@enduml

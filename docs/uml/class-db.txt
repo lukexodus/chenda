@@ -1,0 +1,91 @@
+@startuml Chenda Database Schema
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor White
+  BorderColor #555
+  ArrowColor #555
+}
+
+class users {
+  +id : SERIAL <<PK>>
+  --
+  +name : VARCHAR
+  +email : VARCHAR <<unique>>
+  +password_hash : VARCHAR
+  +type : VARCHAR <<buyer|seller|both>>
+  +location : GEOMETRY(Point, 4326)
+  +address : TEXT
+  +preferences : JSONB
+  +email_verified : BOOLEAN
+}
+
+class products {
+  +id : SERIAL <<PK>>
+  --
+  +seller_id : INTEGER <<FK>>
+  +product_type_id : INTEGER <<FK>>
+  +price : DECIMAL
+  +quantity : DECIMAL
+  +unit : VARCHAR
+  +days_already_used : INTEGER
+  +listed_date : TIMESTAMP
+  +location : GEOMETRY(Point, 4326)
+  +address : TEXT
+  +storage_condition : VARCHAR <<pantry|refrigerated|frozen|..>>
+  +image_url : TEXT
+  +status : VARCHAR <<active|sold|expired|removed>>
+}
+
+class product_types {
+  +id : INTEGER <<PK>>
+  --
+  +name : VARCHAR
+  +name_subtitle : TEXT
+  +category_id : INTEGER
+  +keywords : TEXT
+  +default_shelf_life_days : INTEGER
+  +default_storage_condition : VARCHAR
+}
+
+class orders {
+  +id : SERIAL <<PK>>
+  --
+  +buyer_id : INTEGER <<FK>>
+  +seller_id : INTEGER <<FK>>
+  +product_id : INTEGER <<FK>>
+  +quantity : DECIMAL
+  +unit_price : DECIMAL
+  +total_amount : DECIMAL
+  +payment_method : VARCHAR <<cash|gcash|card>>
+  +payment_status : VARCHAR <<pending|paid|failed|refunded>>
+  +order_status : VARCHAR <<pending|confirmed|completed|cancelled>>
+  +transaction_id : VARCHAR
+}
+
+class analytics_events {
+  +id : SERIAL <<PK>>
+  --
+  +user_id : INTEGER <<FK>>
+  +event_name : VARCHAR
+  +event_properties : JSONB
+  +session_id : VARCHAR
+}
+
+class session {
+  +sid : VARCHAR <<PK>>
+  --
+  +sess : JSON
+  +expire : TIMESTAMP
+}
+
+users "1" --o{ products       : "sells\n(seller_id)"
+users "1" --o{ orders         : "places\n(buyer_id)"
+users "1" --o{ orders         : "receives\n(seller_id)"
+product_types "1" --o{ products : "defines shelf life\n(product_type_id)"
+products "1" --o{ orders      : "ordered in\n(product_id)"
+users "1" --o{ analytics_events : "tracked by\n(user_id)"
+
+@enduml

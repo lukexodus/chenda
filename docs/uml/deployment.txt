@@ -1,0 +1,105 @@
+@startuml Chenda Deployment Diagram
+
+skinparam node {
+  BackgroundColor #f5f5f5
+  BorderColor #555
+  FontStyle bold
+}
+skinparam component {
+  BackgroundColor #ddeeff
+  BorderColor #336699
+}
+skinparam database {
+  BackgroundColor #fff3cd
+  BorderColor #c8a000
+}
+skinparam artifact {
+  BackgroundColor #e8f5e9
+  BorderColor #388e3c
+}
+skinparam linetype ortho
+
+' ──────────────────────────────────────────
+' CLIENT
+' ──────────────────────────────────────────
+node "User's Browser" <<client>> {
+  component "Next.js App\n(React + Leaflet)" as BrowserApp
+}
+
+' ──────────────────────────────────────────
+' DOCKER HOST (single machine)
+' ──────────────────────────────────────────
+node "Docker Host\n(localhost / server)" <<device>> {
+
+  node "frontend\n(Docker container)" <<container>> {
+    component "Next.js 16\nStandalone Server" as NextServer
+    note right of NextServer
+      node:20-alpine
+      PORT 3000
+      multi-stage build
+      (.next/standalone)
+    end note
+  }
+
+  node "backend\n(Docker container)" <<container>> {
+    component "Express.js 5\nREST API" as ExpressApp
+    component "Passport.js\nSession Auth" as Passport
+    component "Chenda Algorithm\n(Node.js)" as Algo
+    component "Multer\nFile Uploads" as Multer
+    note right of ExpressApp
+      node:20-alpine
+      PORT 3001
+      NODE_ENV=production
+    end note
+  }
+
+  node "db\n(Docker container)" <<container>> {
+    database "PostgreSQL 16\n+ PostGIS 3.4" as PG {
+      component "users" as T1
+      component "products" as T2
+      component "product_types" as T3
+      component "orders" as T4
+      component "analytics_events" as T5
+      component "session" as T6
+    }
+    note right of PG
+      postgis/postgis:16-3.4-alpine
+      PORT 5432
+      healthcheck: pg_isready
+    end note
+  }
+
+  ' ── Named Volumes ──────────────────────
+  artifact "postgres_data\n(named volume)" as PGVol
+  artifact "uploads_data\n(named volume)" as UploadsVol
+}
+
+' ──────────────────────────────────────────
+' EXTERNAL SERVICES
+' ──────────────────────────────────────────
+node "OpenStreetMap\n(external)" <<cloud>> {
+  component "Nominatim API\nGeocoding" as Nominatim
+  component "OSM Tile Server\nMap Tiles" as OSMTiles
+}
+
+' ──────────────────────────────────────────
+' CONNECTIONS
+' ──────────────────────────────────────────
+
+BrowserApp  -down->  NextServer   : "HTTP :3000"
+BrowserApp  -down->  ExpressApp   : "HTTP :3001\n/api/*"
+BrowserApp  -down->  OSMTiles     : "HTTPS\nmap tiles"
+
+NextServer  -down->  ExpressApp   : "HTTP :3001\n(SSR API calls)"
+
+ExpressApp  -right-> Passport     : uses
+ExpressApp  -right-> Algo         : uses
+ExpressApp  -right-> Multer       : uses
+ExpressApp  -down->  PG           : "TCP :5432\n(pg.Pool)"
+ExpressApp  -right-> Nominatim    : "HTTPS\n(geocoding)"
+
+Multer      .down.>  UploadsVol   : "writes images"
+ExpressApp  .right.> UploadsVol   : "serves /uploads/*"
+PG          .down.>  PGVol        : "persists data"
+
+@enduml
