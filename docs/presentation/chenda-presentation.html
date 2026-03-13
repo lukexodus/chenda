@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHENDA — Algorithm Complexity</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #D93D4A;
+    --green:  #1F8C45;
+    --light:  #F2F2F2;
+    --amber:  #F29727;
+    --orange: #D97925;
+    --bg:     #F7F6F3;
+    --ink:    #1A1A18;
+    --muted:  #6B6B66;
+    --border: rgba(26,26,24,0.09);
+    --card:   #FFFFFF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── SLIDE SYSTEM ── */
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px clamp(32px, 8vw, 120px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide + .slide {
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── SLIDE 1 — HERO ── */
+  .slide-hero {
+    background: var(--ink);
+    color: var(--light);
+    min-height: 100vh;
+    justify-content: flex-end;
+    padding-bottom: 100px;
+  }
+
+  .slide-hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -100px;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217,61,74,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .slide-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: -80px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(31,140,69,0.14) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(64px, 10vw, 140px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--light);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 300;
+    color: rgba(242,242,242,0.55);
+    max-width: 480px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+
+  .hero-pill {
+    position: absolute;
+    top: 60px;
+    right: clamp(32px, 8vw, 120px);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(242,242,242,0.35);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: fadeIn 1s 1s forwards;
+  }
+
+  /* ── SLIDE 2 — BIG NUMBER ── */
+  .slide-stat {
+    background: var(--bg);
+    flex-direction: row;
+    align-items: center;
+    gap: 80px;
+    flex-wrap: wrap;
+  }
+
+  .stat-block {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(80px, 14vw, 180px);
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+  }
+
+  .stat-number span { color: var(--red); }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stat-desc {
+    flex: 1.4;
+    min-width: 280px;
+  }
+
+  .stat-desc h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .stat-desc p {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 420px;
+  }
+
+  /* ── SLIDE 3 — PIPELINE ── */
+  .slide-pipeline {
+    background: var(--card);
+  }
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 48px;
+  }
+
+  .section-eyebrow::before {
+    content: '—— ';
+    color: var(--red);
+  }
+
+  .pipeline-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    margin-bottom: 64px;
+    letter-spacing: -0.02em;
+  }
+
+  .pipeline-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .pipeline-step {
+    background: var(--card);
+    padding: 40px 32px;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .pipeline-step:hover { background: var(--bg); }
+
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+
+  .step-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .step-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 100px;
+    display: inline-block;
+  }
+
+  .badge-linear   { background: rgba(31,140,69,0.1);  color: var(--green); }
+  .badge-nlogn    { background: rgba(217,61,74,0.1);  color: var(--red); }
+  .badge-dominant { background: var(--red); color: #fff; }
+
+  /* ── SLIDE 4 — FULL TABLE ── */
+  .slide-table { background: var(--bg); }
+
+  .algo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 48px;
+  }
+
+  .algo-table thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 0 20px 16px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .algo-table thead th:first-child { padding-left: 0; }
+
+  .algo-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .algo-table tbody tr:hover { background: rgba(0,0,0,0.025); }
+
+  .algo-table tbody td {
+    padding: 14px 20px;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .algo-table tbody td:first-child {
+    padding-left: 0;
+    font-weight: 400;
+    font-size: 12.5px;
+  }
+
+  .algo-table .file-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .o-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .o-1     { color: var(--green); }
+  .o-n     { color: var(--amber); }
+  .o-nlogn { color: var(--red); }
+  .o-other { color: var(--muted); }
+
+  .table-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  /* ── SLIDE 5 — ALGORITHMS ── */
+  .slide-algos { background: var(--card); }
+
+  .algo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  @media (max-width: 800px) {
+    .algo-grid { grid-template-columns: 1fr; }
+    .slide-stat { flex-direction: column; gap: 40px; }
+  }
+
+  .algo-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .algo-card-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .algo-card-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .algo-card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  .algo-card-body {
+    padding: 24px 32px;
+  }
+
+  .pseudo-line {
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    line-height: 2;
+    color: var(--ink);
+    white-space: pre;
+  }
+
+  .pseudo-line.comment { color: var(--muted); }
+  .pseudo-line.keyword { color: var(--red); font-weight: 500; }
+  .pseudo-line.value   { color: var(--green); }
+  .pseudo-line.math    { color: var(--amber); }
+  .pseudo-line.indent  { padding-left: 20px; }
+  .pseudo-line.indent2 { padding-left: 40px; }
+
+  /* ── SLIDE 6 — CAVEATS ── */
+  .slide-caveats { background: var(--bg); }
+
+  .caveat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .caveat-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 36px 32px;
+    border-left: 3px solid transparent;
+  }
+
+  .caveat-card.warn  { border-left-color: var(--amber); }
+  .caveat-card.note  { border-left-color: var(--muted); }
+  .caveat-card.scope { border-left-color: var(--green); }
+
+  .caveat-icon {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .caveat-title {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .caveat-text {
+    font-size: 13.5px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .caveat-text code {
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    background: var(--bg);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--ink);
+  }
+
+  /* ── SLIDE 7 — CLOSING ── */
+  .slide-close {
+    background: var(--ink);
+    color: var(--light);
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 80px;
+  }
+
+  .close-left { flex: 1; min-width: 240px; }
+
+  .close-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    color: var(--light);
+  }
+
+  .close-title em { color: var(--green); font-style: italic; }
+
+  .close-sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(242,242,242,0.45);
+    max-width: 360px;
+    line-height: 1.7;
+  }
+
+  .close-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-end;
+    min-width: 200px;
+  }
+
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: rgba(242,242,242,0.6);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── NAV DOTS ── */
+  .nav-dots {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+  }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(26,26,24,0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+
+  .nav-dot.active {
+    background: var(--red);
+    transform: scale(1.5);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* stagger children */
+  .reveal-parent > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal-parent.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0s; }
+  .reveal-parent.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay: 0.08s; }
+  .reveal-parent.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay: 0.16s; }
+  .reveal-parent.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay: 0.24s; }
+  .reveal-parent.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay: 0.32s; }
+  .reveal-parent.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay: 0.40s; }
+  .reveal-parent.visible > *:nth-child(7) { opacity:1; transform:none; transition-delay: 0.48s; }
+  .reveal-parent.visible > *:nth-child(8) { opacity:1; transform:none; transition-delay: 0.56s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .nav-dots { display: none; }
+    .slide { padding: 60px 28px; }
+    .slide-close { flex-direction: column; align-items: flex-start; }
+    .close-right { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV DOTS -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 1 — HERO
+════════════════════════════════════════ -->
+<section class="slide slide-hero" data-slide="0">
+  <div class="hero-pill">CHENDA System · Algorithmic Analysis</div>
+  <div class="hero-eyebrow">Complexity Analysis</div>
+  <h1 class="hero-title">Big<em> O</em><br>in Motion</h1>
+  <p class="hero-sub">A complete asymptotic profile of CHENDA's core and pipeline algorithms — from a single haversine call to a ranked product feed.</p>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 2 — BIG NUMBER CALLOUT
+════════════════════════════════════════ -->
+<section class="slide slide-stat" data-slide="1">
+  <div class="stat-block reveal">
+    <div class="stat-number">O(<span>n</span><br>log n)</div>
+    <div class="stat-label">End-to-end pipeline</div>
+  </div>
+  <div class="stat-desc reveal">
+    <h2>Sorting is the<br>dominant cost.</h2>
+    <p>Every step in the pipeline — enrichment, filtering, scoring — runs in linear time. Ranking breaks the ceiling. That single sort step sets the asymptotic bound for the entire system.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 3 — PIPELINE BREAKDOWN
+════════════════════════════════════════ -->
+<section class="slide slide-pipeline" data-slide="2">
+  <div class="section-eyebrow">Backend Pipeline</div>
+  <h2 class="pipeline-title reveal">Four steps.<br>One bound.</h2>
+  <div class="pipeline-steps reveal-parent">
+    <div class="pipeline-step">
+      <div class="step-num">01</div>
+      <div class="step-name">Enrichment</div>
+      <div class="step-desc">Distance & shelf-life computed per product.</div>
+      <span class="step-badge badge-linear">O(n)</span>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">02</div>
+      <div class="step-name">Filtering</div>
+      <div class="step-desc">Proximity, freshness, expiry — all single-pass.</div>
+      <span class="step-badge badge-linear">O(n)</span>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">03</div>
+      <div class="step-name">Scoring</div>
+      <div class="step-desc">Weighted combined scores, normalized batch.</div>
+      <span class="step-badge badge-linear">O(n)</span>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">04</div>
+      <div class="step-name">Sorting</div>
+      <div class="step-desc">Comparison sort — sets the asymptotic ceiling.</div>
+      <span class="step-badge badge-dominant">O(n log n) ↑</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 4 — FULL COMPLEXITY TABLE
+════════════════════════════════════════ -->
+<section class="slide slide-table" data-slide="3">
+  <div class="section-eyebrow">Full Reference</div>
+  <h2 class="table-title reveal">Every function.<br>Every bound.</h2>
+  <div class="reveal">
+  <table class="algo-table">
+    <thead>
+      <tr>
+        <th style="width:36%">Function</th>
+        <th>Best</th>
+        <th>Average</th>
+        <th>Worst</th>
+        <th>Space</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Constant-time helpers<br><span class="file-tag">haversine.js · shelf-life.js · score-normalizer.js · combined-score.js</span></td>
+        <td><span class="o-tag o-1">O(1)</span></td>
+        <td><span class="o-tag o-1">O(1)</span></td>
+        <td><span class="o-tag o-1">O(1)</span></td>
+        <td><span class="o-tag o-1">O(1)</span></td>
+      </tr>
+      <tr>
+        <td>calculateDistanceBatch<br><span class="file-tag">haversine.js</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+      </tr>
+      <tr>
+        <td>calculateShelfLifeMetricsBatch<br><span class="file-tag">shelf-life.js</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+      </tr>
+      <tr>
+        <td>filterExpiredProducts · filterByFreshness · filterByProximity · applyFilters<br><span class="file-tag">shelf-life.js · product_filter.js</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+      </tr>
+      <tr>
+        <td>normalizeScoresBatch · calculateCombinedScoresBatch<br><span class="file-tag">score-normalizer.js · combined-score.js</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+      </tr>
+      <tr>
+        <td>scoreAndRankProducts · addRankPositions · getTopProducts · sortByCombinedScore<br><span class="file-tag">product_ranker.js · combined-score.js</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-nlogn">O(n log n)</span></td>
+        <td><span class="o-tag o-nlogn">O(n log n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+      </tr>
+      <tr>
+        <td>compareWeightConfigs<br><span class="file-tag">product_ranker.js</span></td>
+        <td><span class="o-tag o-other">O(k·n)</span></td>
+        <td><span class="o-tag o-other">O(k·n log n)</span></td>
+        <td><span class="o-tag o-other">O(k·n log n)</span></td>
+        <td><span class="o-tag o-other">O(k·n)</span></td>
+      </tr>
+      <tr>
+        <td>chendaAlgorithm · quickSearch · searchByPrice · searchByDistance · searchByFreshness<br><span class="file-tag">chenda_algorithm.js</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+        <td><span class="o-tag o-nlogn">O(n log n)</span></td>
+        <td><span class="o-tag o-nlogn">O(n log n)</span></td>
+        <td><span class="o-tag o-n">O(n)</span></td>
+      </tr>
+      <tr>
+        <td>transformProductTypes (USDA)<br><span class="file-tag">usda-transformer.js</span></td>
+        <td><span class="o-tag o-other">O(p·f)</span></td>
+        <td><span class="o-tag o-other">O(p·f)</span></td>
+        <td><span class="o-tag o-other">O(p·f)</span></td>
+        <td><span class="o-tag o-other">O(p+f)</span></td>
+      </tr>
+      <tr>
+        <td>geocodeAddress · reverseGeocode<br><span class="file-tag">geocodingService.js</span></td>
+        <td><span class="o-tag o-1">O(1)</span></td>
+        <td><span class="o-tag o-1">O(1) expected</span></td>
+        <td><span class="o-tag o-other">O(c) pathological</span></td>
+        <td><span class="o-tag o-other">O(c)</span></td>
+      </tr>
+      <tr>
+        <td>SellerAnalytics aggregation<br><span class="file-tag">SellerAnalytics.tsx</span></td>
+        <td><span class="o-tag o-n">O(a)</span></td>
+        <td><span class="o-tag o-nlogn">O(a + u log u)</span></td>
+        <td><span class="o-tag o-nlogn">O(a log a)</span></td>
+        <td><span class="o-tag o-other">O(u)</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 5 — PSEUDOCODE
+════════════════════════════════════════ -->
+<section class="slide slide-algos" data-slide="4">
+  <div class="section-eyebrow">Core Algorithms</div>
+  <h2 class="pipeline-title reveal">The two building<br>blocks of everything.</h2>
+  <div class="algo-grid">
+    <div class="algo-card reveal">
+      <div class="algo-card-header">
+        <div class="algo-card-num">Algorithm 01</div>
+        <div class="algo-card-title">Haversine Distance</div>
+      </div>
+      <div class="algo-card-body">
+        <div class="pseudo-line comment">// O(1) — great circle distance</div>
+        <div class="pseudo-line keyword">INPUT</div>
+        <div class="pseudo-line indent">buyer_lat, buyer_lng</div>
+        <div class="pseudo-line indent">product_lat, product_lng</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line keyword">IF</div><div class="pseudo-line indent">same location → RETURN 0</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line">Convert coords to radians</div>
+        <div class="pseudo-line math">delta_lat = product_lat − buyer_lat</div>
+        <div class="pseudo-line math">delta_lng = product_lng − buyer_lng</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line math">a = sin²(Δlat/2) +</div>
+        <div class="pseudo-line indent math">cos(b_lat) · cos(p_lat) · sin²(Δlng/2)</div>
+        <div class="pseudo-line math">c = 2 · atan2(√a, √(1−a))</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line keyword">RETURN</div><div class="pseudo-line indent value">EARTH_RADIUS_KM × c</div>
+      </div>
+    </div>
+
+    <div class="algo-card reveal">
+      <div class="algo-card-header">
+        <div class="algo-card-num">Algorithm 02</div>
+        <div class="algo-card-title">Shelf-Life Metrics</div>
+      </div>
+      <div class="algo-card-body">
+        <div class="pseudo-line comment">// O(1) — four derived metrics</div>
+        <div class="pseudo-line keyword">INPUT</div>
+        <div class="pseudo-line indent">total_shelf_life_days</div>
+        <div class="pseudo-line indent">days_already_used</div>
+        <div class="pseudo-line indent">listed_date, current_date</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line math">remaining = total − days_used</div>
+        <div class="pseudo-line math">freshness% = (remaining / total) × 100</div>
+        <div class="pseudo-line math">expiry = listed_date + remaining</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line keyword">IF</div><div class="pseudo-line indent">current_date > expiry</div>
+        <div class="pseudo-line indent2 value">is_expired = TRUE</div>
+        <div class="pseudo-line keyword">ELSE</div>
+        <div class="pseudo-line indent2 value">is_expired = FALSE</div>
+        <div class="pseudo-line"> </div>
+        <div class="pseudo-line keyword">RETURN</div><div class="pseudo-line indent value">remaining, freshness%, expiry, is_expired</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 6 — CAVEATS / WATCH LIST
+════════════════════════════════════════ -->
+<section class="slide slide-caveats" data-slide="5">
+  <div class="section-eyebrow">Practical Notes</div>
+  <h2 class="pipeline-title reveal">Clean theory.<br>Real-world caveats.</h2>
+  <div class="caveat-grid reveal-parent">
+    <div class="caveat-card warn">
+      <div class="caveat-icon">⚠</div>
+      <div class="caveat-title">USDA Transformer — Double Pass</div>
+      <div class="caveat-text"><code>usda-transformer.js</code> rebuilds each USDA record into an object more than once. Asymptotically O(p·f), but worth consolidating for large catalogs.</div>
+    </div>
+    <div class="caveat-card warn">
+      <div class="caveat-icon">⚠</div>
+      <div class="caveat-title">Seller Analytics — Multiple Passes</div>
+      <div class="caveat-text"><code>SellerAnalytics.tsx</code> performs several separate passes over the same product list. Technically O(a + u log u) but has a higher constant factor than needed.</div>
+    </div>
+    <div class="caveat-card note">
+      <div class="caveat-icon">○</div>
+      <div class="caveat-title">SQL / PostGIS Layer — Out of Scope</div>
+      <div class="caveat-text">Exact bounds for <code>ST_DWithin</code>, <code>ST_Distance</code>, GiST/GIN index use, and materialized-view refresh cannot be reliably derived from the JS codebase alone. Depends on PostgreSQL planner decisions at runtime.</div>
+    </div>
+    <div class="caveat-card scope">
+      <div class="caveat-icon">✓</div>
+      <div class="caveat-title">Pipeline is Cleanly Composed</div>
+      <div class="caveat-text">The standalone <code>chenda_algorithm.js</code> package has identical asymptotics to the production backend. The architecture scales gracefully — no hidden quadratic traps in the core path.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     SLIDE 7 — CLOSE
+════════════════════════════════════════ -->
+<section class="slide slide-close" data-slide="6">
+  <div class="close-left">
+    <h2 class="close-title">Linear<br>by <em>design.</em></h2>
+    <p class="close-sub">The CHENDA pipeline is architecturally efficient. Every step is O(n) until ranking — and that's by necessity, not negligence.</p>
+  </div>
+  <div class="close-right">
+    <div class="legend-row"><span class="legend-dot" style="background:var(--green)"></span>O(1) — constant</div>
+    <div class="legend-row"><span class="legend-dot" style="background:var(--amber)"></span>O(n) — linear</div>
+    <div class="legend-row"><span class="legend-dot" style="background:var(--red)"></span>O(n log n) — dominant sort</div>
+    <div class="legend-row"><span class="legend-dot" style="background:var(--muted)"></span>O(p·f), O(k·n) — parameterized</div>
+  </div>
+</section>
+
+<script>
+  // Build nav dots
+  const slides = document.querySelectorAll('.slide');
+  const nav = document.getElementById('navDots');
+
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+    dot.addEventListener('click', () => slides[i].scrollIntoView({ behavior: 'smooth' }));
+    nav.appendChild(dot);
+  });
+
+  // Update active dot on scroll
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = [...slides].indexOf(e.target);
+        document.querySelectorAll('.nav-dot').forEach((d, j) => d.classList.toggle('active', j === i));
+      }
+    });
+  }, { threshold: 0.5 });
+
+  slides.forEach(s => io.observe(s));
+
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal, .reveal-parent');
+  const revealIo = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+
+  revealEls.forEach(el => revealIo.observe(el));
+</script>
+</body>
+</html>
