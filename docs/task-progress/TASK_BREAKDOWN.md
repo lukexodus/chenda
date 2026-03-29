@@ -82,10 +82,11 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ## 📋 Task Breakdown Overview
 
-### **Total Phases: 3 Major Phases**
+### **Total Phases: 4 Major Phases**
 1. **Backend Integration** (Algorithm → Server)
 2. **Frontend Development** (User Interface)
 3. **Integration & Deployment** (Connect Everything)
+4. **Production Readiness** (Reliability, Security, Operations)
 
 ---
 
@@ -1067,6 +1068,263 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ---
 
+# 🛡️ PHASE 4: Production Readiness (Reliability, Security, Operations)
+
+## **Duration**: 2-3 weeks
+
+### **Task 4.1: Environment & Configuration Hardening** (1-2 days)
+**Goal**: Make runtime configuration safe, explicit, and environment-specific
+
+#### Subtasks:
+- [ ] 4.1.1: Create strict environment validation on startup (required vars, type checks)
+- [ ] 4.1.2: Split configs by environment (`development`, `test`, `staging`, `production`)
+- [ ] 4.1.3: Add `.env.example` for root, backend, and frontend with complete variable docs
+- [ ] 4.1.4: Add fail-fast behavior when required secrets are missing
+- [ ] 4.1.5: Add secret rotation procedure documentation (session secret, DB password, API keys)
+
+**Deliverables**:
+- Environment validation utility
+- Complete env templates and docs
+- Safe startup behavior in all environments
+
+---
+
+### **Task 4.2: CI/CD & Quality Gates** (2-3 days)
+**Goal**: Prevent regressions and enforce release quality
+
+#### Subtasks:
+- [ ] 4.2.1: Add CI pipeline (lint, type-check, unit tests, API tests, E2E smoke tests)
+- [ ] 4.2.2: Add coverage thresholds for backend and frontend
+- [ ] 4.2.3: Add branch protection requirements (all checks must pass before merge)
+- [ ] 4.2.4: Add build artifacts and preview deployment for pull requests
+- [ ] 4.2.5: Add release tagging and changelog automation
+
+**Deliverables**:
+- CI workflow files
+- Enforced quality gates
+- Repeatable release process
+
+---
+
+### **Task 4.3: API Contract & Compatibility** (1-2 days)
+**Goal**: Ensure API reliability for frontend and external clients
+
+#### Subtasks:
+- [ ] 4.3.1: Publish OpenAPI spec for all endpoints
+- [ ] 4.3.2: Add request/response schema validation for all routes
+- [ ] 4.3.3: Add API versioning strategy (`/api/v1`)
+- [ ] 4.3.4: Add contract tests between frontend client and backend API
+- [ ] 4.3.5: Standardize error response envelopes across all controllers
+
+**Deliverables**:
+- OpenAPI spec
+- Contract tests
+- Stable versioned API behavior
+
+---
+
+### **Task 4.4: Database Reliability & Data Safety** (2 days)
+**Goal**: Protect production data and reduce operational risk
+
+#### Subtasks:
+- [ ] 4.4.1: Add automated backup scripts with retention policy
+- [ ] 4.4.2: Add restore drill procedure and verify restore works on clean DB
+- [ ] 4.4.3: Add migration safety checks (dry-run, lock timeout, rollback notes)
+- [ ] 4.4.4: Add zero-downtime migration guidelines for schema changes
+- [ ] 4.4.5: Add data integrity checks for critical tables (`users`, `products`, `orders`)
+
+**Deliverables**:
+- Backup + restore runbook
+- Safer migration workflow
+- Verified data recovery path
+
+---
+
+### **Task 4.5: Security Enhancements** (2-3 days)
+**Goal**: Close common web security gaps before launch
+
+#### Subtasks:
+- [ ] 4.5.1: Add CSRF protection for session-authenticated endpoints
+- [ ] 4.5.2: Enforce secure cookie flags in production (`httpOnly`, `secure`, `sameSite`)
+- [ ] 4.5.3: Add account lockout and login throttling per account + IP
+- [ ] 4.5.4: Add dependency vulnerability scanning and remediation workflow
+- [ ] 4.5.5: Add audit logging for auth, profile updates, and seller product modifications
+- [ ] 4.5.6: Add content security policy (CSP) tuned for Next.js + Leaflet usage
+
+**Deliverables**:
+- Hardened auth/session security
+- Security scan baseline with remediation process
+- Audit trail for sensitive actions
+
+---
+
+### **Task 4.6: Observability & Alerting** (2 days)
+**Goal**: Make issues visible before users report them
+
+#### Subtasks:
+- [ ] 4.6.1: Add structured JSON logging with request IDs (frontend + backend correlation)
+- [ ] 4.6.2: Add centralized error tracking (backend exceptions + frontend runtime errors)
+- [ ] 4.6.3: Add metrics dashboards (latency, error rate, throughput, DB query timings)
+- [ ] 4.6.4: Add alert rules (5xx spikes, slow search endpoint, DB connection issues)
+- [ ] 4.6.5: Define SLO targets and alert thresholds (availability, p95 latency)
+
+**Deliverables**:
+- Dashboards and alerts
+- End-to-end request tracing basics
+- Incident detection and triage readiness
+
+---
+
+### **Task 4.7: Performance & Scalability Validation** (2 days)
+**Goal**: Confirm production behavior under realistic load
+
+#### Subtasks:
+- [ ] 4.7.1: Run load tests for search, auth, and order flows at target concurrency
+- [ ] 4.7.2: Profile slow SQL queries and optimize with indexes/query refactors
+- [ ] 4.7.3: Add caching strategy for hot endpoints and static metadata
+- [ ] 4.7.4: Add pagination/limits safeguards for all list endpoints
+- [ ] 4.7.5: Define capacity baseline (max concurrent users, expected p95 latency)
+
+**Deliverables**:
+- Load/perf report with bottlenecks
+- Optimized high-traffic endpoints
+- Capacity and scaling guidance
+
+---
+
+### **Task 4.8: Production Deployment Architecture** (2 days)
+**Goal**: Prepare deployable infrastructure and runtime processes
+
+#### Subtasks:
+- [ ] 4.8.1: Add production-ready Dockerfiles for backend and frontend
+- [ ] 4.8.2: Add container orchestration config (compose for staging/prod-like setup)
+- [ ] 4.8.3: Add reverse proxy config (TLS termination, gzip/brotli, caching headers)
+- [ ] 4.8.4: Add health/readiness/liveness checks used by orchestrator
+- [ ] 4.8.5: Add zero-downtime deployment strategy (rolling or blue/green)
+
+**Deliverables**:
+- Deployable container stack
+- Proxy and TLS-ready configuration
+- Safer release rollout procedure
+
+---
+
+### **Task 4.9: Business-Critical Product Features** (2-3 days)
+**Goal**: Add essential product capabilities for real users
+
+#### Subtasks:
+- [ ] 4.9.1: Add forgot/reset password flow with expiring token and email delivery
+- [ ] 4.9.2: Add email verification flow (already planned as optional, now required)
+- [ ] 4.9.3: Add order lifecycle notifications (order placed, paid, completed)
+- [ ] 4.9.4: Add inventory safeguards (prevent oversell with transactional stock checks)
+- [ ] 4.9.5: Add idempotency keys for order creation/payment endpoints
+- [ ] 4.9.6: Add admin moderation basics (disable user/product, review flagged listings)
+
+**Deliverables**:
+- Critical account recovery and verification features
+- Reliable order/inventory handling
+- Basic operational admin controls
+
+---
+
+### **Task 4.10: Operations Runbooks & Go-Live Readiness** (1-2 days)
+**Goal**: Prepare team for launch-day and incident response
+
+#### Subtasks:
+- [ ] 4.10.1: Create runbooks for deploy, rollback, DB restore, and incident triage
+- [ ] 4.10.2: Define on-call contact flow and severity levels
+- [ ] 4.10.3: Create launch checklist (security, performance, backups, monitoring, legal pages)
+- [ ] 4.10.4: Conduct go-live dry run in staging
+- [ ] 4.10.5: Record known limitations and post-launch backlog
+
+**Deliverables**:
+- Operations runbook set
+- Go-live checklist and sign-off template
+- Launch readiness report
+
+---
+
+### **Task 4.11: Production Payment Features** (3-4 days)
+**Goal**: Move from mock payments to secure, traceable, production-grade payment flows
+
+#### Subtasks:
+- [ ] 4.11.1: Integrate a **GCash-first** payment gateway (PayMongo/Xendit/GCash-supported provider)
+- [ ] 4.11.2: Keep optional secondary methods (card/bank transfer/COD) behind feature flags
+- [ ] 4.11.3: Add payment intents/checkout sessions API and secure webhook handling
+- [ ] 4.11.4: Add payment status lifecycle in database (`pending`, `authorized`, `captured`, `failed`, `refunded`)
+- [ ] 4.11.5: Add retry-safe idempotency for create-payment and confirm-payment endpoints
+- [ ] 4.11.6: Add buyer payment pages:
+  - Checkout page with payment method selection
+  - Payment processing/redirect page
+  - Payment success/failure page
+  - Invoice/receipt details page
+- [ ] 4.11.7: Add seller payment views:
+  - Payout status per order
+  - Settlement history page
+  - Dispute/refund action flow
+- [ ] 4.11.8: Add refund and partial refund functionality with audit logs
+- [ ] 4.11.9: Add payment reconciliation job (gateway events vs local orders)
+- [ ] 4.11.10: Add payment-specific monitoring and alerts (webhook failures, capture failures)
+
+**Deliverables**:
+- Real **GCash-first** payment integration replacing mock-only flows
+- Buyer and seller payment pages with end-to-end status tracking
+- Webhook-safe, auditable, and reconciled payment processing
+
+---
+
+### **Task 4.12: Courier/Rider Role, Pages & Fulfillment Features** (4-5 days)
+**Goal**: Add courier/rider as a first-class user role with dispatch and delivery workflows
+
+#### Subtasks:
+- [ ] 4.12.1: Extend user model and auth middleware with courier/rider role permissions
+- [ ] 4.12.2: Add **hybrid fulfillment** model support (in-house riders + third-party couriers)
+- [ ] 4.12.3: Add fulfillment data model:
+  - Deliveries table (assignment, status, ETA, proof-of-delivery)
+  - Fulfillment type (`in_house`, `third_party`) and external tracking references
+  - Rider availability and active location tracking
+  - Order-to-delivery linkage and handoff timestamps
+- [ ] 4.12.4: Add rider API endpoints:
+  - Get available delivery jobs
+  - Accept/decline assignment
+  - Update delivery status (`accepted`, `picked_up`, `in_transit`, `delivered`, `failed`)
+  - Update live rider location
+  - Upload **photo-only** proof-of-delivery (no signature for current scope)
+- [ ] 4.12.5: Add dispatch/admin endpoints:
+  - Assign/reassign rider
+  - Dispatch to third-party courier partner (hybrid flow)
+  - Monitor active deliveries
+  - Flag delayed/failed deliveries
+- [ ] 4.12.6: Build rider features as **responsive web pages only** (mobile-first web, no native app)
+- [ ] 4.12.7: Add rider pages:
+  - Rider dashboard (today's tasks + active delivery)
+  - Available jobs page
+  - Delivery detail page (buyer/seller contact, pickup/dropoff, status timeline)
+  - Route/map page with navigation handoff
+  - Earnings/history page
+- [ ] 4.12.8: Add buyer/seller tracking pages:
+  - Live order tracking page with rider location
+  - Delivery status timeline and ETA updates
+  - Delivery issue report flow
+- [ ] 4.12.9: Add notifications:
+  - Rider assigned, picked up, near destination, delivered, failed
+  - Push/SMS/email hooks (provider-ready)
+- [ ] 4.12.10: Add delivery SLA metrics and operational analytics (on-time rate, avg delivery time)
+
+**Deliverables**:
+- Courier/rider role with protected APIs and pages
+- End-to-end **hybrid** dispatch, tracking, and photo-only proof-of-delivery workflow
+- Buyer, seller, and rider delivery visibility with operational metrics
+
+---
+
+## **Phase 4 Summary**
+**Total Duration**: 3-4 weeks  
+**Total Tasks**: 12 major tasks, 70+ subtasks  
+**Deliverables**: Production-ready, observable, secure, operable system with real payments and delivery workflows
+
+---
+
 # 📊 Complete Project Timeline
 
 | Phase | Duration | Major Tasks | Subtasks |
@@ -1074,7 +1332,8 @@ curl -X POST http://localhost:3001/api/auth/register \
 | **Phase 1: Backend** | 2-3 weeks | 10 | 50+ |
 | **Phase 2: Frontend** | 3-4 weeks | 10 | 60+ |
 | **Phase 3: Integration** | 1-2 weeks | 7 | 35+ |
-| **TOTAL** | **6-9 weeks** | **27** | **145+** |
+| **Phase 4: Production Readiness** | 3-4 weeks | 12 | 70+ |
+| **TOTAL** | **9-13 weeks** | **39** | **215+** |
 
 ---
 
@@ -1111,11 +1370,25 @@ curl -X POST http://localhost:3001/api/auth/register \
 - [ ] Documentation complete
 - [ ] Ready for demo
 
+## **Week 10-12: Production Readiness**
+- [ ] CI/CD quality gates enforced
+- [ ] Security hardening + CSRF + audit logs complete
+- [ ] Observability dashboards + alerting live
+- [ ] Backup/restore drill passed
+- [ ] Go-live checklist signed off
+
+## **Week 13: Payments + Courier Launch Readiness**
+- [ ] Real payment gateway flow validated end-to-end
+- [ ] Payment webhooks and reconciliation stable
+- [ ] Courier/rider dashboard and delivery tracking live
+- [ ] Dispatch + proof-of-delivery workflows verified
+- [ ] Fulfillment SLA dashboards reviewed
+
 ---
 
 # 🚀 Quick Start Paths
 
-## **Path A: Full Feature Set** (9 weeks)
+## **Path A: Full Feature Set** (10-13 weeks)
 All tasks above, including optional features (email verification, analytics dashboard, etc.)
 
 ## **Path B: MVP** (6 weeks)
