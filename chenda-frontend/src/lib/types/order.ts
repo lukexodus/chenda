@@ -5,9 +5,17 @@
 
 export type OrderStatus = 'pending' | 'paid' | 'completed' | 'cancelled';
 
-export type PaymentMethod = 'cash' | 'gcash' | 'card';
+export type PaymentMethod = 'cash' | 'gcash';
 
-export type PaymentStatus = 'pending' | 'processing' | 'completed' | 'failed';
+export type PaymentStatus =
+  | 'pending'
+  | 'authorized'
+  | 'captured'
+  | 'paid'
+  | 'refunded'
+  | 'failed'
+  | 'processing'
+  | 'completed';
 
 export interface PaymentDetails {
   method: PaymentMethod;
@@ -77,6 +85,8 @@ export interface CreateOrderRequest {
 
 export interface PayOrderRequest {
   payment_method: PaymentMethod;
+  success_redirect_url?: string;
+  failure_redirect_url?: string;
   payment_details?: {
     account_number?: string;
     account_name?: string;
@@ -111,14 +121,6 @@ export const PAYMENT_METHODS: PaymentMethodOption[] = [
     processing_time: '1-2 minutes',
     fee: 'Free',
   },
-  {
-    id: 'card',
-    name: 'Credit/Debit Card',
-    description: 'Pay with Visa, Mastercard, or other cards',
-    icon: '💳',
-    processing_time: 'Instant',
-    fee: 'Free',
-  },
 ];
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
@@ -137,7 +139,11 @@ export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
 
 export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
   pending: 'Pending',
-  processing: 'Processing...',
+  authorized: 'Authorized',
+  captured: 'Captured',
+  paid: 'Paid',
+  refunded: 'Refunded',
   completed: 'Completed',
+  processing: 'Processing...',
   failed: 'Failed',
 };

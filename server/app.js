@@ -7,7 +7,6 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 const { sanitizeObject } = require('./middleware/sanitize');
-require('dotenv').config();
 
 // Import configuration
 const config = require('./config');
@@ -26,6 +25,7 @@ const productTypesRoutes = require('./routes/productTypes');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
 const analyticsRoutes = require('./routes/analytics');
+const xenditWebhookRoutes = require('./routes/xenditWebhooks');
 // Import routes
 const healthRoutes = require('./routes/health');
 
@@ -206,6 +206,9 @@ app.use('/api/orders', orderRoutes);
 
 // Analytics routes (dashboard endpoints)
 app.use('/api/analytics', analyticsRoutes);
+
+// Xendit webhooks (public callback endpoints with token verification)
+app.use('/api/webhooks/xendit', xenditWebhookRoutes);
 
 /**
  * Error Handling

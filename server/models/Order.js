@@ -55,7 +55,7 @@ class Order {
         CASE
           WHEN o.order_status = 'cancelled' THEN 'cancelled'
           WHEN o.order_status = 'completed' THEN 'completed'
-          WHEN o.payment_status = 'paid' THEN 'paid'
+          WHEN o.payment_status IN ('captured', 'paid') THEN 'paid'
           ELSE 'pending'
         END AS status,
         o.transaction_id,
@@ -103,7 +103,7 @@ class Order {
         CASE
           WHEN o.order_status = 'cancelled' THEN 'cancelled'
           WHEN o.order_status = 'completed' THEN 'completed'
-          WHEN o.payment_status = 'paid' THEN 'paid'
+          WHEN o.payment_status IN ('captured', 'paid') THEN 'paid'
           ELSE 'pending'
         END AS status,
         o.transaction_id,
@@ -167,7 +167,7 @@ class Order {
         CASE
           WHEN o.order_status = 'cancelled' THEN 'cancelled'
           WHEN o.order_status = 'completed' THEN 'completed'
-          WHEN o.payment_status = 'paid' THEN 'paid'
+          WHEN o.payment_status IN ('captured', 'paid') THEN 'paid'
           ELSE 'pending'
         END AS status,
         o.transaction_id,
@@ -216,7 +216,12 @@ class Order {
   /**
    * Update order payment status
    */
-  static async updatePaymentStatus(orderId, paymentStatus, transactionId = null) {
+  static async updatePaymentStatus(orderId, paymentStatus, transactionId = null, options = {}) {
+    const {
+      paymentProvider = null,
+      externalPaymentId = null,
+    } = options;
+
     const updates = [`payment_status = $1`];
     const params = [paymentStatus, orderId];
     let paramIndex = 3;
@@ -227,8 +232,20 @@ class Order {
       paramIndex++;
     }
 
+    if (paymentProvider) {
+      updates.push(`payment_provider = $${paramIndex}`);
+      params.push(paymentProvider);
+      paramIndex++;
+    }
+
+    if (externalPaymentId) {
+      updates.push(`external_payment_id = $${paramIndex}`);
+      params.push(externalPaymentId);
+      paramIndex++;
+    }
+
     // If payment successful, update order status to confirmed
-    if (paymentStatus === 'paid') {
+    if (paymentStatus === 'paid' || paymentStatus === 'captured') {
       updates.push(`order_status = 'confirmed'`);
     }
 

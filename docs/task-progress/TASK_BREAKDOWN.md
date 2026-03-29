@@ -1072,15 +1072,15 @@ curl -X POST http://localhost:3001/api/auth/register \
 
 ## **Duration**: 2-3 weeks
 
-### **Task 4.1: Environment & Configuration Hardening** (1-2 days)
+### **Task 4.1: Environment & Configuration Hardening** (1-2 days) ✅ **COMPLETE**
 **Goal**: Make runtime configuration safe, explicit, and environment-specific
 
 #### Subtasks:
-- [ ] 4.1.1: Create strict environment validation on startup (required vars, type checks)
-- [ ] 4.1.2: Split configs by environment (`development`, `test`, `staging`, `production`)
-- [ ] 4.1.3: Add `.env.example` for root, backend, and frontend with complete variable docs
-- [ ] 4.1.4: Add fail-fast behavior when required secrets are missing
-- [ ] 4.1.5: Add secret rotation procedure documentation (session secret, DB password, API keys)
+- [x] 4.1.1: Create strict environment validation on startup (required vars, type checks)
+- [x] 4.1.2: Split configs by environment (`development`, `test`, `staging`, `production`)
+- [x] 4.1.3: Add `.env.example` for root, backend, and frontend with complete variable docs
+- [x] 4.1.4: Add fail-fast behavior when required secrets are missing
+- [x] 4.1.5: Add secret rotation procedure documentation (session secret, DB password, API keys)
 
 **Deliverables**:
 - Environment validation utility
@@ -1248,23 +1248,23 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Goal**: Move from mock payments to secure, traceable, production-grade payment flows
 
 #### Subtasks:
-- [ ] 4.11.1: Integrate a **GCash-first** payment gateway (PayMongo/Xendit/GCash-supported provider)
-- [ ] 4.11.2: Keep optional secondary methods (card/bank transfer/COD) behind feature flags
-- [ ] 4.11.3: Add payment intents/checkout sessions API and secure webhook handling
-- [ ] 4.11.4: Add payment status lifecycle in database (`pending`, `authorized`, `captured`, `failed`, `refunded`)
-- [ ] 4.11.5: Add retry-safe idempotency for create-payment and confirm-payment endpoints
-- [ ] 4.11.6: Add buyer payment pages:
+- [x] 4.11.1: Integrate a **GCash-first** payment gateway (PayMongo/Xendit/GCash-supported provider)
+- [x] 4.11.2: Keep optional secondary methods (card/bank transfer/COD) behind feature flags
+- [x] 4.11.3: Add payment intents/checkout sessions API and secure webhook handling
+- [x] 4.11.4: Add payment status lifecycle in database (`pending`, `authorized`, `captured`, `failed`, `refunded`)
+- [x] 4.11.5: Add retry-safe idempotency for create-payment and confirm-payment endpoints
+- [x] 4.11.6: Add buyer payment pages:
   - Checkout page with payment method selection
   - Payment processing/redirect page
   - Payment success/failure page
   - Invoice/receipt details page
-- [ ] 4.11.7: Add seller payment views:
+- [x] 4.11.7: Add seller payment views:
   - Payout status per order
   - Settlement history page
   - Dispute/refund action flow
-- [ ] 4.11.8: Add refund and partial refund functionality with audit logs
-- [ ] 4.11.9: Add payment reconciliation job (gateway events vs local orders)
-- [ ] 4.11.10: Add payment-specific monitoring and alerts (webhook failures, capture failures)
+- [x] 4.11.8: Add refund and partial refund functionality with audit logs
+- [x] 4.11.9: Add payment reconciliation job (gateway events vs local orders)
+- [x] 4.11.10: Add payment-specific monitoring and alerts (webhook failures, capture failures)
 
 **Deliverables**:
 - Real **GCash-first** payment integration replacing mock-only flows

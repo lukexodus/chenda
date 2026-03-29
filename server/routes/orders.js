@@ -11,6 +11,12 @@ const {
   createOrder,
   createBatchOrders,
   processPayment,
+  createRefund,
+  runPaymentReconciliation,
+  getPaymentMonitoringSummary,
+  acknowledgePaymentAlert,
+  getSellerSettlementHistory,
+  getSellerPayoutOverview,
   getOrder,
   listOrders,
   updateOrderStatus,
@@ -29,8 +35,31 @@ const validateCreateOrder = [
     .withMessage('Quantity must be greater than 0'),
   body('payment_method')
     .optional()
-    .isIn(['cash', 'gcash', 'card'])
-    .withMessage('Payment method must be cash, gcash, or card')
+    .isIn(['cash', 'gcash'])
+    .withMessage('Payment method must be cash or gcash')
+];
+
+const validateProcessPayment = [
+  body('success_redirect_url')
+    .optional()
+    .isURL()
+    .withMessage('success_redirect_url must be a valid URL'),
+  body('failure_redirect_url')
+    .optional()
+    .isURL()
+    .withMessage('failure_redirect_url must be a valid URL')
+];
+
+const validateCreateRefund = [
+  body('amount')
+    .optional()
+    .isFloat({ min: 0.01 })
+    .withMessage('Refund amount must be greater than 0'),
+  body('reason')
+    .optional()
+    .isString()
+    .isLength({ min: 3, max: 255 })
+    .withMessage('reason must be 3 to 255 characters')
 ];
 
 const validateUpdateStatus = [
@@ -94,7 +123,69 @@ router.post('/',
 router.post('/:id/payment',
   isAuthenticated,
   isBuyer,
+  validateProcessPayment,
   asyncHandler(processPayment)
+);
+
+/**
+ * POST /api/orders/:id/refunds
+ * Create full/partial refund (seller only)
+ */
+router.post('/:id/refunds',
+  isAuthenticated,
+  isSeller,
+  validateCreateRefund,
+  asyncHandler(createRefund)
+);
+
+/**
+ * POST /api/orders/reconciliation/run
+ * Run payment reconciliation for seller orders
+ */
+router.post('/reconciliation/run',
+  isAuthenticated,
+  isSeller,
+  asyncHandler(runPaymentReconciliation)
+);
+
+/**
+ * GET /api/orders/payment-monitoring/summary
+ * Get payment monitoring and active alerts
+ */
+router.get('/payment-monitoring/summary',
+  isAuthenticated,
+  isSeller,
+  asyncHandler(getPaymentMonitoringSummary)
+);
+
+/**
+ * POST /api/orders/payment-monitoring/alerts/:alertId/ack
+ * Acknowledge open payment alert
+ */
+router.post('/payment-monitoring/alerts/:alertId/ack',
+  isAuthenticated,
+  isSeller,
+  asyncHandler(acknowledgePaymentAlert)
+);
+
+/**
+ * GET /api/orders/seller/payments/settlements
+ * Seller settlement history with status filtering
+ */
+router.get('/seller/payments/settlements',
+  isAuthenticated,
+  isSeller,
+  asyncHandler(getSellerSettlementHistory)
+);
+
+/**
+ * GET /api/orders/seller/payments/overview
+ * Seller payout summary and trend
+ */
+router.get('/seller/payments/overview',
+  isAuthenticated,
+  isSeller,
+  asyncHandler(getSellerPayoutOverview)
 );
 
 /**

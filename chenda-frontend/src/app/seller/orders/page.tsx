@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShoppingBag, Loader2, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Loader2, CheckCircle2, RotateCw, BadgeDollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -36,6 +39,10 @@ export default function SellerOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isRefunding, setIsRefunding] = useState(false);
+  const [refundAmount, setRefundAmount] = useState('');
+  const [refundReason, setRefundReason] = useState('requested_by_seller');
+  const [isReconciling, setIsReconciling] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -142,6 +149,82 @@ export default function SellerOrdersPage() {
     }
   };
 
+  const handleCreateRefund = async (fullRefund: boolean) => {
+    if (!selectedOrder) return;
+
+    const parsedAmount = refundAmount.trim() ? Number(refundAmount) : undefined;
+    if (!fullRefund && (!parsedAmount || !Number.isFinite(parsedAmount) || parsedAmount <= 0)) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid refund amount',
+        description: 'Enter a valid positive refund amount for partial refunds.',
+      });
+      return;
+    }
+
+    setIsRefunding(true);
+    try {
+      const payload: Record<string, unknown> = {
+        reason: refundReason || 'requested_by_seller',
+      };
+
+      if (!fullRefund) {
+        payload.amount = parsedAmount;
+      }
+
+      const response = await api.post(`/orders/${selectedOrder.id}/refunds`, payload);
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Refund failed');
+      }
+
+      toast({
+        title: 'Refund submitted',
+        description: fullRefund
+          ? 'Full refund has been recorded.'
+          : 'Partial refund has been recorded.',
+      });
+
+      if (response.data.order) {
+        setSelectedOrder(response.data.order);
+      }
+
+      setRefundAmount('');
+      await fetchOrders();
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Refund failed',
+        description: error.response?.data?.message || error.message || 'Please try again.',
+      });
+    } finally {
+      setIsRefunding(false);
+    }
+  };
+
+  const handleRunReconciliation = async () => {
+    setIsReconciling(true);
+    try {
+      const response = await api.post('/orders/reconciliation/run', { auto_fix: false });
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Reconciliation failed');
+      }
+
+      const reconciliation = response.data.reconciliation;
+      toast({
+        title: 'Reconciliation complete',
+        description: `Scanned ${reconciliation.scanned}, mismatches ${reconciliation.mismatchesFound}.`,
+      });
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Reconciliation failed',
+        description: error.response?.data?.message || error.message || 'Please try again.',
+      });
+    } finally {
+      setIsReconciling(false);
+    }
+  };
+
   // Count orders by status
   const statusCounts = {
     all: orders.length,
@@ -156,12 +239,32 @@ export default function SellerOrdersPage() {
       <div className="container max-w-6xl mx-auto py-6 px-4 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-[var(--fresh-text-primary)]">
+          <h1 className="text-3xl font-bold text-fresh-text-primary">
             Customer Orders
           </h1>
-          <p className="text-[var(--fresh-text-muted)] mt-2">
+          <p className="text-fresh-text-muted mt-2">
             Manage orders for your products
           </p>
+        </div>
+
+        <div className="flex justify-end">
+          <Button
+            variant="outline"
+            onClick={handleRunReconciliation}
+            disabled={isReconciling}
+          >
+            {isReconciling ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Reconciling...
+              </>
+            ) : (
+              <>
+                <RotateCw className="mr-2 h-4 w-4" />
+                Run Reconciliation
+              </>
+            )}
+          </Button>
         </div>
 
         {/* Status Filter Tabs */}
@@ -181,18 +284,18 @@ export default function SellerOrdersPage() {
         {/* Loading State */}
         {isLoading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-[var(--fresh-primary)]" />
+            <Loader2 className="h-8 w-8 animate-spin text-fresh-primary" />
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && filteredOrders.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <ShoppingBag className="h-16 w-16 text-[var(--fresh-text-muted)] mb-4" />
-            <h3 className="text-lg font-semibold text-[var(--fresh-text-primary)] mb-2">
+            <ShoppingBag className="h-16 w-16 text-fresh-text-muted mb-4" />
+            <h3 className="text-lg font-semibold text-fresh-text-primary mb-2">
               {statusFilter === 'all' ? 'No orders yet' : `No ${statusFilter} orders`}
             </h3>
-            <p className="text-[var(--fresh-text-muted)] mb-4">
+            <p className="text-fresh-text-muted mb-4">
               {statusFilter === 'all'
                 ? 'Orders for your products will appear here'
                 : `You don't have any ${statusFilter} orders`}
@@ -228,6 +331,57 @@ export default function SellerOrdersPage() {
           {selectedOrder && (
             <div className="py-4">
               <OrderDetail order={selectedOrder} viewAs="seller" />
+
+              {['captured', 'paid'].includes(selectedOrder.payment_status) && selectedOrder.status !== 'cancelled' && (
+                <Card className="mt-4 border-dashed">
+                  <CardContent className="pt-6 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <BadgeDollarSign className="h-5 w-5 text-fresh-primary" />
+                      <h3 className="font-semibold text-fresh-text-primary">Issue Refund</h3>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="refund-amount">Partial Refund Amount (optional for full refund)</Label>
+                      <Input
+                        id="refund-amount"
+                        placeholder="e.g. 120.50"
+                        value={refundAmount}
+                        onChange={(e) => setRefundAmount(e.target.value)}
+                        disabled={isRefunding}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="refund-reason">Reason</Label>
+                      <Textarea
+                        id="refund-reason"
+                        value={refundReason}
+                        onChange={(e) => setRefundReason(e.target.value)}
+                        disabled={isRefunding}
+                        rows={3}
+                      />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => handleCreateRefund(false)}
+                        disabled={isRefunding}
+                        className="w-full sm:w-auto"
+                      >
+                        {isRefunding ? 'Submitting...' : 'Submit Partial Refund'}
+                      </Button>
+                      <Button
+                        onClick={() => handleCreateRefund(true)}
+                        disabled={isRefunding}
+                        className="w-full sm:w-auto"
+                      >
+                        {isRefunding ? 'Submitting...' : 'Submit Full Refund'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
 

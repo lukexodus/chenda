@@ -9,6 +9,7 @@ import {
   User,
   ShoppingCart,
   LayoutDashboard,
+  WalletCards,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
@@ -34,6 +35,7 @@ const sellerNav: NavItem[] = [
   { href: "/seller/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/seller/products", label: "Products", icon: Package },
   { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/seller/payments", label: "Payments", icon: WalletCards },
   { href: "/seller/profile", label: "Profile", icon: User },
 ];
 
@@ -42,6 +44,7 @@ const bothNav: NavItem[] = [
   { href: "/seller/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/seller/products", label: "Products", icon: Package },
   { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/seller/payments", label: "Payments", icon: WalletCards },
   { href: "/buyer/profile", label: "Profile", icon: User },
 ];
 
@@ -68,7 +71,7 @@ export function TopHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 w-full max-w-[100vw] overflow-x-hidden items-center justify-between border-b border-[var(--fresh-border)] bg-white/95 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95">
+    <header className="sticky top-0 z-40 flex h-14 w-full max-w-[100vw] overflow-x-hidden items-center justify-between border-b border-fresh-border bg-white/95 px-3 sm:px-4 backdrop-blur supports-backdrop-filter:bg-white/80 dark:bg-fresh-surface/95">
       <Link href={homeHref} className="flex items-center gap-2 shrink-0" aria-label="Chenda home">
         <Image
           src="/chenda.png"
@@ -77,7 +80,7 @@ export function TopHeader() {
           height={28}
           className="rounded-md"
         />
-        <span className="text-lg font-semibold text-[var(--fresh-text-primary)]">
+        <span className="text-lg font-semibold text-fresh-text-primary">
           Chenda
         </span>
       </Link>
@@ -87,14 +90,14 @@ export function TopHeader() {
         {isBuyer && (
           <Link
             href="/cart"
-            className="relative rounded-md p-2 text-[var(--fresh-text-muted)] hover:text-[var(--fresh-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)]"
+            className="relative rounded-md p-2 text-fresh-text-muted hover:text-fresh-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary"
             aria-label={`Cart${cartCount > 0 ? `, ${cartCount} item${cartCount !== 1 ? 's' : ''}` : ''}`}
           >
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
               <span
                 aria-hidden="true"
-                className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--fresh-primary)] text-[10px] font-bold text-white"
+                className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-fresh-primary text-[10px] font-bold text-white"
               >
                 {cartCount > 9 ? '9+' : cartCount}
               </span>
@@ -105,7 +108,7 @@ export function TopHeader() {
         {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="rounded-md p-1.5 sm:p-2 text-[var(--fresh-text-muted)] hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)] shrink-0"
+          className="rounded-md p-1.5 sm:p-2 text-fresh-text-muted hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary shrink-0"
           aria-label="Log out"
           title="Log out"
         >
@@ -131,7 +134,7 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--fresh-border)] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:bg-[var(--fresh-surface)]/95 w-full max-w-[100vw] overflow-x-hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-fresh-border bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/80 dark:bg-fresh-surface/95 w-full max-w-[100vw] overflow-x-hidden">
       <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-2">
         {items.map((item) => {
           // Use exact match for root-level tabs (e.g. /buyer) so sub-routes
@@ -145,10 +148,10 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center gap-1 px-1 sm:px-3 py-1 text-[10px] sm:text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--fresh-primary)] rounded-md min-w-0 shrink-1 w-full text-center overflow-hidden",
+                "flex flex-col items-center gap-1 px-1 sm:px-3 py-1 text-[10px] sm:text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary rounded-md min-w-0 shrink w-full text-center overflow-hidden",
                 active
-                  ? "text-[var(--fresh-primary)] font-medium"
-                  : "text-[var(--fresh-text-muted)] hover:text-[var(--fresh-text-primary)]"
+                  ? "text-fresh-primary font-medium"
+                  : "text-fresh-text-muted hover:text-fresh-text-primary"
               )}
               aria-current={active ? "page" : undefined}
             >

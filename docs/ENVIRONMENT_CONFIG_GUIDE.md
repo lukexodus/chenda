@@ -10,6 +10,7 @@ This document lists every environment variable used by the backend server and th
    - [Server / Runtime](#server--runtime)
    - [Database](#database)
    - [Session](#session)
+   - [Payments / Webhooks](#payments--webhooks)
    - [CORS](#cors)
    - [Rate Limiting](#rate-limiting)
    - [File Uploads](#file-uploads)
@@ -26,14 +27,15 @@ This document lists every environment variable used by the backend server and th
 
 ## Server (`server/.env`)
 
-The server loads variables with `dotenv` at startup (`require('dotenv').config()`).  
+The server loads variables with a centralized loader and validator in `server/config/env.js`.  
+Load order is environment-specific and supports `.env.development`, `.env.test`, `.env.staging`, `.env.production` (plus `.local` variants).  
 Copy `server/.env.example` to `server/.env` and fill in the values marked **Required**.
 
 ### Server / Runtime
 
 | Variable | Default | Required? | Description |
 |----------|---------|-----------|-------------|
-| `NODE_ENV` | `development` | Optional | Runtime environment. Accepted values: `development`, `production`, `test`. Controls debug logging, stack-trace exposure in error responses, and whether the session cookie is marked `Secure`. |
+| `NODE_ENV` | `development` | Optional | Runtime environment. Accepted values: `development`, `test`, `staging`, `production`. Controls logging, error detail level, and secure cookie behavior. |
 | `PORT` | `3001` | Optional | TCP port the Express server listens on. Change if 3001 is already in use on your machine. |
 
 ### Database
@@ -56,6 +58,12 @@ Sessions are stored in the `session` PostgreSQL table via `connect-pg-simple`.
 |----------|---------|-----------|-------------|
 | `SESSION_SECRET` | `chenda-secret-key-change-this-in-production` | **Required** | Secret used to sign the session cookie (`chenda.sid`). Must be a long, random, unpredictable string in staging and production. Rotating this value immediately invalidates all active sessions. |
 | `SESSION_MAX_AGE` | `86400000` | Optional | How long a session lives, in **milliseconds**. Default is 86 400 000 ms = 24 hours. In production you may want a shorter value (e.g. `3600000` for 1 hour). |
+
+### Payments / Webhooks
+
+| Variable | Default | Required? | Description |
+|----------|---------|-----------|-------------|
+| `XENDIT_CALLBACK_TOKEN` | *(none)* | Required when Xendit webhooks are enabled | Shared verification token used by webhook endpoints to validate `x-callback-token` headers sent by Xendit. Must exactly match the token configured in Xendit Dashboard Webhooks settings. |
 
 ### CORS
 

@@ -6,6 +6,9 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const paymentService = require('../services/paymentService');
+const paymentReconciliationService = require('../services/paymentReconciliationService');
+const paymentMonitoringService = require('../services/paymentMonitoringService');
+const paymentReportingService = require('../services/paymentReportingService');
 
 /**
  * Create a new order (buyers only)
@@ -30,10 +33,10 @@ const createOrder = async (req, res) => {
     });
   }
 
-  if (!['cash', 'gcash', 'card'].includes(payment_method)) {
+  if (!paymentService.isMethodSupported(payment_method)) {
     return res.status(400).json({
       success: false,
-      message: 'Invalid payment method. Must be cash, gcash, or card'
+      message: 'Invalid payment method or method is currently disabled'
     });
   }
 
@@ -116,6 +119,14 @@ const createOrder = async (req, res) => {
 const processPayment = async (req, res) => {
   const orderId = parseInt(req.params.id);
   const userId = req.user.id;
+  const idempotencyKey = req.get('Idempotency-Key');
+
+  if (!idempotencyKey) {
+    return res.status(400).json({
+      success: false,
+      message: 'Idempotency-Key header is required',
+    });
+  }
 
   // Check if order exists and user can pay for it
   const order = await Order.getById(orderId);
@@ -135,7 +146,7 @@ const processPayment = async (req, res) => {
   }
 
   // Check order status
-  if (order.payment_status === 'paid') {
+  if (['paid', 'captured'].includes(order.payment_status)) {
     return res.status(400).json({
       success: false,
       message: 'Order has already been paid'
@@ -150,50 +161,41 @@ const processPayment = async (req, res) => {
   }
 
   try {
-    // Process payment using payment service
-    const paymentData = {
-      orderId: order.id,
-      amount: parseFloat(order.total_amount),
-      method: order.payment_method,
+    const paymentResult = await paymentService.processOrderPayment({
+      order,
       buyer: {
         id: order.buyer_id,
         name: order.buyer_name,
-        email: order.buyer_email
-      }
-    };
+        email: order.buyer_email,
+      },
+      idempotencyKey,
+      successRedirectUrl: req.body?.success_redirect_url,
+      failureRedirectUrl: req.body?.failure_redirect_url,
+    });
 
-    const paymentResult = await paymentService.processPayment(paymentData);
-
-    if (paymentResult.success) {
-      // Update order payment status
-      const updatedOrder = await Order.updatePaymentStatus(
-        orderId, 
-        'paid', 
-        paymentResult.transactionId
-      );
-
-      res.json({
-        success: true,
-        message: 'Payment processed successfully',
-        payment: paymentResult,
-        order: updatedOrder
-      });
-    } else {
-      // Payment failed - update order status
-      await Order.updatePaymentStatus(orderId, 'failed');
-
-      res.status(400).json({
-        success: false,
-        message: 'Payment processing failed',
-        payment: paymentResult,
-        error: paymentResult.error
-      });
-    }
+    res.json({
+      success: true,
+      message: paymentResult.reused ? 'Payment attempt reused (idempotent request)' : 'Payment request created',
+      payment: {
+        idempotencyKey,
+        checkoutUrl: paymentResult.checkoutUrl,
+        attempt: paymentResult.attempt,
+        reused: paymentResult.reused,
+      },
+      order: paymentResult.order,
+    });
   } catch (error) {
     console.error('Payment processing error:', error);
-    
-    // Update order payment status to failed
-    await Order.updatePaymentStatus(orderId, 'failed');
+
+    await paymentMonitoringService.createAlert({
+      alertType: 'payment_processing_exception',
+      severity: 'high',
+      message: `Payment processing failed for order ${orderId}: ${error.message}`,
+      details: {
+        orderId,
+        buyerId: userId,
+      },
+    });
 
     res.status(500).json({
       success: false,
@@ -362,7 +364,197 @@ const getPaymentMethods = async (req, res) => {
   res.json({
     success: true,
     paymentMethods: methods,
-    disclaimer: '⚠️ This is a mock payment system. No real transactions are processed.'
+    disclaimer: 'Payment methods depend on feature flags and provider configuration.'
+  });
+};
+
+/**
+ * Create full or partial refund (seller only)
+ * POST /api/orders/:id/refunds
+ */
+const createRefund = async (req, res) => {
+  const orderId = parseInt(req.params.id, 10);
+  const sellerId = req.user.id;
+  const { amount, reason = 'requested_by_seller' } = req.body;
+
+  const order = await Order.getById(orderId);
+  if (!order) {
+    return res.status(404).json({
+      success: false,
+      message: 'Order not found',
+    });
+  }
+
+  if (order.seller_id !== sellerId) {
+    return res.status(403).json({
+      success: false,
+      message: 'Only the seller for this order can issue refunds',
+    });
+  }
+
+  try {
+    const result = await paymentService.createRefund({
+      order,
+      amount,
+      reason,
+      requestedBy: sellerId,
+    });
+
+    if (req.analytics) {
+      req.analytics.track('payment_refund_created', {
+        order_id: order.id,
+        seller_id: sellerId,
+        refund_id: result.refund.id,
+        amount: result.refundedAmount,
+        fully_refunded: result.fullyRefunded,
+      }, sellerId).catch((err) => console.error('Refund analytics error:', err));
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: 'Refund recorded successfully',
+      refund: result.refund,
+      paymentSummary: {
+        totalRefunded: result.totalRefunded,
+        remainingRefundable: result.remainingRefundable,
+        fullyRefunded: result.fullyRefunded,
+      },
+      order: result.order,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message || 'Refund failed',
+    });
+  }
+};
+
+/**
+ * Run payment reconciliation (seller scope)
+ * POST /api/orders/reconciliation/run
+ */
+const runPaymentReconciliation = async (req, res) => {
+  const sellerId = req.user.id;
+  const autoFix = Boolean(req.body?.auto_fix);
+
+  const result = await paymentReconciliationService.run({
+    sellerId,
+    triggeredBy: sellerId,
+    autoFix,
+  });
+
+  return res.json({
+    success: true,
+    message: 'Payment reconciliation completed',
+    reconciliation: {
+      scanned: result.scanned,
+      mismatchesFound: result.mismatches.length,
+      fixedCount: result.fixedCount,
+      mismatches: result.mismatches,
+      runId: result.run.id,
+      createdAt: result.run.created_at,
+    },
+  });
+};
+
+/**
+ * Get payment monitoring summary (seller scope)
+ * GET /api/orders/payment-monitoring/summary
+ */
+const getPaymentMonitoringSummary = async (req, res) => {
+  const hoursRaw = req.query?.hours;
+  const hours = hoursRaw ? parseInt(hoursRaw, 10) : 24;
+
+  const summary = await paymentMonitoringService.getSummary({ hours });
+
+  return res.json({
+    success: true,
+    monitoring: summary,
+  });
+};
+
+/**
+ * Acknowledge payment alert (seller scope)
+ * POST /api/orders/payment-monitoring/alerts/:alertId/ack
+ */
+const acknowledgePaymentAlert = async (req, res) => {
+  const alertId = parseInt(req.params.alertId, 10);
+  const userId = req.user.id;
+
+  if (!alertId || Number.isNaN(alertId)) {
+    return res.status(400).json({
+      success: false,
+      message: 'alertId must be a valid integer',
+    });
+  }
+
+  const alert = await paymentMonitoringService.acknowledgeAlert({
+    alertId,
+    userId,
+  });
+
+  if (!alert) {
+    return res.status(404).json({
+      success: false,
+      message: 'Open alert not found',
+    });
+  }
+
+  return res.json({
+    success: true,
+    message: 'Alert acknowledged',
+    alert,
+  });
+};
+
+/**
+ * Get seller settlement history
+ * GET /api/orders/seller/payments/settlements
+ */
+const getSellerSettlementHistory = async (req, res) => {
+  const sellerId = req.user.id;
+  const { status = 'all', limit = 50, offset = 0 } = req.query;
+
+  const result = await paymentReportingService.getSellerSettlementHistory({
+    sellerId,
+    status,
+    limit,
+    offset,
+  });
+
+  return res.json({
+    success: true,
+    settlements: result.settlements,
+    pagination: {
+      total: result.total,
+      limit: result.limit,
+      offset: result.offset,
+      hasMore: result.offset + result.limit < result.total,
+    },
+    filter: {
+      status: result.status,
+    },
+  });
+};
+
+/**
+ * Get seller payout overview and trend
+ * GET /api/orders/seller/payments/overview
+ */
+const getSellerPayoutOverview = async (req, res) => {
+  const sellerId = req.user.id;
+  const { days = 30 } = req.query;
+
+  const result = await paymentReportingService.getSellerPayoutOverview({
+    sellerId,
+    days,
+  });
+
+  return res.json({
+    success: true,
+    days: result.days,
+    overview: result.overview,
+    trend: result.trend,
   });
 };
 
@@ -382,10 +574,10 @@ const createBatchOrders = async (req, res) => {
     });
   }
 
-  if (!['cash', 'gcash', 'card'].includes(payment_method)) {
+  if (!paymentService.isMethodSupported(payment_method)) {
     return res.status(400).json({
       success: false,
-      message: 'Invalid payment method. Must be cash, gcash, or card'
+      message: 'Invalid payment method or method is currently disabled'
     });
   }
 
@@ -472,6 +664,12 @@ module.exports = {
   createOrder,
   createBatchOrders,
   processPayment,
+  createRefund,
+  runPaymentReconciliation,
+  getPaymentMonitoringSummary,
+  acknowledgePaymentAlert,
+  getSellerSettlementHistory,
+  getSellerPayoutOverview,
   getOrder,
   listOrders,
   updateOrderStatus,

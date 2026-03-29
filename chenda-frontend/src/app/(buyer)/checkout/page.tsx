@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, MapPin, AlertTriangle, Loader2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -33,7 +33,7 @@ export default function CheckoutPage() {
   const { items, clearCart, getTotalPrice } = useCartStore();
   const { user } = useAuthStore();
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('cash');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('gcash');
   const [deliveryNotes, setDeliveryNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -57,7 +57,7 @@ export default function CheckoutPage() {
     return (
       <div className="container max-w-4xl mx-auto py-12 px-4">
         <div className="flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--fresh-primary)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-fresh-primary" />
         </div>
       </div>
     );
@@ -160,18 +160,15 @@ export default function CheckoutPage() {
         <div className="space-y-6">
           {/* Page Title */}
           <div>
-            <h1 className="text-3xl font-bold text-[var(--fresh-text-primary)]">Checkout</h1>
-            <p className="text-[var(--fresh-text-muted)] mt-2">
+            <h1 className="text-3xl font-bold text-fresh-text-primary">Checkout</h1>
+            <p className="text-fresh-text-muted mt-2">
               Review your order and complete payment
             </p>
           </div>
 
-          {/* Mock Payment Warning */}
-          <Alert className="border-orange-200 bg-orange-50">
-            <AlertTriangle className="h-4 w-4 text-orange-600" />
-            <AlertDescription className="text-sm text-orange-800">
-              <strong>⚠️ This is a mock payment system.</strong> No real transactions
-              occur. This is for demonstration purposes only. All payments are simulated.
+          <Alert className="border-blue-200 bg-blue-50">
+            <AlertDescription className="text-sm text-blue-800">
+              GCash payment requests are created in real backend flow. For GCash, complete payment in the checkout page that opens after order creation.
             </AlertDescription>
           </Alert>
 
@@ -187,8 +184,8 @@ export default function CheckoutPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="rounded-lg border bg-[var(--fresh-surface)] p-4">
-                    <p className="text-sm text-[var(--fresh-text-muted)]">
+                  <div className="rounded-lg border bg-fresh-surface p-4">
+                    <p className="text-sm text-fresh-text-muted">
                       {user.address || 'No address set — please update your profile'}
                     </p>
                   </div>
@@ -232,7 +229,7 @@ export default function CheckoutPage() {
                       {PAYMENT_METHODS.map((method) => (
                         <div
                           key={method.id}
-                          className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-[var(--fresh-surface)] transition-colors cursor-pointer"
+                          className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-fresh-surface transition-colors cursor-pointer"
                         >
                           <RadioGroupItem value={method.id} id={method.id} />
                           <Label
@@ -241,17 +238,17 @@ export default function CheckoutPage() {
                           >
                             <span className="text-2xl">{method.icon}</span>
                             <div className="flex-1">
-                              <p className="font-medium text-[var(--fresh-text-primary)]">
+                              <p className="font-medium text-fresh-text-primary">
                                 {method.name}
                               </p>
-                              <p className="text-sm text-[var(--fresh-text-muted)]">
+                              <p className="text-sm text-fresh-text-muted">
                                 {method.description}
                               </p>
                               <div className="flex gap-4 mt-1">
-                                <p className="text-xs text-[var(--fresh-text-muted)]">
+                                <p className="text-xs text-fresh-text-muted">
                                   Fee: {method.fee}
                                 </p>
-                                <p className="text-xs text-[var(--fresh-text-muted)]">
+                                <p className="text-xs text-fresh-text-muted">
                                   Time: {method.processing_time}
                                 </p>
                               </div>
