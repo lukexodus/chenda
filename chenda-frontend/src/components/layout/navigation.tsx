@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -10,12 +11,16 @@ import {
   ShoppingCart,
   LayoutDashboard,
   WalletCards,
+  Bike,
+  MapPinned,
+  Bell,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/lib/store";
 import { useCartStore } from "@/lib/stores/cartStore";
+import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -28,6 +33,7 @@ interface NavItem {
 const buyerNav: NavItem[] = [
   { href: "/buyer", label: "Search", icon: Search },
   { href: "/buyer/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/buyer/profile", label: "Profile", icon: User },
 ];
 
@@ -36,6 +42,7 @@ const sellerNav: NavItem[] = [
   { href: "/seller/products", label: "Products", icon: Package },
   { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
   { href: "/seller/payments", label: "Payments", icon: WalletCards },
+  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/seller/profile", label: "Profile", icon: User },
 ];
 
@@ -45,21 +52,35 @@ const bothNav: NavItem[] = [
   { href: "/seller/products", label: "Products", icon: Package },
   { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
   { href: "/seller/payments", label: "Payments", icon: WalletCards },
+  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/buyer/profile", label: "Profile", icon: User },
+];
+
+const riderNav: NavItem[] = [
+  { href: "/rider/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/rider/jobs", label: "Jobs", icon: Bike },
+  { href: "/rider/history", label: "History", icon: WalletCards },
+  { href: "/rider/tracking", label: "Tracking", icon: MapPinned },
+  { href: "/notifications", label: "Alerts", icon: Bell },
+  { href: "/rider/profile", label: "Profile", icon: User },
 ];
 
 /**
  * Top header bar – logo + app name.
  */
 export function TopHeader() {
+  const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const cartCount = useCartStore((s) => s.getTotalItems());
-  const isBuyer = user?.type !== "seller";
+  const isBuyer = user?.type === "buyer" || user?.type === "both";
   const router = useRouter();
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
   const homeHref = user?.type === "buyer"
     ? "/buyer"
+    : user?.type === "rider"
+      ? "/rider/dashboard"
     : user?.type === "seller" || user?.type === "both"
       ? "/seller/dashboard"
       : "/";
@@ -69,6 +90,29 @@ export function TopHeader() {
     toast.success("Logged out");
     router.push("/");
   };
+
+  useEffect(() => {
+    if (!user) {
+      setUnreadNotificationCount(0);
+      return;
+    }
+
+    const loadUnreadCount = async () => {
+      try {
+        const response = await api.get("/deliveries/notifications/me/unread-count");
+
+        if (!response.data?.success) {
+          return;
+        }
+
+        setUnreadNotificationCount(Number(response.data.unread_count || 0));
+      } catch {
+        // Keep header resilient; ignore badge fetch failures silently.
+      }
+    };
+
+    loadUnreadCount();
+  }, [user?.id, pathname]);
 
   return (
     <header className="sticky top-0 z-40 flex h-14 w-full max-w-[100vw] overflow-x-hidden items-center justify-between border-b border-fresh-border bg-white/95 px-3 sm:px-4 backdrop-blur supports-backdrop-filter:bg-white/80 dark:bg-fresh-surface/95">
@@ -86,6 +130,27 @@ export function TopHeader() {
       </Link>
 
       <div className="ml-auto flex items-center gap-1">
+        <Link
+          href="/notifications"
+          className="relative rounded-md p-1.5 sm:p-2 text-fresh-text-muted hover:text-fresh-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fresh-primary shrink-0"
+          aria-label={
+            unreadNotificationCount > 0
+              ? `Notifications, ${unreadNotificationCount} unread`
+              : "Notifications"
+          }
+          title="Notifications"
+        >
+          <Bell className="h-5 w-5" />
+          {unreadNotificationCount > 0 && (
+            <span
+              aria-hidden="true"
+              className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-fresh-primary px-1 text-[10px] font-bold text-white"
+            >
+              {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
+            </span>
+          )}
+        </Link>
+
         {/* Cart icon — buyers only */}
         {isBuyer && (
           <Link
@@ -125,12 +190,38 @@ export function TopHeader() {
 export function BottomNav() {
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
+
+  useEffect(() => {
+    if (!user) {
+      setUnreadNotificationCount(0);
+      return;
+    }
+
+    const loadUnreadCount = async () => {
+      try {
+        const response = await api.get("/deliveries/notifications/me/unread-count");
+
+        if (!response.data?.success) {
+          return;
+        }
+
+        setUnreadNotificationCount(Number(response.data.unread_count || 0));
+      } catch {
+        // Ignore badge fetch errors in navigation UI.
+      }
+    };
+
+    loadUnreadCount();
+  }, [user?.id, pathname]);
 
   let items: NavItem[] = buyerNav;
   if (user?.type === "both") {
     items = bothNav;
   } else if (user?.type === "seller") {
     items = sellerNav;
+  } else if (user?.type === "rider") {
+    items = riderNav;
   }
 
   return (
@@ -155,7 +246,17 @@ export function BottomNav() {
               )}
               aria-current={active ? "page" : undefined}
             >
-              <item.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" aria-hidden="true" />
+              <span className="relative inline-flex">
+                <item.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" aria-hidden="true" />
+                {item.href === "/notifications" && unreadNotificationCount > 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-fresh-primary px-1 text-[10px] font-bold text-white"
+                  >
+                    {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
+                  </span>
+                )}
+              </span>
               <span className="truncate w-full">{item.label}</span>
             </Link>
           );

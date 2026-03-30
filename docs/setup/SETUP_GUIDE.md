@@ -409,6 +409,24 @@ cp .env.example .env
 # Edit .env and set DB_PASSWORD
 ```
 
+Optional: delivery notification hooks and near-destination threshold.
+
+```env
+# Keep false for local development unless testing provider hooks
+ENABLE_EXTERNAL_DELIVERY_NOTIFICATIONS=false
+ENABLE_DELIVERY_EMAIL=false
+ENABLE_DELIVERY_SMS=false
+ENABLE_DELIVERY_PUSH=false
+
+# Provider labels used by hook scaffolding
+DELIVERY_EMAIL_PROVIDER=provider_not_configured
+DELIVERY_SMS_PROVIDER=provider_not_configured
+DELIVERY_PUSH_PROVIDER=provider_not_configured
+
+# Distance threshold in meters for near-destination event
+DELIVERY_NEAR_DESTINATION_METERS=300
+```
+
 ### 2. Install Dependencies
 ```bash
 npm install
@@ -576,6 +594,8 @@ Before deploying to production:
    - Set strong `SESSION_SECRET`
    - Use secure `DB_PASSWORD`
    - Set `NODE_ENV=production`
+   - Configure delivery notification flags/channels per environment
+   - Keep `DELIVERY_NEAR_DESTINATION_METERS` tuned to local delivery density
 
 2. **Database**
    - Use managed PostgreSQL service (AWS RDS, Azure Database, etc.)

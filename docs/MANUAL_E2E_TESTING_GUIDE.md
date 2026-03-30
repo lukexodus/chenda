@@ -1012,13 +1012,125 @@ When you encounter a bug during testing, document it as follows:
 ## Success Criteria
 
 All tests should:
-- ✅ Complete without errors
-- ✅ Display appropriate feedback (success/error messages)
-- ✅ Maintain data integrity
-- ✅ Provide good user experience
-- ✅ Work across different browsers
-- ✅ Be responsive on mobile devices
+
+
+# Test Suite 7: Payment and Courier/Rider Flows
+
+## Test 7.1: Buyer Payment Flow (Checkout, Payment, Confirmation)
+**Objective**: Verify buyer can complete checkout, select payment method, and see payment status.
+
+**Steps:**
+1. Login as buyer and add product(s) to cart.
+2. Proceed to checkout (`/buyer/checkout`).
+3. Fill in delivery address and contact info if required.
+4. Select payment method:
+   - Cash on Delivery
+   - GCash (mock payment)
+   - Card (if enabled)
+5. Click **"Place Order"**.
+6. ✅ Verify payment modal/dialog appears for GCash/Card (if selected).
+7. ✅ Verify payment transitions through processing → success.
+8. ✅ Verify redirect to order confirmation page (`/buyer/orders/[orderId]`).
+9. ✅ Verify payment status and method are shown in order details.
+10. Navigate to `/buyer/orders` and confirm order appears with correct status.
+
+**Expected Results:**
+- ✅ Buyer can select and process payment
+- ✅ Payment status is reflected in order details
+- ✅ Payment errors (if any) are shown clearly
 
 ---
 
+## Test 7.2: Seller Dispatch and Delivery Management
+**Objective**: Verify seller can assign in-house rider, dispatch third-party, and track delivery status.
+
+**Steps:**
+1. Login as seller and ensure at least one paid order exists.
+2. Navigate to `/seller/orders` and select an order ready for delivery.
+3. Click **"Dispatch"** or **"Assign Rider"** (as available).
+4. For in-house delivery:
+   - Select available rider from list
+   - Optionally set ETA
+   - Click **"Assign"**
+   - ✅ Verify order status updates to "assigned" and rider is notified
+5. For third-party delivery:
+   - Select third-party provider
+   - Enter tracking reference and ETA
+   - Click **"Dispatch"**
+   - ✅ Verify order status updates to "in_transit" and buyer is notified
+6. View active deliveries in seller dashboard or orders page
+7. ✅ Verify delivery status, assigned rider/provider, and timeline are visible
+
+**Expected Results:**
+- ✅ Seller can assign/reassign riders and dispatch third-party couriers
+- ✅ Delivery status and timeline update correctly
+- ✅ Notifications are sent to buyer/rider as appropriate
+
+---
+
+## Test 7.3: Rider Workflow (Dashboard, Jobs, Delivery, Proof-of-Delivery)
+**Objective**: Verify rider can view jobs, accept/decline, update status/location, and complete delivery with proof photo.
+
+**Steps:**
+1. Login as rider (use a test account with rider role).
+2. Navigate to `/rider/dashboard` to view profile and active jobs.
+3. Go to `/rider/jobs` to see available jobs.
+4. Accept a job:
+   - Click **"Accept"** on a job
+   - ✅ Verify job moves to active list
+5. Update status as delivery progresses:
+   - Mark as "picked up", "in transit" as appropriate
+   - ✅ Verify status/timeline updates
+6. Update location:
+   - Use location update button or form (manual/auto)
+   - ✅ Verify location is sent and map/timeline update
+7. When near destination, verify "near destination" event triggers (buyer/seller notified)
+8. Complete delivery:
+   - Upload proof-of-delivery photo (image file, max 7MB)
+   - ✅ Verify delivery status updates to "delivered"
+   - ✅ Buyer and seller receive notification
+9. View delivery history in `/rider/history`
+
+**Expected Results:**
+- ✅ Rider can accept/decline jobs, update status/location
+- ✅ Proof-of-delivery upload marks delivery as complete
+- ✅ Timeline and notifications reflect all events
+
+---
+
+## Test 7.4: Buyer/Seller Order Tracking and Issue Reporting
+**Objective**: Verify buyers and sellers can track delivery status and report issues.
+
+**Steps:**
+1. Login as buyer or seller and navigate to an order in progress.
+2. Click **"Track Delivery"** (buyer: `/buyer/orders/[id]/tracking`, seller: `/seller/orders/[id]/delivery`).
+3. ✅ Verify delivery timeline, status, rider info, and map are visible.
+4. As delivery progresses, verify timeline/events update in real time.
+5. Report an issue:
+   - Click **"Report Issue"**
+   - Enter issue description (min 5 chars)
+   - Submit
+   - ✅ Verify confirmation and notification to relevant parties
+
+**Expected Results:**
+- ✅ Tracking page shows up-to-date status, events, and map
+- ✅ Issue reporting works and notifies seller/rider
+
+---
+
+## Test 7.5: In-App Delivery Notifications (All Roles)
+**Objective**: Verify delivery notifications, unread badge, and read-all functionality.
+
+**Steps:**
+1. Login as any user (buyer, seller, rider).
+2. Trigger delivery events (assignment, status updates, proof photo, near-destination, issues).
+3. Click bell icon or navigate to `/notifications`.
+4. ✅ Verify new notifications appear at top, unread badge is visible.
+5. Click notification to mark as read, or use **"Mark All as Read"**.
+6. ✅ Verify unread badge updates and notifications are marked as read.
+
+**Expected Results:**
+- ✅ All delivery events generate notifications
+- ✅ Unread badge and read-all work as expected
+- ✅ Notifications are timely and accurate
 *Last Updated: March 6, 2026*

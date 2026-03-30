@@ -41,7 +41,7 @@ export const registerSchema = z
       .email("Invalid email address"),
     password: passwordSchema,
     confirmPassword: z.string().min(1, "Please confirm your password"),
-    type: z.enum(["buyer", "seller", "both"], {
+    type: z.enum(["buyer", "seller", "both", "rider"], {
       message: "Please select an account type",
     }),
     acceptTerms: z

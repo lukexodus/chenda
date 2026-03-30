@@ -20,7 +20,7 @@ const isAuthenticated = (req, res, next) => {
 
 /**
  * Check if user is a buyer
- * User must have type 'buyer' or 'both'
+ * User must have type 'buyer', 'both', or 'rider'
  */
 const isBuyer = (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -59,6 +59,28 @@ const isSeller = (req, res, next) => {
   res.status(403).json({
     success: false,
     message: 'Access denied. Seller privileges required.',
+  });
+};
+
+/**
+ * Check if user is a rider
+ * User must have type 'rider'
+ */
+const isRider = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required. Please login.',
+    });
+  }
+
+  if (req.user.type === 'rider') {
+    return next();
+  }
+
+  return res.status(403).json({
+    success: false,
+    message: 'Access denied. Rider privileges required.',
   });
 };
 
@@ -102,5 +124,6 @@ module.exports = {
   isAuthenticated,
   isBuyer,
   isSeller,
+  isRider,
   isOwner,
 };

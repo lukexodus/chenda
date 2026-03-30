@@ -87,6 +87,18 @@ Edit `.env` and set:
 DB_PASSWORD=your_postgres_password
 ```
 
+Optional delivery notification settings:
+```env
+ENABLE_EXTERNAL_DELIVERY_NOTIFICATIONS=false
+ENABLE_DELIVERY_EMAIL=false
+ENABLE_DELIVERY_SMS=false
+ENABLE_DELIVERY_PUSH=false
+DELIVERY_EMAIL_PROVIDER=provider_not_configured
+DELIVERY_SMS_PROVIDER=provider_not_configured
+DELIVERY_PUSH_PROVIDER=provider_not_configured
+DELIVERY_NEAR_DESTINATION_METERS=300
+```
+
 **NEVER commit `.env` files to git!**
 
 ---

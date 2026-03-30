@@ -87,6 +87,67 @@ Implemented backend work for Task 4.11.10:
 - Missing or invalid callback token returns HTTP 401.
 - Missing server-side token configuration returns HTTP 500.
 
+## Webhook Setup Instructions (Development)
+
+Follow these steps in order.
+
+1. Configure backend environment in `server/.env`
+  - Set these values:
+    - `ENABLE_PAYMENT_XENDIT=true`
+    - `XENDIT_SECRET_KEY=<your_xendit_secret_key>`
+    - `XENDIT_CALLBACK_TOKEN=<your_shared_callback_token>`
+  - Important: `XENDIT_CALLBACK_TOKEN` must exactly match the token configured in Xendit Dashboard.
+
+2. Start backend on the expected port
+  - From `server/` run: `npm start`
+  - Confirm server is listening on `http://localhost:3001`
+
+3. Start ngrok pointing to the same backend port
+  - Run: `ngrok http 3001`
+  - Important: do not tunnel `3002` if backend is on `3001`, or callbacks will fail.
+
+4. Build webhook callback URLs from your ngrok domain
+  - `https://<ngrok-domain>/api/webhooks/xendit/ewallet-payment-status`
+  - `https://<ngrok-domain>/api/webhooks/xendit/invoices`
+  - `https://<ngrok-domain>/api/webhooks/xendit/payment-requests-v3`
+
+5. Configure webhooks in Xendit Dashboard
+  - Open Dashboard webhook settings for your account/environment.
+  - Register each callback URL above.
+  - Set webhook callback token to the same value as `XENDIT_CALLBACK_TOKEN`.
+
+6. Trigger a payment to generate webhook events
+  - Initiate payment via backend endpoint:
+    - `POST /api/orders/:id/payment`
+    - Include header: `Idempotency-Key: <unique-value>`
+  - Complete checkout in GCash/Xendit flow so Xendit sends callbacks.
+
+7. Verify successful webhook processing
+  - Backend logs should show incoming webhook route hits.
+  - Status should be HTTP `200` for valid callbacks.
+  - Check DB updates:
+    - `payment_attempts.status` transitions (`authorized`/`captured`/`failed`/`refunded`)
+    - `orders.payment_status` updated to mapped lifecycle status.
+
+8. Validate monitoring and alerting endpoints
+  - Get monitoring summary:
+    - `GET /api/orders/payment-monitoring/summary`
+  - Acknowledge open alert:
+    - `POST /api/orders/payment-monitoring/alerts/:alertId/ack`
+
+### Quick Troubleshooting
+
+- `500` on webhook callback:
+  - Check `XENDIT_CALLBACK_TOKEN` exists in `server/.env` and restart backend.
+  - Confirm ngrok is forwarding to the same active backend port.
+
+- `401` on webhook callback:
+  - Token mismatch between Xendit Dashboard and `server/.env`.
+
+- No callback arrives:
+  - Confirm correct ngrok URL is currently active (domain changes on ngrok restart unless reserved).
+  - Confirm webhook URLs in Dashboard exactly match current ngrok domain and route path.
+
 ## Next Steps
 
 1. Run migration: `node migrations/migrate.js up` (applies `005_payment_integration.sql`).

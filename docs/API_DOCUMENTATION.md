@@ -29,6 +29,7 @@ The API uses **session-based authentication** with PostgreSQL session storage po
 - **Private**: Requires authentication (`isAuthenticated` middleware)
 - **Seller**: Requires seller role (`isSeller` middleware)  
 - **Buyer**: Requires buyer role (`isBuyer` middleware)
+- **Rider**: Requires rider role (`isRider` middleware)
 - **Owner**: Role + ownership verification (e.g., seller can only modify own products)
 
 ### Authentication Headers
@@ -709,6 +710,278 @@ The API uses **session-based authentication** with PostgreSQL session storage po
 {
   "status": "completed",
   "notes": "Order fulfilled and delivered"
+}
+```
+
+---
+
+### 🚚 Delivery, Rider, and Notifications
+
+#### Seller Dispatch APIs
+
+#### `POST /api/deliveries/orders/:orderId/assign-in-house`
+**Access**: Seller  
+**Description**: Assign an in-house rider to a seller-owned order.
+
+**Request Body**:
+```json
+{
+  "rider_id": 14,
+  "eta_at": "2026-03-30T11:30:00.000Z"
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Rider assigned successfully",
+  "delivery": {
+    "id": 103,
+    "order_id": 88,
+    "fulfillment_type": "in_house",
+    "status": "assigned",
+    "assigned_rider_id": 14,
+    "eta_at": "2026-03-30T11:30:00.000Z"
+  }
+}
+```
+
+#### `POST /api/deliveries/orders/:orderId/dispatch-third-party`
+**Access**: Seller  
+**Description**: Mark an order as dispatched with an external courier.
+
+**Request Body**:
+```json
+{
+  "provider": "Lalamove",
+  "tracking_reference": "LLM-6F4A02",
+  "eta_at": "2026-03-30T11:45:00.000Z"
+}
+```
+
+#### `PUT /api/deliveries/:id/reassign`
+**Access**: Seller  
+**Description**: Reassign an existing in-house delivery to another rider.
+
+#### `GET /api/deliveries/dispatch/active`
+**Access**: Seller  
+**Description**: List active deliveries for seller dispatch operations.
+
+**Query Parameters**:
+- `status`: Optional status filter
+- `limit`: Max rows (default: 50)
+- `offset`: Pagination offset
+
+#### `GET /api/deliveries/dispatch/riders/available`
+**Access**: Seller  
+**Description**: List available rider profiles for assignment.
+
+#### `GET /api/deliveries/dispatch/sla/metrics`
+**Access**: Seller  
+**Description**: Delivery SLA performance summary.
+
+**Query Parameters**:
+- `days`: 1..365 (default: 30)
+
+**Response**:
+```json
+{
+  "success": true,
+  "metrics": {
+    "days": 30,
+    "graceMinutes": 10,
+    "deliveredCount": 24,
+    "onTimeCount": 21,
+    "onTimeRatePercent": 87.5,
+    "averageDeliveryMinutes": 39.4
+  }
+}
+```
+
+#### Rider APIs
+
+#### `GET /api/deliveries/rider/dashboard`
+**Access**: Rider  
+**Description**: Rider profile + active deliveries + same-day stats.
+
+#### `PUT /api/deliveries/rider/availability`
+**Access**: Rider  
+**Description**: Toggle rider availability for assignment queue.
+
+**Request Body**:
+```json
+{
+  "is_available": true
+}
+```
+
+#### `GET /api/deliveries/rider/jobs/available`
+**Access**: Rider  
+**Description**: List open in-house jobs riders can accept.
+
+#### `GET /api/deliveries/rider/history`
+**Access**: Rider  
+**Description**: List delivered jobs with computed rider earnings.
+
+#### `GET /api/deliveries/rider/:id`
+**Access**: Rider  
+**Description**: Rider-only delivery detail with timeline snapshot.
+
+#### `POST /api/deliveries/:id/accept`
+**Access**: Rider  
+**Description**: Accept assigned (or available) in-house delivery.
+
+#### `POST /api/deliveries/:id/decline`
+**Access**: Rider  
+**Description**: Decline an assigned delivery.
+
+#### `PUT /api/deliveries/:id/status`
+**Access**: Rider  
+**Description**: Update rider delivery status.
+
+**Allowed Status Values**:
+- `accepted`
+- `picked_up`
+- `in_transit`
+- `failed`
+
+`delivered` is intentionally blocked here; use proof-photo upload endpoint to complete delivery.
+
+**Request Body**:
+```json
+{
+  "status": "in_transit",
+  "eta_at": "2026-03-30T11:42:00.000Z",
+  "note": "Left warehouse",
+  "failure_reason": null
+}
+```
+
+#### `POST /api/deliveries/:id/location`
+**Access**: Rider  
+**Description**: Push rider GPS coordinate updates.
+
+**Request Body**:
+```json
+{
+  "lat": 14.5567,
+  "lng": 121.0214,
+  "source": "manual"
+}
+```
+
+When distance to buyer falls below `DELIVERY_NEAR_DESTINATION_METERS` (minimum enforced: 50m), the system emits a one-time `delivery_near_destination` event and notifies buyer + seller.
+
+#### `POST /api/deliveries/:id/proof-photo`
+**Access**: Rider  
+**Description**: Upload proof of delivery photo and mark delivery as delivered.
+
+**Request Content Type**: `multipart/form-data`  
+**Form Field**: `proof_photo` (single file)
+
+**Upload Constraints**:
+- Max file size: `7MB`
+- Allowed formats: `jpeg`, `jpg`, `png`, `webp`
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Proof photo uploaded and delivery marked as delivered",
+  "delivery": {
+    "id": 103,
+    "status": "delivered",
+    "proof_photo_url": "/uploads/delivery-proofs/delivery-proof-1743323400000-335019302.jpg"
+  }
+}
+```
+
+#### Buyer/Seller Tracking APIs
+
+#### `GET /api/deliveries/orders/:orderId/tracking`
+**Access**: Private (buyer or seller who owns the order)
+**Description**: Get full tracking payload for a single order.
+
+**Response**:
+```json
+{
+  "success": true,
+  "tracking": {
+    "delivery": {
+      "id": 103,
+      "order_id": 88,
+      "status": "in_transit",
+      "fulfillment_type": "in_house",
+      "assigned_rider_id": 14
+    },
+    "events": [
+      {
+        "id": 991,
+        "event_type": "delivery_picked_up",
+        "event_note": "Order has been picked up by rider.",
+        "payload": {},
+        "created_at": "2026-03-30T10:49:12.000Z"
+      }
+    ],
+    "locations": [
+      {
+        "id": 1440,
+        "latitude": 14.5567,
+        "longitude": 121.0214,
+        "source": "manual",
+        "created_at": "2026-03-30T11:01:45.000Z"
+      }
+    ]
+  }
+}
+```
+
+#### `POST /api/deliveries/orders/:orderId/issues`
+**Access**: Private (buyer or seller who owns the order)
+**Description**: Report a delivery issue and notify operational participants.
+
+**Request Body**:
+```json
+{
+  "message": "Rider has been waiting at wrong gate for 10 minutes"
+}
+```
+
+#### In-App Delivery Notification APIs
+
+#### `GET /api/deliveries/notifications/me`
+**Access**: Private  
+**Description**: List current user delivery notifications (latest first).
+
+**Query Parameters**:
+- `limit`: 1..200 (default: 50)
+
+#### `GET /api/deliveries/notifications/me/unread-count`
+**Access**: Private  
+**Description**: Return unread delivery notification count only.
+
+**Response**:
+```json
+{
+  "success": true,
+  "unread_count": 3
+}
+```
+
+#### `POST /api/deliveries/notifications/:notificationId/read`
+**Access**: Private  
+**Description**: Mark one notification as read.
+
+#### `POST /api/deliveries/notifications/me/read-all`
+**Access**: Private  
+**Description**: Mark all current user unread delivery notifications as read.
+
+**Response**:
+```json
+{
+  "success": true,
+  "updated": 5
 }
 ```
 

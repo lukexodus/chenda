@@ -9,7 +9,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  type: "buyer" | "seller" | "both";
+  type: "buyer" | "seller" | "both" | "rider";
   address?: string;
   location?: { lat: number; lng: number };
   preferences?: {
@@ -34,7 +34,7 @@ interface AuthState {
     name: string;
     email: string;
     password: string;
-    type: "buyer" | "seller" | "both";
+    type: "buyer" | "seller" | "both" | "rider";
     address?: string;
     location?: { lat: number; lng: number };
   }) => Promise<User | null>;

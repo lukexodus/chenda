@@ -24,6 +24,7 @@ const productRoutes = require('./routes/products');
 const productTypesRoutes = require('./routes/productTypes');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
+const deliveryRoutes = require('./routes/deliveries');
 const analyticsRoutes = require('./routes/analytics');
 const xenditWebhookRoutes = require('./routes/xenditWebhooks');
 // Import routes
@@ -203,6 +204,9 @@ app.use('/api/users', preferenceAnalyticsMiddleware, userRoutes);
 
 // Order management routes (mock payment system)
 app.use('/api/orders', orderRoutes);
+
+// Delivery management routes (rider/dispatch/tracking)
+app.use('/api/deliveries', deliveryRoutes);
 
 // Analytics routes (dashboard endpoints)
 app.use('/api/analytics', analyticsRoutes);

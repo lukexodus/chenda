@@ -29,6 +29,34 @@ import { useToast } from '@/hooks/use-toast';
 import api from '@/lib/api';
 import type { Order, OrderStatus } from '@/lib/types/order';
 
+interface RiderOption {
+  id: number;
+  name: string;
+  email: string;
+  is_available: boolean;
+  active_deliveries: number;
+}
+
+interface DeliveryTrackingSnapshot {
+  delivery: {
+    id: number;
+    status: string;
+    fulfillment_type: string;
+    assigned_rider_name?: string;
+    eta_at?: string;
+    third_party_provider?: string;
+    third_party_tracking_ref?: string;
+    delivered_at?: string;
+    failed_at?: string;
+    failure_reason?: string;
+  };
+  events: Array<{
+    event_type: string;
+    event_note?: string;
+    created_at: string;
+  }>;
+}
+
 export default function SellerOrdersPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -43,6 +71,15 @@ export default function SellerOrdersPage() {
   const [refundAmount, setRefundAmount] = useState('');
   const [refundReason, setRefundReason] = useState('requested_by_seller');
   const [isReconciling, setIsReconciling] = useState(false);
+  const [riders, setRiders] = useState<RiderOption[]>([]);
+  const [ridersLoading, setRidersLoading] = useState(false);
+  const [selectedRiderId, setSelectedRiderId] = useState('');
+  const [dispatchEta, setDispatchEta] = useState('');
+  const [thirdPartyProvider, setThirdPartyProvider] = useState('');
+  const [thirdPartyTrackingRef, setThirdPartyTrackingRef] = useState('');
+  const [isDispatching, setIsDispatching] = useState(false);
+  const [deliveryTracking, setDeliveryTracking] = useState<DeliveryTrackingSnapshot | null>(null);
+  const [deliveryTrackingLoading, setDeliveryTrackingLoading] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -56,6 +93,16 @@ export default function SellerOrdersPage() {
       setFilteredOrders(orders.filter((order) => order.status === statusFilter));
     }
   }, [statusFilter, orders]);
+
+  useEffect(() => {
+    if (!showDetailModal || !selectedOrder) {
+      setDeliveryTracking(null);
+      return;
+    }
+
+    fetchAvailableRiders();
+    fetchDeliveryTracking(selectedOrder.id);
+  }, [showDetailModal, selectedOrder?.id]);
 
   const fetchOrders = async () => {
     setIsLoading(true);
@@ -225,6 +272,135 @@ export default function SellerOrdersPage() {
     }
   };
 
+  const fetchAvailableRiders = async () => {
+    setRidersLoading(true);
+    try {
+      const response = await api.get('/deliveries/dispatch/riders/available', {
+        params: { limit: 100 },
+      });
+
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || 'Failed to fetch riders');
+      }
+
+      setRiders(response.data.riders || []);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Unable to load riders',
+        description: error.response?.data?.message || error.message || 'Please try again.',
+      });
+    } finally {
+      setRidersLoading(false);
+    }
+  };
+
+  const toIsoFromLocal = (value: string) => {
+    if (!value) return undefined;
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+  };
+
+  const fetchDeliveryTracking = async (orderId: number) => {
+    setDeliveryTrackingLoading(true);
+    try {
+      const response = await api.get(`/deliveries/orders/${orderId}/tracking`);
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || 'Failed to load delivery tracking');
+      }
+      setDeliveryTracking(response.data.tracking || null);
+    } catch {
+      setDeliveryTracking(null);
+    } finally {
+      setDeliveryTrackingLoading(false);
+    }
+  };
+
+  const handleAssignInHouse = async () => {
+    if (!selectedOrder) return;
+    if (!selectedRiderId) {
+      toast({
+        variant: 'destructive',
+        title: 'Rider required',
+        description: 'Please select an available rider.',
+      });
+      return;
+    }
+
+    setIsDispatching(true);
+    try {
+      const payload: Record<string, unknown> = {
+        rider_id: Number(selectedRiderId),
+      };
+      const etaIso = toIsoFromLocal(dispatchEta);
+      if (etaIso) payload.eta_at = etaIso;
+
+      const response = await api.post(`/deliveries/orders/${selectedOrder.id}/assign-in-house`, payload);
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || 'Failed to assign rider');
+      }
+
+      toast({
+        title: 'Rider assigned',
+        description: 'In-house rider assignment has been created.',
+      });
+      setSelectedRiderId('');
+      await fetchAvailableRiders();
+      await fetchDeliveryTracking(selectedOrder.id);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Assignment failed',
+        description: error.response?.data?.message || error.message || 'Please try again.',
+      });
+    } finally {
+      setIsDispatching(false);
+    }
+  };
+
+  const handleDispatchThirdParty = async () => {
+    if (!selectedOrder) return;
+    if (!thirdPartyProvider.trim() || !thirdPartyTrackingRef.trim()) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing details',
+        description: 'Courier provider and tracking reference are required.',
+      });
+      return;
+    }
+
+    setIsDispatching(true);
+    try {
+      const payload: Record<string, unknown> = {
+        provider: thirdPartyProvider.trim(),
+        tracking_reference: thirdPartyTrackingRef.trim(),
+      };
+      const etaIso = toIsoFromLocal(dispatchEta);
+      if (etaIso) payload.eta_at = etaIso;
+
+      const response = await api.post(`/deliveries/orders/${selectedOrder.id}/dispatch-third-party`, payload);
+      if (!response.data?.success) {
+        throw new Error(response.data?.message || 'Failed to dispatch third-party courier');
+      }
+
+      toast({
+        title: 'Third-party dispatched',
+        description: 'Third-party courier tracking has been recorded.',
+      });
+      setThirdPartyProvider('');
+      setThirdPartyTrackingRef('');
+      await fetchDeliveryTracking(selectedOrder.id);
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Dispatch failed',
+        description: error.response?.data?.message || error.message || 'Please try again.',
+      });
+    } finally {
+      setIsDispatching(false);
+    }
+  };
+
   // Count orders by status
   const statusCounts = {
     all: orders.length,
@@ -332,6 +508,137 @@ export default function SellerOrdersPage() {
             <div className="py-4">
               <OrderDetail order={selectedOrder} viewAs="seller" />
 
+              <Card className="mt-4 border-dashed">
+                <CardContent className="pt-6 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-semibold text-fresh-text-primary">Current Dispatch Status</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fetchDeliveryTracking(selectedOrder.id)}
+                      disabled={deliveryTrackingLoading}
+                    >
+                      {deliveryTrackingLoading ? 'Refreshing...' : 'Refresh'}
+                    </Button>
+                  </div>
+
+                  {!deliveryTracking && !deliveryTrackingLoading && (
+                    <p className="text-sm text-fresh-text-muted">No delivery record yet for this order.</p>
+                  )}
+
+                  {deliveryTrackingLoading && (
+                    <p className="text-sm text-fresh-text-muted">Loading delivery status...</p>
+                  )}
+
+                  {deliveryTracking && (
+                    <div className="space-y-1 text-sm">
+                      <p><span className="font-medium">Status:</span> {deliveryTracking.delivery.status}</p>
+                      <p><span className="font-medium">Fulfillment:</span> {deliveryTracking.delivery.fulfillment_type}</p>
+                      {deliveryTracking.delivery.assigned_rider_name && (
+                        <p><span className="font-medium">Assigned Rider:</span> {deliveryTracking.delivery.assigned_rider_name}</p>
+                      )}
+                      {deliveryTracking.delivery.eta_at && (
+                        <p><span className="font-medium">ETA:</span> {new Date(deliveryTracking.delivery.eta_at).toLocaleString()}</p>
+                      )}
+                      {deliveryTracking.delivery.third_party_provider && (
+                        <p><span className="font-medium">Courier:</span> {deliveryTracking.delivery.third_party_provider}</p>
+                      )}
+                      {deliveryTracking.delivery.third_party_tracking_ref && (
+                        <p><span className="font-medium">Tracking Ref:</span> {deliveryTracking.delivery.third_party_tracking_ref}</p>
+                      )}
+                      {deliveryTracking.delivery.failure_reason && (
+                        <p><span className="font-medium">Failure:</span> {deliveryTracking.delivery.failure_reason}</p>
+                      )}
+                      {deliveryTracking.events?.length ? (
+                        <p className="text-xs text-fresh-text-muted pt-2">
+                          Last update: {new Date(deliveryTracking.events[deliveryTracking.events.length - 1].created_at).toLocaleString()}
+                        </p>
+                      ) : null}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {selectedOrder.status !== 'cancelled' && (
+                <Card className="mt-4 border-dashed">
+                  <CardContent className="pt-6 space-y-4">
+                    <h3 className="font-semibold text-fresh-text-primary">Dispatch Delivery</h3>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="dispatch-eta">ETA (optional)</Label>
+                      <Input
+                        id="dispatch-eta"
+                        type="datetime-local"
+                        value={dispatchEta}
+                        onChange={(e) => setDispatchEta(e.target.value)}
+                        disabled={isDispatching}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="rider-select">Assign In-House Rider</Label>
+                      <select
+                        id="rider-select"
+                        value={selectedRiderId}
+                        onChange={(e) => setSelectedRiderId(e.target.value)}
+                        disabled={ridersLoading || isDispatching}
+                        className="w-full rounded-md border border-fresh-border bg-white px-3 py-2 text-sm"
+                      >
+                        <option value="">Select rider...</option>
+                        {riders
+                          .filter((rider) => rider.is_available)
+                          .map((rider) => (
+                            <option key={rider.id} value={String(rider.id)}>
+                              {rider.name} ({rider.active_deliveries} active)
+                            </option>
+                          ))}
+                      </select>
+                      {ridersLoading && <p className="text-xs text-fresh-text-muted">Loading riders...</p>}
+                      {!ridersLoading && riders.length === 0 && (
+                        <p className="text-xs text-fresh-text-muted">No rider accounts found yet.</p>
+                      )}
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      onClick={handleAssignInHouse}
+                      disabled={isDispatching || ridersLoading}
+                      className="w-full sm:w-auto"
+                    >
+                      {isDispatching ? 'Processing...' : 'Assign In-House Rider'}
+                    </Button>
+
+                    <div className="border-t pt-4 space-y-2">
+                      <Label htmlFor="third-party-provider">Third-Party Provider</Label>
+                      <Input
+                        id="third-party-provider"
+                        value={thirdPartyProvider}
+                        onChange={(e) => setThirdPartyProvider(e.target.value)}
+                        placeholder="Lalamove, GrabExpress, etc."
+                        disabled={isDispatching}
+                      />
+
+                      <Label htmlFor="third-party-tracking">Tracking Reference</Label>
+                      <Input
+                        id="third-party-tracking"
+                        value={thirdPartyTrackingRef}
+                        onChange={(e) => setThirdPartyTrackingRef(e.target.value)}
+                        placeholder="External tracking ID"
+                        disabled={isDispatching}
+                      />
+
+                      <Button
+                        onClick={handleDispatchThirdParty}
+                        disabled={isDispatching}
+                        className="w-full sm:w-auto"
+                      >
+                        {isDispatching ? 'Processing...' : 'Dispatch Third-Party Courier'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {['captured', 'paid'].includes(selectedOrder.payment_status) && selectedOrder.status !== 'cancelled' && (
                 <Card className="mt-4 border-dashed">
                   <CardContent className="pt-6 space-y-4">
@@ -386,6 +693,15 @@ export default function SellerOrdersPage() {
           )}
 
           <DialogFooter className="flex-col sm:flex-row gap-2">
+            {selectedOrder && (
+              <Button
+                variant="secondary"
+                onClick={() => router.push(`/seller/orders/${selectedOrder.id}/delivery`)}
+                className="w-full sm:w-auto"
+              >
+                Track Delivery
+              </Button>
+            )}
             {selectedOrder && selectedOrder.status === 'paid' && (
               <Button
                 onClick={() => handleMarkAsCompleted(selectedOrder.id)}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -61,7 +62,7 @@ export default function OrderConfirmationPage({ params: paramsPromise }: { param
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--fresh-surface)]">
+    <div className="flex min-h-screen flex-col bg-fresh-surface">
       <TopHeader />
       <main className="flex-1 overflow-y-auto pb-20 px-4 pt-4">
       <div className="container max-w-4xl mx-auto py-6 px-0 space-y-4">
@@ -81,7 +82,7 @@ export default function OrderConfirmationPage({ params: paramsPromise }: { param
       {/* Loading State */}
       {isLoading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-[var(--fresh-primary)]" />
+          <Loader2 className="h-8 w-8 animate-spin text-fresh-primary" />
         </div>
       )}
 
@@ -116,6 +117,11 @@ export default function OrderConfirmationPage({ params: paramsPromise }: { param
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <Button onClick={handleBackToDashboard} className="flex-1">
               Back to Dashboard
+            </Button>
+            <Button variant="secondary" className="flex-1" asChild>
+              <Link href={`/orders/${order.id}/tracking`}>
+                Track Delivery
+              </Link>
             </Button>
             <Button onClick={handleViewOrders} variant="outline" className="flex-1">
               View All Orders

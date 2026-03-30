@@ -7,8 +7,8 @@ import { Loader2 } from "lucide-react";
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredType?: "buyer" | "seller" | "both";
-  allowedTypes?: Array<"buyer" | "seller" | "both">;
+  requiredType?: "buyer" | "seller" | "both" | "rider";
+  allowedTypes?: Array<"buyer" | "seller" | "both" | "rider">;
 }
 
 /**
@@ -45,6 +45,8 @@ export function ProtectedRoute({
         router.replace("/buyer");
       } else if (user.type === "seller") {
         router.replace("/seller/dashboard");
+      } else if (user.type === "rider") {
+        router.replace("/rider/dashboard");
       }
       return;
     }
@@ -60,6 +62,8 @@ export function ProtectedRoute({
           router.replace("/buyer");
         } else if (user.type === "seller") {
           router.replace("/seller/dashboard");
+        } else if (user.type === "rider") {
+          router.replace("/rider/dashboard");
         } else {
           router.replace("/");
         }
@@ -127,6 +131,7 @@ export function useUserType() {
   return {
     isBuyer: user?.type === "buyer" || user?.type === "both",
     isSeller: user?.type === "seller" || user?.type === "both",
+    isRider: user?.type === "rider",
     type: user?.type,
   };
 }

@@ -1138,6 +1138,20 @@ curl -X POST http://localhost:3001/api/auth/register \
 - Safer migration workflow
 - Verified data recovery path
 
+#### References & Artifacts:
+- **Backup script**: [`scripts/backup-db.sh`](../../scripts/backup-db.sh)
+- **Restore script**: [`scripts/restore-db.sh`](../../scripts/restore-db.sh)
+- **Integrity check SQL**: [`scripts/db-integrity-check.sql`](../../scripts/db-integrity-check.sql)
+- **Runbook**: [`docs/BACKUP_RESTORE_RUNBOOK.md`](../../docs/BACKUP_RESTORE_RUNBOOK.md)
+- **Migration safety guidelines**: [`docs/migrations/MIGRATION_SAFETY_GUIDELINES.md`](../../docs/migrations/MIGRATION_SAFETY_GUIDELINES.md)
+
+#### Restore Drill Checklist:
+1. Create a clean/test DB instance
+2. Restore latest backup using `restore-db.sh`
+3. Run `db-integrity-check.sql` and verify all counts/constraints
+4. Confirm application starts and data is accessible
+5. Document any issues in the runbook
+
 ---
 
 ### **Task 4.5: Security Enhancements** (2-3 days)
@@ -1277,44 +1291,50 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Goal**: Add courier/rider as a first-class user role with dispatch and delivery workflows
 
 #### Subtasks:
-- [ ] 4.12.1: Extend user model and auth middleware with courier/rider role permissions
-- [ ] 4.12.2: Add **hybrid fulfillment** model support (in-house riders + third-party couriers)
-- [ ] 4.12.3: Add fulfillment data model:
+- [x] 4.12.1: Extend user model and auth middleware with courier/rider role permissions
+- [x] 4.12.2: Add **hybrid fulfillment** model support (in-house riders + third-party couriers)
+- [x] 4.12.3: Add fulfillment data model:
   - Deliveries table (assignment, status, ETA, proof-of-delivery)
   - Fulfillment type (`in_house`, `third_party`) and external tracking references
   - Rider availability and active location tracking
   - Order-to-delivery linkage and handoff timestamps
-- [ ] 4.12.4: Add rider API endpoints:
+- [x] 4.12.4: Add rider API endpoints:
   - Get available delivery jobs
   - Accept/decline assignment
   - Update delivery status (`accepted`, `picked_up`, `in_transit`, `delivered`, `failed`)
   - Update live rider location
   - Upload **photo-only** proof-of-delivery (no signature for current scope)
-- [ ] 4.12.5: Add dispatch/admin endpoints:
+- [x] 4.12.5: Add dispatch/admin endpoints:
   - Assign/reassign rider
   - Dispatch to third-party courier partner (hybrid flow)
   - Monitor active deliveries
   - Flag delayed/failed deliveries
-- [ ] 4.12.6: Build rider features as **responsive web pages only** (mobile-first web, no native app)
-- [ ] 4.12.7: Add rider pages:
+- [x] 4.12.6: Build rider features as **responsive web pages only** (mobile-first web, no native app)
+- [x] 4.12.7: Add rider pages:
   - Rider dashboard (today's tasks + active delivery)
   - Available jobs page
   - Delivery detail page (buyer/seller contact, pickup/dropoff, status timeline)
   - Route/map page with navigation handoff
   - Earnings/history page
-- [ ] 4.12.8: Add buyer/seller tracking pages:
+- [x] 4.12.8: Add buyer/seller tracking pages:
   - Live order tracking page with rider location
   - Delivery status timeline and ETA updates
   - Delivery issue report flow
-- [ ] 4.12.9: Add notifications:
+- [x] 4.12.9: Add notifications:
   - Rider assigned, picked up, near destination, delivered, failed
   - Push/SMS/email hooks (provider-ready)
-- [ ] 4.12.10: Add delivery SLA metrics and operational analytics (on-time rate, avg delivery time)
+- [x] 4.12.10: Add delivery SLA metrics and operational analytics (on-time rate, avg delivery time)
 
 **Deliverables**:
 - Courier/rider role with protected APIs and pages
 - End-to-end **hybrid** dispatch, tracking, and photo-only proof-of-delivery workflow
 - Buyer, seller, and rider delivery visibility with operational metrics
+
+**Current Status Note**:
+- 4.12.9 is implemented for current scope: in-app delivery notifications are end-to-end (backend events + unread-count API + notification endpoints + web UI with single/bulk mark-as-read + header/mobile badges), including near-destination event trigger from rider location updates.
+- Provider-ready external notification scaffolding (email/SMS/push hooks behind feature flags) is implemented; production provider integrations/credentials remain deployment-time work.
+- Verification runbook: `docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md`
+- Completion summary: `docs/task-progress/TASK_4.12_COMPLETE.md`
 
 ---
 

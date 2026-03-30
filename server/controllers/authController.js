@@ -45,10 +45,10 @@ exports.register = asyncHandler(async (req, res) => {
   }
 
   // Validate user type
-  const validTypes = ['buyer', 'seller', 'both'];
+  const validTypes = ['buyer', 'seller', 'both', 'rider'];
   if (!validTypes.includes(type)) {
     res.status(400);
-    throw new Error('User type must be buyer, seller, or both');
+    throw new Error('User type must be buyer, seller, both, or rider');
   }
 
   // Check if email already exists

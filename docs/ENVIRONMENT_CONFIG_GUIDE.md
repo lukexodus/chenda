@@ -11,6 +11,7 @@ This document lists every environment variable used by the backend server and th
    - [Database](#database)
    - [Session](#session)
    - [Payments / Webhooks](#payments--webhooks)
+   - [Delivery Notifications](#delivery-notifications)
    - [CORS](#cors)
    - [Rate Limiting](#rate-limiting)
    - [File Uploads](#file-uploads)
@@ -64,6 +65,27 @@ Sessions are stored in the `session` PostgreSQL table via `connect-pg-simple`.
 | Variable | Default | Required? | Description |
 |----------|---------|-----------|-------------|
 | `XENDIT_CALLBACK_TOKEN` | *(none)* | Required when Xendit webhooks are enabled | Shared verification token used by webhook endpoints to validate `x-callback-token` headers sent by Xendit. Must exactly match the token configured in Xendit Dashboard Webhooks settings. |
+
+### Delivery Notifications
+
+These variables control optional external notification hooks (email/SMS/push) and near-destination triggering. In-app notifications remain enabled regardless of these flags.
+
+| Variable | Default | Required? | Description |
+|----------|---------|-----------|-------------|
+| `ENABLE_EXTERNAL_DELIVERY_NOTIFICATIONS` | `false` | Optional | Master switch for external delivery notifications. When `false`, only in-app notifications are created. When `true`, the server also attempts provider hook execution for configured channels. |
+| `ENABLE_DELIVERY_EMAIL` | `false` | Optional | Enables email channel hook execution for delivery events. Safe to keep `false` until an email provider integration is configured. |
+| `ENABLE_DELIVERY_SMS` | `false` | Optional | Enables SMS channel hook execution for delivery events. Safe to keep `false` until an SMS provider integration is configured. |
+| `ENABLE_DELIVERY_PUSH` | `false` | Optional | Enables push-notification hook execution for delivery events. Safe to keep `false` until device-token storage and provider integration are configured. |
+| `DELIVERY_EMAIL_PROVIDER` | `provider_not_configured` | Optional | Provider identifier used by email hook logging/telemetry (for example `sendgrid`, `ses`). |
+| `DELIVERY_SMS_PROVIDER` | `provider_not_configured` | Optional | Provider identifier used by SMS hook logging/telemetry (for example `twilio`). |
+| `DELIVERY_PUSH_PROVIDER` | `provider_not_configured` | Optional | Provider identifier used by push hook logging/telemetry (for example `fcm`, `onesignal`). |
+| `DELIVERY_NEAR_DESTINATION_METERS` | `300` | Optional | Distance threshold in meters for triggering the one-time `delivery_near_destination` event during rider live-location updates. Minimum enforced at runtime is 50 meters. |
+
+Rollout recommendation:
+
+1. Enable only `ENABLE_EXTERNAL_DELIVERY_NOTIFICATIONS=true` in staging first while all channel flags remain `false`.
+2. Enable one channel at a time (`ENABLE_DELIVERY_EMAIL`, then SMS/push) after provider credentials and retry strategy are in place.
+3. Tune `DELIVERY_NEAR_DESTINATION_METERS` based on local delivery density and rider ETA behavior.
 
 ### CORS
 
@@ -186,6 +208,19 @@ The test suite (`NODE_ENV=test`) loads `server/.env.test` instead of `server/.en
 | `SESSION_SECRET` | `a-64-char-random-hex-string` |
 | `NODE_ENV` | `production` |
 | `FRONTEND_URL` | `https://chenda.example.com` |
+
+### Server — Delivery Notifications (Optional)
+
+| Variable | Example Value |
+|----------|--------------|
+| `ENABLE_EXTERNAL_DELIVERY_NOTIFICATIONS` | `true` |
+| `ENABLE_DELIVERY_EMAIL` | `true` |
+| `ENABLE_DELIVERY_SMS` | `false` |
+| `ENABLE_DELIVERY_PUSH` | `false` |
+| `DELIVERY_EMAIL_PROVIDER` | `sendgrid` |
+| `DELIVERY_SMS_PROVIDER` | `twilio` |
+| `DELIVERY_PUSH_PROVIDER` | `fcm` |
+| `DELIVERY_NEAR_DESTINATION_METERS` | `300` |
 
 ### Frontend — Required
 
