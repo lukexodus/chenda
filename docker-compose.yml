@@ -1,60 +1,93 @@
+# Docker Compose file for local development/testing.
+# Start all services: docker compose up -d
+# Stop all services: docker compose down
+# Rebuild images after code/Dockerfile changes: docker compose up -d --build
+# View logs: docker compose logs -f backend
+
 services:
+  # PostgreSQL + PostGIS database service.
+  # Other services use the hostname "db" to connect to this container.
   db:
     image: postgis/postgis:16-3.4-alpine
+    # Restart automatically unless you explicitly stop the container.
     restart: unless-stopped
     environment:
+      # Initial database created on first startup.
       POSTGRES_DB: chenda
+      # Default superuser account.
       POSTGRES_USER: postgres
+      # Reads DB_PASSWORD from .env; if missing, uses "changeme".
+      # Format: ${ENV_NAME:-default_value}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
     volumes:
+      # Named volume keeps database files between container restarts/recreates.
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      # host:container mapping. Defaults to 5433 so it doesn't clash with a local PostgreSQL on 5432.
+      - "${DB_HOST_PORT:-5433}:5432"
     healthcheck:
+      # Marks DB as healthy only when it can accept connections.
       test: ["CMD-SHELL", "pg_isready -U postgres -d chenda"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # Node.js API server.
   backend:
+    # Build image from ./server/Dockerfile.
     build:
       context: ./server
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
       db:
+        # Wait for DB healthcheck to pass before starting backend.
         condition: service_healthy
     environment:
+      # Runs backend in production mode inside the container.
       NODE_ENV: production
       PORT: 3001
+      # Important: DB_HOST is the service name, not localhost.
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: chenda
       DB_USER: postgres
       DB_PASSWORD: ${DB_PASSWORD:-changeme}
+      # Replace this with a long secret value in real deployments.
       SESSION_SECRET: ${SESSION_SECRET:-change-this-in-production}
       SESSION_MAX_AGE: 86400000
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       RATE_LIMIT_WINDOW_MS: 900000
       RATE_LIMIT_MAX_REQUESTS: 100
     volumes:
+      # Persist uploaded files outside the container filesystem.
       - uploads_data:/app/uploads
     ports:
+      # API exposed at http://localhost:3001
       - "3001:3001"
 
+  # Next.js frontend application.
   frontend:
+    # Build image from ./chenda-frontend/Dockerfile.
     build:
       context: ./chenda-frontend
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
+      # Starts after backend container starts (does not wait for HTTP readiness).
       - backend
     environment:
+      # Browser calls this URL to reach the backend API.
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
       NEXT_PUBLIC_API_PREFIX: /api
+      # Server-side rewrites inside the frontend container must use the backend service name.
+      INTERNAL_API_URL: ${INTERNAL_API_URL:-http://backend:3001}
     ports:
+      # Frontend exposed at http://localhost:3000
       - "3000:3000"
 
+# Named volumes managed by Docker.
+# They survive "docker compose down" (unless you pass -v).
 volumes:
   postgres_data:
   uploads_data:

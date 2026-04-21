@@ -85,7 +85,7 @@ export const authApi = {
     name: string;
     email: string;
     password: string;
-    type: "buyer" | "seller" | "both";
+    type: "buyer" | "seller" | "both" | "rider";
     address?: string;
     location?: { lat: number; lng: number };
   }) => api.post("/auth/register", data),

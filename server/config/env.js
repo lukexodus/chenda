@@ -44,6 +44,8 @@ const loadEnvironment = () => {
   const env = inferEnv();
   const serverRoot = path.resolve(__dirname, '..');
 
+  // Load env files from most specific to most general.
+  // Since override=false, the first value loaded for each key wins.
   const candidates = [
     path.join(serverRoot, `.env.${env}.local`),
     path.join(serverRoot, `.env.${env}`),
@@ -63,6 +65,7 @@ const loadEnvironment = () => {
     });
   }
 
+  // Guarantee NODE_ENV is always set to a validated runtime value.
   if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = env;
   }
@@ -137,11 +140,13 @@ const validateEnvironment = () => {
     },
   };
 
+  // Process values take precedence over defaults.
   const merged = { ...defaults[env], ...process.env };
 
   const requiredAlways = ['DB_HOST', 'DB_NAME', 'DB_USER', 'FRONTEND_URL'];
   const requiredSecure = ['DB_PASSWORD', 'SESSION_SECRET'];
 
+  // Make tests self-contained when SESSION_SECRET is not explicitly provided.
   if (env === 'test' && !merged.SESSION_SECRET) {
     merged.SESSION_SECRET = 'test-session-secret-not-for-production';
   }
@@ -152,6 +157,7 @@ const validateEnvironment = () => {
 
   assertRequired('SESSION_SECRET', merged.SESSION_SECRET);
 
+  // Enforce stricter guarantees for deployed environments.
   if (env === 'production' || env === 'staging') {
     for (const name of requiredSecure) {
       assertRequired(name, merged[name]);
@@ -180,6 +186,7 @@ const validateEnvironment = () => {
     if (parsed <= 0) {
       throw new Error(`Environment variable ${name} must be greater than 0. Received: ${parsed}`);
     }
+    // Store normalized string values because process.env is string-based.
     merged[name] = String(parsed);
   }
 

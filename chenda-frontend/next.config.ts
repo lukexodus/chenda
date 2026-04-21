@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+const internalApiUrl =
+  process.env.INTERNAL_API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:3001";
+
 const nextConfig: NextConfig = {
   // Required for Docker: bundles only what is needed to run in a minimal image
   output: "standalone",
@@ -24,7 +29,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/uploads/:path*",
-        destination: "http://localhost:3001/uploads/:path*",
+        destination: `${internalApiUrl}/uploads/:path*`,
       },
     ];
   },
@@ -35,6 +40,12 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "localhost",
+        port: "3001",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "backend",
         port: "3001",
         pathname: "/uploads/**",
       },

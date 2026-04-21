@@ -1,5 +1,4 @@
 node_modules
-package-lock.json
 coverage
 .DS_Store
 .idea
@@ -34,6 +33,12 @@ npm-debug.log*
 # Ignore lock files
 yarn.lock
 
+# Local environment overrides
+.env
+.env.*
+!.env.example
+!.env.docker
+
 # Ignore environment variable files
 #.env
 #.env.test
@@ -43,12 +48,10 @@ yarn.lock
 #.env.production.local
 
 server/node_modules
-server/package-lock.json
 server/.env
 server/.env.local
 server/.env.development.local
 server/.env.test.local
 server/.env.production.local
-server/.env.example
 
 uploads/

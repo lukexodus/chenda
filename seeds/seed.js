@@ -3,6 +3,12 @@
 /**
  * Database Seeder
  * Executes SQL seed files to populate database with initial data
+ *
+ * Quick usage:
+ *   node seeds/seed.js                 # Seed only when DB is empty
+ *   node seeds/seed.js --force         # Clear and reseed all seedable data
+ *   node seeds/seed.js --products-only # Reseed products only (keeps users/types)
+ *   node seeds/seed.js --help          # Show CLI help
  */
 
 import dotenv from 'dotenv';
@@ -40,6 +46,7 @@ function log(message, color = 'reset') {
 }
 
 async function checkMigrations(client) {
+  // Ensure the migration tracking table exists before any seed operations.
   const result = await client.query(
     "SELECT COUNT(*) as count FROM information_schema.tables WHERE table_name = 'migrations'"
   );
@@ -50,6 +57,7 @@ async function checkMigrations(client) {
     return false;
   }
   
+  // Require baseline migrations so seeded tables/columns are guaranteed to exist.
   const migrationResult = await client.query('SELECT COUNT(*) as count FROM migrations');
   if (parseInt(migrationResult.rows[0].count) < 2) {
     log('\n❌ Error: Migrations not applied', 'red');
@@ -64,7 +72,7 @@ async function getSeedFiles(productsOnly = false) {
   const seedsDir = __dirname;
   const files = await fs.readdir(seedsDir);
   
-  // Return seed files in specific order
+  // Order matters because later files depend on data from earlier files.
   const order = productsOnly
     ? ['mock_products.sql', 'nationwide_products.sql']
     : ['product_types.sql', 'mock_users.sql', 'mock_products.sql', 'nationwide_products.sql'];
@@ -87,6 +95,7 @@ async function runSeedFile(client, filename) {
 }
 
 async function checkExistingData(client) {
+  // A lightweight safety check to avoid accidental duplicate inserts.
   const checks = [
     { table: 'product_types', name: 'Product Types' },
     { table: 'users', name: 'Users' },
@@ -113,13 +122,13 @@ async function seed(force = false, productsOnly = false) {
     await client.connect();
     log(`✓ Connected to ${DB_CONFIG.database}@${DB_CONFIG.host}`, 'green');
     
-    // Check migrations
+    // Stop early if schema migrations have not been applied.
     const migrationsOk = await checkMigrations(client);
     if (!migrationsOk) {
       process.exit(1);
     }
     
-    // Check existing data
+    // Snapshot current table counts to decide safe seed strategy.
     const existingData = await checkExistingData(client);
     
     log('\n📊 Current database state:', 'blue');
@@ -150,7 +159,7 @@ async function seed(force = false, productsOnly = false) {
     } else if (force && hasData) {
       log('\n🗑️  Clearing existing data...', 'yellow');
       
-      // Clear in reverse order due to foreign keys
+      // Clear in reverse dependency order to satisfy foreign key constraints.
       await client.query('TRUNCATE products CASCADE');
       await client.query('TRUNCATE users CASCADE');
       await client.query('TRUNCATE product_types CASCADE');
@@ -158,7 +167,7 @@ async function seed(force = false, productsOnly = false) {
       log('✓ Cleared existing data', 'green');
     }
     
-    // Run seed files
+    // Execute each SQL seed file sequentially for deterministic results.
     const seedFiles = await getSeedFiles(productsOnly);
     
     log(`\n🚀 Seeding database with ${seedFiles.length} files...`, 'blue');
@@ -167,7 +176,7 @@ async function seed(force = false, productsOnly = false) {
       await runSeedFile(client, seedFile);
     }
     
-    // Final verification
+    // Final counts provide a quick verification summary in CI/local runs.
     const finalData = await checkExistingData(client);
     
     log('\n━'.repeat(50), 'cyan');
@@ -194,6 +203,10 @@ async function seed(force = false, productsOnly = false) {
 }
 
 // Command line interface
+// Usage examples:
+//   node seeds/seed.js
+//   node seeds/seed.js --force
+//   node seeds/seed.js --products-only
 const args = process.argv.slice(2);
 const force = args.includes('--force') || args.includes('-f');
 const productsOnly = args.includes('--products-only') || args.includes('-p');

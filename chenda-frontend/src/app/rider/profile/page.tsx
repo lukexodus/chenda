@@ -1,7 +1,7 @@
 "use client";
 
 import { TopHeader, BottomNav } from "@/components/layout/navigation";
-import ProfileView from "@/components/profile/ProfileView";
+import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 export default function RiderProfilePage() {
@@ -11,7 +11,7 @@ export default function RiderProfilePage() {
         <TopHeader />
         <main className="flex-1 overflow-y-auto pb-20 px-4 pt-4">
           <div className="container max-w-2xl mx-auto">
-            <ProfileView />
+            <ProfileForm />
           </div>
         </main>
         <BottomNav />
