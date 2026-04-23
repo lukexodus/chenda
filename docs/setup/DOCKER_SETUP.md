@@ -91,11 +91,59 @@ docker compose version  # Docker Compose version v2.x.x
 
 ---
 
+## Docker Desktop and Image Distribution FAQ
+
+### Do Docker Desktop users need separate instructions?
+
+Usually no. Docker Desktop still uses the same Docker Engine and Compose commands, so this guide works for Docker Desktop users as-is.
+
+### Do Docker Desktop users still need the terminal?
+
+For this project, yes for most setup tasks.
+
+- Docker Desktop UI is great for viewing container status, logs, resource usage, and starting/stopping/restarting containers.
+- Initial setup steps here (running ordered migrations, seeding, and one-off compose run commands) are terminal-first operations.
+- On Windows, use PowerShell equivalents included in this guide.
+
+### Is cloning/pulling the repo enough to run the app?
+
+For local development and internal testing, yes.
+
+Use this flow:
+1. Pull latest source.
+2. Run `docker compose up -d --build`.
+3. Run migrations (required on fresh volume).
+4. Run seeds if needed (optional).
+
+You do not need a container registry for this local workflow because images are built from source on each machine.
+
+### When should we push images to a registry?
+
+Push images to a registry (Docker Hub, GHCR, ECR, etc.) when you need consistent, prebuilt deployment artifacts.
+
+Common cases:
+- Production/staging deployments on servers that should pull immutable image tags.
+- CI/CD pipelines that build once and deploy the same image everywhere.
+- Faster onboarding where users should run without local image builds.
+- Environments where source code is not copied to the runtime host.
+
+Rule of thumb:
+- Local dev: repo pull + local build is enough.
+- Shared/prod deployment: publish versioned images to a registry.
+
+---
+
 ## Step 1 — Clone the repository
 
 ```bash
 git clone <repo-url> chenda
 cd chenda
+```
+
+Windows (PowerShell):
+```powershell
+git clone <repo-url> chenda
+Set-Location chenda
 ```
 
 ---
@@ -215,6 +263,14 @@ for f in migrations/00*.sql; do
 done
 ```
 
+Windows (PowerShell) equivalent:
+```powershell
+Get-ChildItem migrations/00*.sql | Sort-Object Name | ForEach-Object {
+  Write-Host "Applying $($_.FullName)..."
+  Get-Content $_.FullName | docker compose exec -T db psql -U postgres -d chenda
+}
+```
+
 Verify the schema was applied:
 ```bash
 docker compose exec db psql -U postgres -d chenda -c "\dt"
@@ -232,6 +288,10 @@ You should see all application tables listed (users, products, product_types, or
 
 Seeds populate the database with mock data for development and testing. **Do not seed a real production database.**
 
+Choose one seeding path depending on what you need.
+
+### Option A — SQL pipeline (recommended for first-time Docker setup)
+
 The `seeds/` directory is also in the project root (not inside the container). The seed SQL files are piped directly into the `db` container, in dependency order:
 
 ```bash
@@ -248,17 +308,72 @@ docker compose exec -T db psql -U postgres -d chenda < seeds/mock_products.sql
 docker compose exec -T db psql -U postgres -d chenda < seeds/nationwide_products.sql
 ```
 
-Alternatively, use the `seed.js` script with a temporary container that has the project root mounted:
+### Option B — Seeder CLI modes (`seed.js`)
+
+Use this when you need selective reseeding behavior.
+
+Available modes:
+
+| Mode | Command | Behavior |
+|---|---|---|
+| Safe default | `node seeds/seed.js` | Seeds only if data is empty |
+| Full reset | `node seeds/seed.js --force` | Clears and reseeds `product_types`, `users`, `products` |
+| Products only | `node seeds/seed.js --products-only` | Clears `orders` + `products`, then reseeds product files only |
+
+If Node is installed on your host, run these commands directly from the project root.
+
+If Node is **not** installed on your host, run the seeder in a temporary backend container:
+
 ```bash
-# Run the Node seed script with the full project root available
+# Safe default
 docker compose run --rm \
+  -e NODE_PATH=/app/node_modules \
   -v "$(pwd)":/workspace \
-  -w /workspace/server \
   --entrypoint node \
-  backend ../seeds/seed.js
+  backend /workspace/seeds/seed.js
+
+# Full reset
+docker compose run --rm \
+  -e NODE_PATH=/app/node_modules \
+  -v "$(pwd)":/workspace \
+  --entrypoint node \
+  backend /workspace/seeds/seed.js --force
+
+# Products-only reseed
+docker compose run --rm \
+  -e NODE_PATH=/app/node_modules \
+  -v "$(pwd)":/workspace \
+  --entrypoint node \
+  backend /workspace/seeds/seed.js --products-only
 ```
 
-> **Note:** The `seed.js` script checks that migrations have been applied before inserting data. If you get a `migrations table not found` error, run Step 5 first.
+Windows (PowerShell) equivalent:
+```powershell
+# Safe default
+docker compose run --rm `
+  -e NODE_PATH=/app/node_modules `
+  -v "${PWD}:/workspace" `
+  --entrypoint node `
+  backend /workspace/seeds/seed.js
+
+# Full reset
+docker compose run --rm `
+  -e NODE_PATH=/app/node_modules `
+  -v "${PWD}:/workspace" `
+  --entrypoint node `
+  backend /workspace/seeds/seed.js --force
+
+# Products-only reseed
+docker compose run --rm `
+  -e NODE_PATH=/app/node_modules `
+  -v "${PWD}:/workspace" `
+  --entrypoint node `
+  backend /workspace/seeds/seed.js --products-only
+```
+
+> **Note 1:** The `seed.js` script checks that migrations have been applied before inserting data. If you get a `migrations table not found` error, run Step 5 first.
+
+> **Note 2:** `--products-only` requires existing `users` and `product_types` data. If those tables are empty, run a full seed first.
 
 What gets seeded:
 - **180 USDA product types** (real FoodKeeper data — categories, shelf life defaults)
@@ -359,6 +474,11 @@ Common causes:
 The Next.js Dockerfile requires `next.config.ts` to have `output: 'standalone'` set. Verify:
 ```bash
 grep -n standalone chenda-frontend/next.config.ts
+```
+
+Windows (PowerShell) equivalent:
+```powershell
+Select-String -Path chenda-frontend/next.config.ts -Pattern standalone
 ```
 
 ### Database connection refused

@@ -14,11 +14,30 @@ Seed files populate the database with initial data for development and testing:
 ```
 seeds/
 ├── generate-seeds.js      # Converts JSON to SQL
-├── seed.js                # Executes SQL seed files
+├── seed.js                # Main seeding CLI (safe/default, force, products-only)
+├── clear-products.js      # Optional helper to clear orders+products only
 ├── product_types.sql      # 180 USDA product types (auto-generated)
 ├── mock_users.sql         # 10 test users (auto-generated)
-└── mock_products.sql      # 30 test products (auto-generated)
+├── mock_products.sql      # 30 test products (auto-generated)
+└── nationwide_products.sql # Additional nationwide sellers/products dataset
 ```
+
+## Seeding Modes
+
+The seeder supports three modes:
+
+| Mode | Command | What it does | When to use |
+|---|---|---|---|
+| Safe default | `node seed.js` | Seeds only if target tables are empty | First-time setup on a fresh DB |
+| Full reset | `node seed.js --force` | Truncates `products`, `users`, `product_types` (cascade), then reseeds all files | Rebuild complete test dataset |
+| Products only | `node seed.js --products-only` | Deletes `orders` then `products`, resets `products_id_seq`, reseeds product files only | Refresh listings while keeping users/types |
+
+Additional utility:
+
+| Utility | Command | What it does |
+|---|---|---|
+| Dry-run clear check | `node clear-products.js` | Shows counts, no writes |
+| Confirm clear | `node clear-products.js --confirm` | Deletes `orders` + `products`, resets `products_id_seq` |
 
 ## Usage
 
@@ -42,14 +61,62 @@ This reads from:
 node seed.js
 ```
 
-**Re-seed** (clear and reload):
+**Re-seed everything** (clear and reload):
 ```bash
 node seed.js --force
+```
+
+**Re-seed products only** (keeps users and product types):
+```bash
+node seed.js --products-only
 ```
 
 **Help**:
 ```bash
 node seed.js --help
+```
+
+## Docker Compose Context
+
+For Docker Compose deployment, seed after containers are up and migrations are applied.
+
+1) Start containers:
+
+```bash
+docker compose up -d --build
+```
+
+2) Run migrations (required first).
+
+3) Choose one seeding approach:
+
+Option A: Pipe SQL files directly into the DB container
+
+```bash
+docker compose exec -T db psql -U postgres -d chenda < seeds/product_types.sql
+docker compose exec -T db psql -U postgres -d chenda < seeds/mock_users.sql
+docker compose exec -T db psql -U postgres -d chenda < seeds/mock_products.sql
+docker compose exec -T db psql -U postgres -d chenda < seeds/nationwide_products.sql
+```
+
+Option B: Run `seed.js` via a temporary backend container
+
+```bash
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/seeds \
+  --entrypoint node \
+  backend seed.js
+```
+
+For full reset in Docker:
+
+```bash
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/seeds \
+  --entrypoint node \
+  backend seed.js --force
 ```
 
 ## Test Credentials
@@ -166,23 +233,16 @@ The `seed.js` script:
 
 1. **Checks migrations** - Ensures database schema is created
 2. **Checks existing data** - Prevents accidental data loss
-3. **Disables triggers** - For faster bulk insert (session_replication_role)
-4. **Executes SQL files** in order:
+3. **Executes SQL files** in order:
    - product_types.sql (180 items)
    - mock_users.sql (10 users)
    - mock_products.sql (30 products)
-5. **Re-enables triggers**
-6. **Updates sequences** - Resets auto-increment counters
-7. **Verifies counts** - Confirms data was inserted
+  - nationwide_products.sql (additional nationwide dataset)
+4. **Shows final counts** - Confirms data was inserted
 
-## Performance
-
-Bulk inserts with disabled triggers:
-- **Product Types**: ~500ms (180 rows)
-- **Users**: ~100ms (10 rows with PostGIS)
-- **Products**: ~200ms (30 rows with PostGIS)
-
-**Total**: < 1 second for complete seeding
+Notes:
+- Trigger/sequence handling is implemented inside the SQL files where needed.
+- In `--products-only`, `orders` are deleted before `products` to satisfy FK constraints.
 
 ## Verification
 
@@ -242,11 +302,17 @@ node seed.js --force
 ### "Migrations not applied"
 Run migrations first:
 ```bash
-cd ../migrations && node migrate.js up
+node migrations/migrate.js up
 ```
 
 ### "Database already contains data"
 Use `--force` to clear and re-seed:
+```bash
+node seed.js --force
+```
+
+### "--products-only requires users and product_types"
+Run a full seed once first:
 ```bash
 node seed.js --force
 ```

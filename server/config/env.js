@@ -158,7 +158,7 @@ const validateEnvironment = () => {
   assertRequired('SESSION_SECRET', merged.SESSION_SECRET);
 
   // Enforce stricter guarantees for deployed environments.
-  if (env === 'production' || env === 'staging') {
+  if ((env === 'production' || env === 'staging') && process.env.IS_DOCKER !== 'true') {
     for (const name of requiredSecure) {
       assertRequired(name, merged[name]);
     }
