@@ -10,7 +10,7 @@ services:
   db:
     image: postgis/postgis:16-3.4-alpine
     # Restart automatically unless you explicitly stop the container.
-    restart: unless-stopped
+    restart: on-failure:3
     env_file:
       - .env.docker
     volumes:
@@ -32,7 +32,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: on-failure:3
     depends_on:
       db:
         # Wait for DB healthcheck to pass before starting backend.
@@ -52,7 +52,7 @@ services:
     build:
       context: ./chenda-frontend
       dockerfile: Dockerfile
-    restart: unless-stopped
+    restart: on-failure:3
     depends_on:
       # Starts after backend container starts (does not wait for HTTP readiness).
       - backend
