@@ -3,6 +3,7 @@
 # Stop all services: docker compose down
 # Rebuild images after code/Dockerfile changes: docker compose up -d --build
 # View logs: docker compose logs -f backend
+# Dev bind-mount workflow: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 services:
   # PostgreSQL + PostGIS database service.
@@ -39,6 +40,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.docker
+    environment:
+      # Backend talks to DB over Docker network, so this must be container port.
+      DB_PORT: 5432
     volumes:
       # Persist uploaded files outside the container filesystem.
       - uploads_data:/app/uploads

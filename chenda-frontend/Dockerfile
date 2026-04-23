@@ -6,6 +6,13 @@ FROM base AS deps
 COPY package.json package-lock.json* ./
 RUN npm ci
 
+# Development image (used by docker-compose.dev.yml)
+FROM deps AS dev
+COPY . .
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]
+
 # Build the Next.js app
 FROM deps AS builder
 COPY . .

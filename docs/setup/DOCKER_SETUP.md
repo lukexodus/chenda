@@ -163,6 +163,10 @@ chenda/.env.docker
 # Use 5433 to avoid conflicts if a local PostgreSQL is running on 5432.
 DB_HOST_PORT=5433
 
+# Port used by backend -> db inside Docker network.
+# Keep this as 5432 (do not set to DB_HOST_PORT).
+DB_PORT=5432
+
 # Password for the postgres superuser inside the container.
 DB_PASSWORD=postgres
 
@@ -203,6 +207,58 @@ docker compose up -d --build
 - `-d` runs containers in detached (background) mode.
 
 The first build takes a few minutes as it downloads base images and installs npm dependencies inside the containers.
+
+### Development workflow for teammates (Arch + Windows)
+
+For day-to-day coding, use the dev Compose override with bind mounts:
+
+- Base file: `docker-compose.yml` (DB + default service config)
+- Dev override: `docker-compose.dev.yml` (hot reload, bind mounts, dev targets)
+
+Start dev stack:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+Windows (PowerShell):
+
+```powershell
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+After the first build, code changes are reflected automatically (no image rebuild needed).
+
+Why this works:
+
+- `./server` and `./chenda-frontend` are bind-mounted into containers.
+- Backend runs with `nodemon` and frontend runs with `next dev`.
+- Dependencies stay isolated in Docker-managed named volumes (`backend_node_modules`, `frontend_node_modules`).
+
+When to rebuild in dev mode:
+
+- `Dockerfile` changed
+- `package.json` or `package-lock.json` changed
+- New native dependency or build dependency added
+
+Rebuild only one service if needed:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build backend
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build frontend
+```
+
+Stop dev stack:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+```
+
+Cross-platform notes:
+
+- Arch/Linux: bind mounts are typically fast by default.
+- Windows (Docker Desktop): bind mounts can be slower; keep the repo in WSL2 filesystem when possible for better performance.
+- If file-change detection is missed on Windows, polling is enabled in dev config for reliability.
 
 ---
 
@@ -507,7 +563,7 @@ docker compose up -d --build
 ```
 .env.docker  ──► docker-compose.yml (env_file)
                     ├─► db container   (DB_PASSWORD, DB_HOST_PORT)
-                    ├─► backend container (DB_PASSWORD, SESSION_SECRET, FRONTEND_URL, ...)
+                    ├─► backend container (DB_PORT=5432, DB_PASSWORD, SESSION_SECRET, FRONTEND_URL, ...)
                     └─► frontend container (NEXT_PUBLIC_API_URL, INTERNAL_API_URL, ...)
 ```
 
