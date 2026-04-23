@@ -1,0 +1,736 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Language                                                    Files        Lines         Code     Comments       Blanks
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Batch                                                           6          701          591           39           71
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./complete-postgis.bat                                                      98           80            2           16
+ ./quick-start.bat                                                          131          108            8           15
+ ./server/start.bat                                                         125          108            5           12
+ ./setup-backend-windows.bat                                                120          102           10            8
+ ./setup-postgresql.bat                                                     143          120           11           12
+ ./start-postgres.bat                                                        84           73            3            8
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ CSS                                                             1          166          147            7           12
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-frontend/src/app/globals.css                                      166          147            7           12
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Dockerfile                                                      2           49           32            6           11
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-frontend/Dockerfile                                                29           20            3            6
+ ./server/Dockerfile                                                         20           12            3            5
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ JavaScript                                                     96        26321        18212         4627         3482
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-algo/src/core-algorithm/calculations/haversine.js                 289          158           97           34
+ ./chenda-algo/src/core-algorithm/calculations/haversine.test.js            247          165           30           52
+ ./chenda-algo/src/core-algorithm/calculations/shelf-life.js                410          226          133           51
+ ./chenda-algo/src/core-algorithm/calculations/shelf-life.test.js           316          208           41           67
+ ./chenda-algo/src/core-algorithm/chenda-algorithm.test.js                  498          352           61           85
+ ./chenda-algo/src/core-algorithm/chenda_algorithm.js                       602          407          131           64
+ ./chenda-algo/src/core-algorithm/ranking/product-ranker.test.js            496          332           67           97
+ ./chenda-algo/src/core-algorithm/ranking/product-sorter.test.js            507          343           64          100
+ ./chenda-algo/src/core-algorithm/ranking/product_ranker.js                 627          363          190           74
+ ./chenda-algo/src/core-algorithm/ranking/product_sorter.js                 579          326          189           64
+ ./chenda-algo/src/core-algorithm/scoring/combined-score.js                 471          253          165           53
+ ./chenda-algo/src/core-algorithm/scoring/combined-score.test.js            418          298           55           65
+ ./chenda-algo/src/core-algorithm/scoring/score-normalizer.js               333          180          111           42
+ ./chenda-algo/src/core-algorithm/scoring/score-normalizer.test.js          318          220           47           51
+ ./chenda-algo/src/edge-cases.test.js                                       570          414           70           86
+ ./chenda-algo/src/product-display/mock_data.js                             741          672           45           24
+ ./chenda-algo/src/product-display/product-filter.test.js                   402          283           53           66
+ ./chenda-algo/src/product-display/product_filter.js                        557          347          142           68
+ ./chenda-algo/src/product-management/usda-transformer.js                   242          181           35           26
+ ./chenda-algo/src/test-runner.js                                           227          150           31           46
+ ./chenda-algo/src/utils/data_structures.js                                 246          138           88           20
+ ./chenda-frontend/eslint.config.mjs                                         18           14            2            2
+ ./chenda-frontend/jest.polyfills.js                                         60           34           17            9
+ ./chenda-frontend/postcss.config.mjs                                         7            6            0            1
+ ./e2e/scripts/clean-data.js                                                 24           13            7            4
+ ./e2e/scripts/setup-db.js                                                   23           12            7            4
+ ./e2e/scripts/teardown-db.js                                                23           12            7            4
+ ./e2e/setup/database.js                                                    239          158           43           38
+ ./migrations/migrate.js                                                    209          151           17           41
+ ./migrations/test-connection.js                                            243          196           17           30
+ ./seeds/clear-products.js                                                  101           71           13           17
+ ./seeds/generate-seeds.js                                                  290          238           15           37
+ ./seeds/seed.js                                                            226          158           28           40
+ ./server/__tests__/auth.test.js                                            383          298           22           63
+ ./server/__tests__/helpers.js                                              185          138           27           20
+ ./server/__tests__/products.test.js                                        358          275           14           69
+ ./server/__tests__/search.test.js                                          311          247           16           48
+ ./server/__tests__/setup.js                                                227          160           43           24
+ ./server/__tests__/users.test.js                                           406          322           14           70
+ ./server/algorithm/calculations/haversine.js                               289          158           97           34
+ ./server/algorithm/calculations/shelf-life.js                              410          226          133           51
+ ./server/algorithm/chenda_algorithm.js                                     371          221          108           42
+ ./server/algorithm/product-display/product_filter.js                       557          347          142           68
+ ./server/algorithm/ranking/product_ranker.js                               627          363          190           74
+ ./server/algorithm/ranking/product_sorter.js                               579          326          189           64
+ ./server/algorithm/scoring/combined-score.js                               471          253          165           53
+ ./server/algorithm/scoring/score-normalizer.js                             333          180          111           42
+ ./server/app.js                                                            273          149           85           39
+ ./server/check-coords.js                                                    33           25            3            5
+ ./server/config/database.js                                                135           87           33           15
+ ./server/config/env.js                                                     210          170            9           31
+ ./server/config/index.js                                                    72           50           12           10
+ ./server/config/passport.js                                                 66           40           15           11
+ ./server/controllers/analyticsController.js                                429          345           49           35
+ ./server/controllers/authController.js                                     226          151           45           30
+ ./server/controllers/deliveryController.js                                 820          682            4          134
+ ./server/controllers/orderController.js                                    677          517           76           84
+ ./server/controllers/productController.js                                  702          571           59           72
+ ./server/controllers/searchController.js                                   453          320           82           51
+ ./server/controllers/userController.js                                     369          258           59           52
+ ./server/diagnose.js                                                        19           14            4            1
+ ./server/middleware/analyticsMiddleware.js                                 306          211           58           37
+ ./server/middleware/asyncHandler.js                                         20            4           14            2
+ ./server/middleware/authenticate.js                                        129           85           27           17
+ ./server/middleware/errorHandler.js                                         51           29           16            6
+ ./server/middleware/logger.js                                               41           19           12           10
+ ./server/middleware/sanitize.js                                             73           37           32            4
+ ./server/middleware/uploadImage.js                                          99           73           16           10
+ ./server/middleware/uploadProofPhoto.js                                     69           53            4           12
+ ./server/middleware/validateProduct.js                                     162          127            7           28
+ ./server/models/Delivery.js                                                661          575            4           82
+ ./server/models/Order.js                                                   313          243           30           40
+ ./server/models/PaymentAttempt.js                                          155          132            4           19
+ ./server/models/Product.js                                                 447          346           59           42
+ ./server/models/ProductType.js                                             273          178           61           34
+ ./server/models/Refund.js                                                   81           68            4            9
+ ./server/models/User.js                                                    225          128           71           26
+ ./server/routes/analytics.js                                               112           53           47           12
+ ./server/routes/auth.js                                                     86           42           33           11
+ ./server/routes/deliveries.js                                               78           62            4           12
+ ./server/routes/health.js                                                   32           23            6            3
+ ./server/routes/orders.js                                                  221          141           58           22
+ ./server/routes/productTypes.js                                             80           53           14           13
+ ./server/routes/products.js                                                 43           25           10            8
+ ./server/routes/search.js                                                   24            9            9            6
+ ./server/routes/users.js                                                    53           11           34            8
+ ./server/routes/xenditWebhooks.js                                          145          118            5           22
+ ./server/services/analyticsService.js                                      409          288           77           44
+ ./server/services/deliveryNotificationService.js                           115           92            7           16
+ ./server/services/geocodingService.js                                      222          133           56           33
+ ./server/services/paymentMonitoringService.js                              195          164            5           26
+ ./server/services/paymentReconciliationService.js                          116           97            4           15
+ ./server/services/paymentReportingService.js                               206          187            4           15
+ ./server/services/paymentService.js                                        329          272            4           53
+ ./server/services/xenditService.js                                         149          120            4           25
+ ./server/smoke.js                                                           51           42            3            6
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ JSON                                                           18        37881        37881            0            0
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-algo/shelf-life-db/shelf-life-core.json                             1            1            0            0
+ ./chenda-algo/shelf-life-db/shelf-life.json                                  1            1            0            0
+ ./chenda-algo/src/data/mock_data_complete.json                             742          742            0            0
+ ./chenda-algo/src/data/mock_products.json                                  542          542            0            0
+ ./chenda-algo/src/data/mock_users.json                                     192          192            0            0
+ ./chenda-algo/src/data/shelf-life-structure.json                           443          443            0            0
+ ./chenda-algo/src/product-management/product-types-full.json              8584         8584            0            0
+ ./chenda-algo/src/product-management/product-types.json                   2522         2522            0            0
+ ./chenda-frontend/components.json                                           23           23            0            0
+ ./chenda-frontend/package-lock.json                                      16326        16326            0            0
+ ./chenda-frontend/package.json                                              63           63            0            0
+ ./chenda-frontend/tsconfig.json                                             34           34            0            0
+ ./package-lock.json                                                        653          653            0            0
+ ./package.json                                                              44           44            0            0
+ ./postman/Chenda_API.postman_collection.json                               948          948            0            0
+ ./postman/Chenda_Environment.postman_environment.json                      114          114            0            0
+ ./server/package-lock.json                                                6589         6589            0            0
+ ./server/package.json                                                       60           60            0            0
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ PowerShell                                                     10         1373         1083           79          211
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-frontend/setup-auth.ps1                                            25           18            2            5
+ ./chenda-frontend/setup-task-2.3.ps1                                        38           30            4            4
+ ./complete-postgis-install.ps1                                             138          107            5           26
+ ./install-postgis-manual.ps1                                               204          166            6           32
+ ./install-postgis-simple.ps1                                               206          164            8           34
+ ./install-postgis.ps1                                                      173          131           16           26
+ ./server/install-postgresql.ps1                                            105           78            5           22
+ ./server/start.ps1                                                         142          112           10           20
+ ./server/verify-setup.ps1                                                  149          121           11           17
+ ./setup-postgresql.ps1                                                     193          156           12           25
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Shell                                                           8          903          687           91          125
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./run-e2e-tests.sh                                                         194          151           20           23
+ ./scripts/backup-db.sh                                                      22           14            3            5
+ ./scripts/restore-db.sh                                                     17           12            2            3
+ ./server/quick-test.sh                                                      65           39           11           15
+ ./server/start.sh                                                          125           94           14           17
+ ./server/test-order-api.sh                                                 191          147           13           31
+ ./server/test-user-api.sh                                                  175          137           17           21
+ ./setup-backend-linux.sh                                                   114           93           11           10
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ SQL                                                            13         4902         4413          289          200
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./migrations/001_create_tables.sql                                         251          151           58           42
+ ./migrations/002_create_indexes.sql                                        351          289           39           23
+ ./migrations/003_create_session_table.sql                                   18            8            6            4
+ ./migrations/004_optimize_indexes.sql                                       85           22           47           16
+ ./migrations/005_payment_integration.sql                                    68           41            9           18
+ ./migrations/006_refunds_reconciliation.sql                                 62           38            9           15
+ ./migrations/007_payment_monitoring_alerts.sql                              43           35            3            5
+ ./migrations/008_courier_delivery_fulfillment.sql                          117           90            9           18
+ ./scripts/db-integrity-check.sql                                            17            7            6            4
+ ./seeds/mock_products.sql                                                  476          458           11            7
+ ./seeds/mock_users.sql                                                     149          134            9            6
+ ./seeds/nationwide_products.sql                                           1439         1327           75           37
+ ./seeds/product_types.sql                                                 1826         1813            8            5
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ SVG                                                             5            5            5            0            0
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-frontend/public/file.svg                                            1            1            0            0
+ ./chenda-frontend/public/globe.svg                                           1            1            0            0
+ ./chenda-frontend/public/next.svg                                            1            1            0            0
+ ./chenda-frontend/public/vercel.svg                                          1            1            0            0
+ ./chenda-frontend/public/window.svg                                          1            1            0            0
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Plain Text                                                     12        52989            0        52432          557
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-algo/shelf-life-db/shelf-life-gron.txt                          44566            0        44566            0
+ ./chenda-algo/shelf-life-db/shelf-life-json-structure.txt                  677            0          677            0
+ ./cookies.txt                                                                5            0            4            1
+ ./docs/uml/class-db.txt                                                     91            0           82            9
+ ./docs/uml/class-full.txt                                                  408            0          361           47
+ ./docs/uml/component-full.txt                                              203            0          176           27
+ ./docs/uml/component-simplified.txt                                         76            0           63           13
+ ./docs/uml/deployment.txt                                                  105            0           91           14
+ ./jest-results-2.txt                                                      1407            0         1351           56
+ ./jest-results.txt                                                        1835            0         1757           78
+ ./server/npmtextoutput.txt                                                 272            0          190           82
+ ./server/test_output.txt                                                  3344            0         3114          230
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ TSX                                                            92        13162        11526          365         1271
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ |chenda-frontend/src/__tests__/components/auth/LoginForm.test.tsx          170          146           15            9
+ |nda-frontend/src/__tests__/components/auth/RegisterForm.test.tsx          156          111           19           26
+ |enda-frontend/src/__tests__/components/buyer/SearchForm.test.tsx          161          120           19           22
+ |-frontend/src/__tests__/components/products/ProductCard.test.tsx          174          123           21           30
+ |a-frontend/src/__tests__/components/profile/ProfileForm.test.tsx          178          125           16           37
+ ./chenda-frontend/src/__tests__/error-states.test.tsx                      267          212           14           41
+ |frontend/src/__tests__/integration/login-search-product.test.tsx          156          112           20           24
+ |nda-frontend/src/__tests__/integration/register-profile.test.tsx          121           94           10           17
+ |a-frontend/src/__tests__/integration/seller-add-product.test.tsx          162          112           18           32
+ ./chenda-frontend/src/__tests__/test-utils.tsx                              34           15           15            4
+ ./chenda-frontend/src/app/(auth)/layout.tsx                                 12            8            3            1
+ ./chenda-frontend/src/app/(auth)/login/page.tsx                             33           29            0            4
+ ./chenda-frontend/src/app/(auth)/register/page.tsx                          33           29            0            4
+ ./chenda-frontend/src/app/(buyer)/buyer/orders/page.tsx                    126          113            0           13
+ ./chenda-frontend/src/app/(buyer)/buyer/page.tsx                            87           74            0           13
+ ./chenda-frontend/src/app/(buyer)/buyer/profile/page.tsx                    27           23            0            4
+ ./chenda-frontend/src/app/(buyer)/cart/page.tsx                             70           59            0           11
+ ./chenda-frontend/src/app/(buyer)/checkout/page.tsx                        306          273            7           26
+ ./chenda-frontend/src/app/(buyer)/layout.tsx                                12           10            0            2
+ ./chenda-frontend/src/app/(buyer)/orders/[id]/page.tsx                     137          123            0           14
+ ./chenda-frontend/src/app/(buyer)/orders/[id]/tracking/page.tsx            206          191            0           15
+ ./chenda-frontend/src/app/(buyer)/orders/page.tsx                           12           10            0            2
+ ./chenda-frontend/src/app/layout.tsx                                        76           65            7            4
+ ./chenda-frontend/src/app/notifications/page.tsx                            10           10            0            0
+ ./chenda-frontend/src/app/page.tsx                                          74           69            0            5
+ ./chenda-frontend/src/app/rider/dashboard/page.tsx                         161          147            0           14
+ ./chenda-frontend/src/app/rider/deliveries/[id]/page.tsx                   272          247            0           25
+ ./chenda-frontend/src/app/rider/history/page.tsx                            81           72            0            9
+ ./chenda-frontend/src/app/rider/jobs/page.tsx                              101           91            0           10
+ ./chenda-frontend/src/app/rider/layout.tsx                                  17           15            0            2
+ ./chenda-frontend/src/app/rider/profile/page.tsx                            21           19            0            2
+ ./chenda-frontend/src/app/rider/tracking/page.tsx                           82           73            0            9
+ ./chenda-frontend/src/app/seller/dashboard/page.tsx                         87           77            2            8
+ ./chenda-frontend/src/app/seller/layout.tsx                                 21           18            0            3
+ ./chenda-frontend/src/app/seller/orders/[id]/delivery/page.tsx             210          195            0           15
+ ./chenda-frontend/src/app/seller/orders/page.tsx                           736          663            8           65
+ ./chenda-frontend/src/app/seller/payments/page.tsx                         302          275            0           27
+ ./chenda-frontend/src/app/seller/products/[id]/edit/page.tsx                49           41            0            8
+ ./chenda-frontend/src/app/seller/products/add/page.tsx                       9            8            0            1
+ ./chenda-frontend/src/app/seller/products/page.tsx                          88           79            0            9
+ ./chenda-frontend/src/app/seller/profile/page.tsx                           17           16            0            1
+ ./chenda-frontend/src/components/auth/LoginForm.tsx                        163          146            3           14
+ ./chenda-frontend/src/components/auth/ProtectedRoute.tsx                   137           98           22           17
+ ./chenda-frontend/src/components/auth/RegisterForm.tsx                     300          280            2           18
+ ./chenda-frontend/src/components/buyer/SearchForm.tsx                      265          238            7           20
+ ./chenda-frontend/src/components/cart/CartSummary.tsx                      172          155            0           17
+ ./chenda-frontend/src/components/layout/navigation.tsx                     267          231           10           26
+ ./chenda-frontend/src/components/layout/states.tsx                         200          179            6           15
+ ./chenda-frontend/src/components/maps/AddressAutocomplete.tsx              197          176            4           17
+ ./chenda-frontend/src/components/maps/GeolocationButton.tsx                 88           79            0            9
+ ./chenda-frontend/src/components/maps/SearchResultsMap.tsx                 271          220           16           35
+ ./chenda-frontend/src/components/orders/OrderCard.tsx                      131          118            0           13
+ ./chenda-frontend/src/components/orders/OrderDetail.tsx                    319          302            2           15
+ ./chenda-frontend/src/components/payment/PaymentModal.tsx                  338          298            3           37
+ ./chenda-frontend/src/components/products/ProductCard.tsx                  196          175            4           17
+ ./chenda-frontend/src/components/products/ProductDetail.tsx                390          358            6           26
+ ./chenda-frontend/src/components/products/ProductGrid.tsx                   39           34            0            5
+ ./chenda-frontend/src/components/products/ProductMap.tsx                    85           65            8           12
+ ./chenda-frontend/src/components/products/SortControls.tsx                 115          107            0            8
+ ./chenda-frontend/src/components/profile/AlgorithmPreferences.tsx          335          305            6           24
+ ./chenda-frontend/src/components/profile/LocationSettings.tsx              237          208            8           21
+ ./chenda-frontend/src/components/profile/PasswordChangeForm.tsx            291          269            3           19
+ ./chenda-frontend/src/components/profile/ProfileForm.tsx                   249          223            4           22
+ ./chenda-frontend/src/components/profile/StoragePreference.tsx              58           54            0            4
+ ./chenda-frontend/src/components/providers/auth-provider.tsx                36           24            7            5
+ ./chenda-frontend/src/components/providers/error-boundary.tsx               75           55           10           10
+ ./chenda-frontend/src/components/seller/ProductForm.tsx                    566          501           16           49
+ ./chenda-frontend/src/components/seller/ProductTable.tsx                   371          342           10           19
+ ./chenda-frontend/src/components/seller/ProductTypeCombobox.tsx            171          152            3           16
+ ./chenda-frontend/src/components/seller/SellerAnalytics.tsx                229          197           11           21
+ ./chenda-frontend/src/components/ui/alert.tsx                               66           60            0            6
+ ./chenda-frontend/src/components/ui/avatar.tsx                             109          100            0            9
+ ./chenda-frontend/src/components/ui/badge.tsx                               48           43            0            5
+ ./chenda-frontend/src/components/ui/button.tsx                              64           59            0            5
+ ./chenda-frontend/src/components/ui/card.tsx                                92           83            0            9
+ ./chenda-frontend/src/components/ui/checkbox.tsx                            30           26            0            4
+ ./chenda-frontend/src/components/ui/dialog.tsx                             158          145            0           13
+ ./chenda-frontend/src/components/ui/dropdown-menu.tsx                      257          239            0           18
+ ./chenda-frontend/src/components/ui/form.tsx                               167          143            0           24
+ ./chenda-frontend/src/components/ui/input.tsx                               21           18            0            3
+ ./chenda-frontend/src/components/ui/label.tsx                               24           20            0            4
+ ./chenda-frontend/src/components/ui/progress.tsx                            28           24            0            4
+ ./chenda-frontend/src/components/ui/radio-group.tsx                         44           39            0            5
+ ./chenda-frontend/src/components/ui/select.tsx                             190          177            0           13
+ ./chenda-frontend/src/components/ui/separator.tsx                           28           24            0            4
+ ./chenda-frontend/src/components/ui/sheet.tsx                              143          130            0           13
+ ./chenda-frontend/src/components/ui/skeleton.tsx                            13           11            0            2
+ ./chenda-frontend/src/components/ui/slider.tsx                              63           58            0            5
+ ./chenda-frontend/src/components/ui/sonner.tsx                              40           36            0            4
+ ./chenda-frontend/src/components/ui/table.tsx                              117          107            0           10
+ ./chenda-frontend/src/components/ui/tabs.tsx                                91           83            0            8
+ ./chenda-frontend/src/components/ui/textarea.tsx                            24           20            0            4
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ TypeScript                                                     27         3011         2036          477          498
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-frontend/jest.config.ts                                            60           47           11            2
+ ./chenda-frontend/next.config.ts                                            58           41            8            9
+ ./chenda-frontend/src/__tests__/__mocks__/fileMock.ts                        3            2            1            0
+ ./chenda-frontend/src/__tests__/mocks/handlers.ts                          296          243           18           35
+ ./chenda-frontend/src/__tests__/mocks/server.ts                              7            3            3            1
+ ./chenda-frontend/src/__tests__/setup.ts                                    21            5           12            4
+ ./chenda-frontend/src/components/maps/index.ts                               3            1            2            0
+ ./chenda-frontend/src/components/products/index.ts                           3            1            2            0
+ ./chenda-frontend/src/hooks/use-mounted.ts                                  10            6            3            1
+ ./chenda-frontend/src/hooks/use-toast.ts                                    23           20            0            3
+ ./chenda-frontend/src/lib/api.ts                                           250          174           21           55
+ ./chenda-frontend/src/lib/sanitize.ts                                       42           16           24            2
+ ./chenda-frontend/src/lib/store.ts                                         164          141            9           14
+ ./chenda-frontend/src/lib/stores/authStore.ts                                7            2            5            0
+ ./chenda-frontend/src/lib/stores/cartStore.ts                              109           82           10           17
+ ./chenda-frontend/src/lib/stores/searchStore.ts                            212          171           14           27
+ ./chenda-frontend/src/lib/types/order.ts                                   149          129            6           14
+ ./chenda-frontend/src/lib/types/profile.ts                                  78           67            3            8
+ ./chenda-frontend/src/lib/types/seller.ts                                   63           56            3            4
+ ./chenda-frontend/src/lib/utils.ts                                          54           33           15            6
+ ./chenda-frontend/src/lib/validators/authSchemas.ts                         58           46            6            6
+ ./e2e/auth-flow.spec.ts                                                    172           90           39           43
+ ./e2e/buyer-journey.spec.ts                                                261          139           58           64
+ ./e2e/helpers/testHelpers.ts                                               269          144           72           53
+ ./e2e/seller-journey.spec.ts                                               334          186           71           77
+ ./e2e/setup/database.ts                                                    230          152           41           37
+ ./playwright.config.ts                                                      75           39           20           16
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ YAML                                                            1           69           43           22            4
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./docker-compose.yml                                                        69           43           22            4
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ HTML                                                            1          282          275            4            3
+ |- CSS                                                          1          566          474           12           80
+ |- JavaScript                                                   1           31           23            3            5
+ (Total)                                                                    879          772           19           88
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./docs/presentation/chenda-presentation.html
+ |- HTML                                                                    282          275            4            3
+ |- CSS                                                                     566          474           12           80
+ |- JavaScript                                                               31           23            3            5
+ ./docs/presentation/chenda-presentation.html                               282          275            4            3
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Markdown                                                       89        23239            0        17345         5894
+ |- BASH                                                        39         1558         1111          284          163
+ |- CSS                                                          2           61           35           16           10
+ |- HTML                                                         1           21           15            3            3
+ |- JavaScript                                                  25         1599         1236          202          161
+ |- JSON                                                        17         1226         1224            0            2
+ |- JSX                                                          1           34           30            1            3
+ |- Markdown                                                     1           27            0           19            8
+ |- PowerShell                                                   6          136           84           32           20
+ |- SQL                                                         17          403          340           43           20
+ |- TSX                                                          2          111           88           14            9
+ |- TypeScript                                                   3           87           67           11            9
+ |- YAML                                                        23         1172         1155            0           17
+ (Total)                                                                  29674         5385        17970         6319
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ ./chenda-algo/README.md                                                     46            0           38            8
+ ./docs/BACKEND_CORE_USE_CASES.md                                           174            0          145           29
+ ./docs/COMPONENT_CATALOG.md                                                719            0          523          196
+ ./docs/UAT_SQUARE_DECISION_INPUTS.md                                       248            0          208           40
+ ./docs/document-list.md                                                     71            0           52           19
+ ./docs/learn/CHENDA Big O.md                                               110            0           80           30
+ ./docs/learn/CHENDA_ALGORITHM_EXPLANATION.md                               302            0          237           65
+ ./docs/learn/DOCKER_CONTAINER_TERMINOLOGIES.md                             140            0          128           12
+ ./docs/setup/SECRET_ROTATION.md                                             77            0           57           20
+ ./docs/setup/USER_GUIDE.md                                                 368            0          241          127
+ ./docs/task-progress/TASK_4.11_WEBHOOK_SETUP.md                            162            0          131           31
+ ./docs/task-progress/TASK_4.12_COMPLETE.md                                 192            0          144           48
+ ./docs/task-progress/TASK_4.1_COMPLETE.md                                   42            0           33            9
+ ./server/__tests__/TASK_1.9_COMPLETE.md                                    105            0           81           24
+ ./server/__tests__/TEST_STATUS.md                                          193            0          151           42
+-- ./README.md --------------------------------------------------------------------------------------------------------
+ |- Markdown                                                                206            0          151           55
+ |- BASH                                                                     42           16           17            9
+ ./README.md                                                                206            0          151           55
+-- ./chenda-algo/docs/PHASE_7_COMPLETE.md -----------------------------------------------------------------------------
+ |- Markdown                                                                391            0          302           89
+ |- BASH                                                                     11            5            4            2
+ ./chenda-algo/docs/PHASE_7_COMPLETE.md                                     391            0          302           89
+-- ./chenda-algo/docs/PHASE_7_TESTING_VALIDATION.md -------------------------------------------------------------------
+ |- Markdown                                                                391            0          295           96
+ |- BASH                                                                     25           13            7            5
+ |- JavaScript                                                               48           43            2            3
+ ./chenda-algo/docs/PHASE_7_TESTING_VALIDATION.md                           391            0          295           96
+-- ./chenda-algo/docs/TASK_1.3-1.4_SUMMARY.md -------------------------------------------------------------------------
+ |- Markdown                                                                120            0           92           28
+ |- JSON                                                                     14           14            0            0
+ ./chenda-algo/docs/TASK_1.3-1.4_SUMMARY.md                                 120            0           92           28
+-- ./chenda-algo/docs/TASK_2_1_COMPLETE.md ----------------------------------------------------------------------------
+ |- Markdown                                                                230            0          174           56
+ |- JavaScript                                                               69           58            6            5
+ ./chenda-algo/docs/TASK_2_1_COMPLETE.md                                    230            0          174           56
+-- ./chenda-algo/docs/TASK_2_2_COMPLETE.md ----------------------------------------------------------------------------
+ |- Markdown                                                                276            0          210           66
+ |- JavaScript                                                               94           47           30           17
+ ./chenda-algo/docs/TASK_2_2_COMPLETE.md                                    276            0          210           66
+-- ./chenda-algo/docs/TASK_2_3_COMPLETE.md ----------------------------------------------------------------------------
+ |- Markdown                                                                359            0          270           89
+ |- JavaScript                                                               63           41           15            7
+ ./chenda-algo/docs/TASK_2_3_COMPLETE.md                                    359            0          270           89
+-- ./chenda-algo/docs/TASK_2_4_COMPLETE.md ----------------------------------------------------------------------------
+ |- Markdown                                                                276            0          206           70
+ |- JavaScript                                                               73           54           14            5
+ ./chenda-algo/docs/TASK_2_4_COMPLETE.md                                    276            0          206           70
+-- ./chenda-algo/docs/TASK_3_COMPLETE.md ------------------------------------------------------------------------------
+ |- Markdown                                                                497            0          379          118
+ |- JavaScript                                                               97           70           11           16
+ ./chenda-algo/docs/TASK_3_COMPLETE.md                                      497            0          379          118
+-- ./chenda-algo/docs/TASK_4_COMPLETE.md ------------------------------------------------------------------------------
+ |- Markdown                                                                585            0          457          128
+ |- JavaScript                                                              139           99           21           19
+ ./chenda-algo/docs/TASK_4_COMPLETE.md                                      585            0          457          128
+-- ./chenda-algo/docs/TASK_6_COMPLETE.md ------------------------------------------------------------------------------
+ |- Markdown                                                                246            0          185           61
+ |- JavaScript                                                               94           87            6            1
+ ./chenda-algo/docs/TASK_6_COMPLETE.md                                      246            0          185           61
+-- ./chenda-algo/docs/context.md --------------------------------------------------------------------------------------
+ |- Markdown                                                                589            0          462          127
+ |- JavaScript                                                              112           86           13           13
+ ./chenda-algo/docs/context.md                                              589            0          462          127
+-- ./chenda-frontend/README.md ----------------------------------------------------------------------------------------
+ |- Markdown                                                                 29            0           16           13
+ |- BASH                                                                      7            4            3            0
+ ./chenda-frontend/README.md                                                 29            0           16           13
+-- ./docs/API_DOCUMENTATION.md ----------------------------------------------------------------------------------------
+ |- Markdown                                                                752            0          546          206
+ |- BASH                                                                     77           77            0            0
+ |- JavaScript                                                                2            0            2            0
+ |- JSON                                                                    663          663            0            0
+ ./docs/API_DOCUMENTATION.md                                                752            0          546          206
+-- ./docs/ARCHITECTURE.md ---------------------------------------------------------------------------------------------
+ |- Markdown                                                                268            0          194           74
+ |- BASH                                                                     84           45           24           15
+ |- HTML                                                                      8            6            1            1
+ |- JavaScript                                                              295          228           27           40
+ |- JSX                                                                      34           30            1            3
+ |- SQL                                                                      10            9            1            0
+ ./docs/ARCHITECTURE.md                                                     268            0          194           74
+-- ./docs/BACKUP_RESTORE_RUNBOOK.md -----------------------------------------------------------------------------------
+ |- Markdown                                                                 83            0           57           26
+ |- BASH                                                                      3            3            0            0
+ |- SQL                                                                       1            1            0            0
+ ./docs/BACKUP_RESTORE_RUNBOOK.md                                            83            0           57           26
+-- ./docs/BROWSE_DB_GUIDE.md ------------------------------------------------------------------------------------------
+ |- Markdown                                                                 30            0           23            7
+ |- BASH                                                                      5            2            2            1
+ |- SQL                                                                      11            9            0            2
+ ./docs/BROWSE_DB_GUIDE.md                                                   30            0           23            7
+-- ./docs/DATABASE_SCHEMA.md ------------------------------------------------------------------------------------------
+ |- Markdown                                                                329            0          264           65
+ |- BASH                                                                      1            1            0            0
+ |- JSON                                                                      8            8            0            0
+ ./docs/DATABASE_SCHEMA.md                                                  329            0          264           65
+-- ./docs/DEPLOYMENT_GUIDE.md -----------------------------------------------------------------------------------------
+ |- Markdown                                                                337            0          221          116
+ |- BASH                                                                    119           97           10           12
+ |- SQL                                                                       9            8            1            0
+ ./docs/DEPLOYMENT_GUIDE.md                                                 337            0          221          116
+-- ./docs/DESIGN_SYSTEM.md --------------------------------------------------------------------------------------------
+ |- Markdown                                                                433            0          297          136
+ |- CSS                                                                      18            8            6            4
+ |- TSX                                                                      61           44           11            6
+ ./docs/DESIGN_SYSTEM.md                                                    433            0          297          136
+-- ./docs/DEVELOPER_GUIDE.md ------------------------------------------------------------------------------------------
+ |- Markdown                                                                471            0          342          129
+ |- BASH                                                                     82           54           18           10
+ |- PowerShell                                                                2            1            1            0
+ |- SQL                                                                       2            1            1            0
+ ./docs/DEVELOPER_GUIDE.md                                                  471            0          342          129
+-- ./docs/ENVIRONMENT_CONFIG_GUIDE.md ---------------------------------------------------------------------------------
+ |- Markdown                                                                240            0          174           66
+ |- BASH                                                                      2            2            0            0
+ ./docs/ENVIRONMENT_CONFIG_GUIDE.md                                         240            0          174           66
+-- ./docs/FRONTEND_DESIGN.md ------------------------------------------------------------------------------------------
+ |- Markdown                                                                258            0          166           92
+ |- CSS                                                                      43           27           10            6
+ |- TSX                                                                      50           44            3            3
+ ./docs/FRONTEND_DESIGN.md                                                  258            0          166           92
+-- ./docs/MANUAL_E2E_TESTING_GUIDE.md ---------------------------------------------------------------------------------
+ |- Markdown                                                               1109            0          862          247
+ |- Markdown                                                                 27            0           19            8
+ ./docs/MANUAL_E2E_TESTING_GUIDE.md                                        1109            0          862          247
+-- ./docs/bug-fixes.md ------------------------------------------------------------------------------------------------
+ |- Markdown                                                                 68            0           44           24
+ |- BASH                                                                      1            1            0            0
+ ./docs/bug-fixes.md                                                         68            0           44           24
+-- ./docs/learn/PROJECT_LEARNING_GUIDE.md -----------------------------------------------------------------------------
+ |- Markdown                                                                897            0          724          173
+ |- BASH                                                                     24            6           14            4
+ |- JavaScript                                                               16           16            0            0
+ |- YAML                                                                      4            4            0            0
+ ./docs/learn/PROJECT_LEARNING_GUIDE.md                                     897            0          724          173
+-- ./docs/learn/SE_CONCEPTS.md ----------------------------------------------------------------------------------------
+ |- Markdown                                                                710            0          497          213
+ |- JavaScript                                                               72           70            2            0
+ |- JSON                                                                      8            8            0            0
+ |- SQL                                                                       5            5            0            0
+ |- TypeScript                                                               25           21            3            1
+ |- YAML                                                                      4            4            0            0
+ ./docs/learn/SE_CONCEPTS.md                                                710            0          497          213
+-- ./docs/learn/TROUBLESHOOTING_GUIDE.md ------------------------------------------------------------------------------
+ |- Markdown                                                                753            0          453          300
+ |- BASH                                                                    256          193           39           24
+ |- JavaScript                                                               19           14            3            2
+ |- JSON                                                                      5            5            0            0
+ |- SQL                                                                     104           79           16            9
+ ./docs/learn/TROUBLESHOOTING_GUIDE.md                                      753            0          453          300
+-- ./docs/migrations/MIGRATION_SAFETY_GUIDELINES.md -------------------------------------------------------------------
+ |- Markdown                                                                 35            0           28            7
+ |- SQL                                                                       4            3            1            0
+ ./docs/migrations/MIGRATION_SAFETY_GUIDELINES.md                            35            0           28            7
+-- ./docs/setup/DOCKER_SETUP.md ---------------------------------------------------------------------------------------
+ |- Markdown                                                                328            0          221          107
+ |- BASH                                                                     73           49           14           10
+ |- YAML                                                                      3            3            0            0
+ ./docs/setup/DOCKER_SETUP.md                                               328            0          221          107
+-- ./docs/setup/QUICK_SETUP.md ----------------------------------------------------------------------------------------
+ |- Markdown                                                                107            0           77           30
+ |- BASH                                                                     20           14            4            2
+ ./docs/setup/QUICK_SETUP.md                                                107            0           77           30
+-- ./docs/setup/SETUP_GUIDE.md ----------------------------------------------------------------------------------------
+ |- Markdown                                                                464            0          334          130
+ |- BASH                                                                    138           73           42           23
+ |- JSON                                                                     12           12            0            0
+ |- PowerShell                                                                1            1            0            0
+ ./docs/setup/SETUP_GUIDE.md                                                464            0          334          130
+-- ./docs/setup/SETUP_POSTGRESQL.md -----------------------------------------------------------------------------------
+ |- Markdown                                                                161            0          113           48
+ |- BASH                                                                      3            3            0            0
+ |- JSON                                                                      1            1            0            0
+ |- PowerShell                                                               29           16            7            6
+ ./docs/setup/SETUP_POSTGRESQL.md                                           161            0          113           48
+-- ./docs/setup/WINDOWS_SETUP_CHECKLIST.md ----------------------------------------------------------------------------
+ |- Markdown                                                                318            0          236           82
+ |- BASH                                                                     74           43           22            9
+ ./docs/setup/WINDOWS_SETUP_CHECKLIST.md                                    318            0          236           82
+-- ./docs/setup/seeding-guide.md --------------------------------------------------------------------------------------
+ |- Markdown                                                                 28            0           16           12
+ |- BASH                                                                      8            4            3            1
+ ./docs/setup/seeding-guide.md                                               28            0           16           12
+-- ./docs/task-progress/TASK_1.1.5_COMPLETE.md ------------------------------------------------------------------------
+ |- Markdown                                                                359            0          260           99
+ |- BASH                                                                      9            9            0            0
+ |- SQL                                                                      46           45            1            0
+ ./docs/task-progress/TASK_1.1.5_COMPLETE.md                                359            0          260           99
+-- ./docs/task-progress/TASK_1.1_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                291            0          210           81
+ |- BASH                                                                     24           14            6            4
+ |- SQL                                                                      50           45            3            2
+ ./docs/task-progress/TASK_1.1_COMPLETE.md                                  291            0          210           81
+-- ./docs/task-progress/TASK_1.2_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                385            0          283          102
+ |- BASH                                                                     56           40            8            8
+ |- JavaScript                                                               20           18            1            1
+ |- JSON                                                                     34           34            0            0
+ ./docs/task-progress/TASK_1.2_COMPLETE.md                                  385            0          283          102
+-- ./docs/task-progress/TASK_1.3_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                568            0          412          156
+ |- BASH                                                                     40           40            0            0
+ |- JavaScript                                                               40           32            4            4
+ |- JSON                                                                    116          116            0            0
+ |- SQL                                                                       8            7            0            1
+ ./docs/task-progress/TASK_1.3_COMPLETE.md                                  568            0          412          156
+-- ./docs/task-progress/TASK_1.4_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                470            0          359          111
+ |- BASH                                                                     71           71            0            0
+ |- JavaScript                                                               72           71            1            0
+ |- SQL                                                                      16           15            1            0
+ ./docs/task-progress/TASK_1.4_COMPLETE.md                                  470            0          359          111
+-- ./docs/task-progress/TASK_1.5_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                508            0          389          119
+ |- BASH                                                                     79           69            7            3
+ |- JavaScript                                                               66           55            4            7
+ |- JSON                                                                    185          185            0            0
+ ./docs/task-progress/TASK_1.5_COMPLETE.md                                  508            0          389          119
+-- ./docs/task-progress/TASK_1.6_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                382            0          289           93
+ |- BASH                                                                     23           23            0            0
+ |- JavaScript                                                               36           16           13            7
+ |- JSON                                                                     48           46            0            2
+ ./docs/task-progress/TASK_1.6_COMPLETE.md                                  382            0          289           93
+-- ./docs/task-progress/TASK_1.7_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                485            0          380          105
+ |- BASH                                                                      8            8            0            0
+ |- JavaScript                                                               15           12            3            0
+ |- JSON                                                                     40           40            0            0
+ |- SQL                                                                       6            6            0            0
+ ./docs/task-progress/TASK_1.7_COMPLETE.md                                  485            0          380          105
+-- ./docs/task-progress/TASK_1.8_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                385            0          288           97
+ |- BASH                                                                     27            9           14            4
+ |- JavaScript                                                               61           49           11            1
+ |- JSON                                                                     49           49            0            0
+ |- SQL                                                                      19           13            5            1
+ ./docs/task-progress/TASK_1.8_COMPLETE.md                                  385            0          288           97
+-- ./docs/task-progress/TASK_2.2_AUTH_GUIDE.md ------------------------------------------------------------------------
+ |- Markdown                                                                288            0          218           70
+ |- BASH                                                                      2            2            0            0
+ |- JavaScript                                                               10            9            1            0
+ |- PowerShell                                                                1            1            0            0
+ ./docs/task-progress/TASK_2.2_AUTH_GUIDE.md                                288            0          218           70
+-- ./docs/task-progress/TASK_2.3_COMPLETE.md --------------------------------------------------------------------------
+ |- Markdown                                                                369            0          296           73
+ |- JSON                                                                     12           12            0            0
+ ./docs/task-progress/TASK_2.3_COMPLETE.md                                  369            0          296           73
+-- ./docs/task-progress/TASK_3.2_E2E_COMPLETE.md ----------------------------------------------------------------------
+ |- Markdown                                                                291            0          209           82
+ |- BASH                                                                     18           11            5            2
+ |- JSON                                                                     11           11            0            0
+ |- TypeScript                                                                8            8            0            0
+ ./docs/task-progress/TASK_3.2_E2E_COMPLETE.md                              291            0          209           82
+-- ./docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md ---------------------------------------------------
+ |- Markdown                                                                157            0          116           41
+ |- SQL                                                                      19           14            3            2
+ ./docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md            157            0          116           41
+-- ./docs/task-progress/TASK_BREAKDOWN.md -----------------------------------------------------------------------------
+ |- Markdown                                                               1411            0         1178          233
+ |- BASH                                                                     24           12            7            5
+ ./docs/task-progress/TASK_BREAKDOWN.md                                    1411            0         1178          233
+-- ./e2e/README.md ----------------------------------------------------------------------------------------------------
+ |- Markdown                                                                295            0          203           92
+ |- BASH                                                                     20           19            0            1
+ |- JavaScript                                                                6            5            1            0
+ |- TypeScript                                                               54           38            8            8
+ |- YAML                                                                     48           37            0           11
+ ./e2e/README.md                                                            295            0          203           92
+-- ./migrations/README.md ---------------------------------------------------------------------------------------------
+ |- Markdown                                                                135            0           97           38
+ |- BASH                                                                     13           10            2            1
+ |- SQL                                                                      57           44           10            3
+ ./migrations/README.md                                                     135            0           97           38
+-- ./seeds/README.md --------------------------------------------------------------------------------------------------
+ |- Markdown                                                                189            0          140           49
+ |- BASH                                                                     45           37            5            3
+ |- SQL                                                                      36           36            0            0
+ ./seeds/README.md                                                          189            0          140           49
+-- ./server/INSTALL_POSTGRESQL_WINDOWS.md -----------------------------------------------------------------------------
+ |- Markdown                                                                184            0          126           58
+ |- PowerShell                                                               93           59           21           13
+ ./server/INSTALL_POSTGRESQL_WINDOWS.md                                     184            0          126           58
+-- ./server/README.md -------------------------------------------------------------------------------------------------
+ |- Markdown                                                                234            0          169           65
+ |- BASH                                                                     18           13            3            2
+ |- JavaScript                                                               49           36            6            7
+ |- JSON                                                                     15           15            0            0
+ ./server/README.md                                                         234            0          169           65
+-- ./server/START_HERE.md ---------------------------------------------------------------------------------------------
+ |- Markdown                                                                164            0          114           50
+ |- BASH                                                                      1            1            0            0
+ |- JSON                                                                      5            5            0            0
+ |- PowerShell                                                               10            6            3            1
+ ./server/START_HERE.md                                                     164            0          114           50
+-- ./server/__tests__/README.md ---------------------------------------------------------------------------------------
+ |- Markdown                                                                294            0          218           76
+ |- BASH                                                                     25           18            4            3
+ |- JavaScript                                                               31           20            5            6
+ |- YAML                                                                     36           30            0            6
+ ./server/__tests__/README.md                                               294            0          218           76
+-- ./test-results/auth-flow-Authentication-F-0988d-er-and-seller-account-types-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/auth-flow-Authentication-F-0988d-er-and-seller-account-types-chromium/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-0988d-er-and-seller-account-types-firefox/error-context.md ---------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/auth-flow-Authentication-F-0988d-er-and-seller-account-types-firefox/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-5fafe-utes-when-not-authenticated-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     10           10            0            0
+ ./test-results/auth-flow-Authentication-F-5fafe-utes-when-not-authenticated-chromium/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-5fafe-utes-when-not-authenticated-firefox/error-context.md ---------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     10           10            0            0
+ ./test-results/auth-flow-Authentication-F-5fafe-utes-when-not-authenticated-firefox/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-aca36-er-→-Login-→-Logout-→-Login-chromium/error-context.md --------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/auth-flow-Authentication-F-aca36-er-→-Login-→-Logout-→-Login-chromium/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-aca36-er-→-Login-→-Logout-→-Login-firefox/error-context.md ---------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/auth-flow-Authentication-F-aca36-er-→-Login-→-Logout-→-Login-firefox/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-e847a-tration-with-existing-email-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/auth-flow-Authentication-F-e847a-tration-with-existing-email-chromium/error-context.md              4            0            3            1
+-- ./test-results/auth-flow-Authentication-F-e847a-tration-with-existing-email-firefox/error-context.md ---------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/auth-flow-Authentication-F-e847a-tration-with-existing-email-firefox/error-context.md              4            0            3            1
+-- ./test-results/buyer-journey-Buyer-Journe-4676a--→-Search-→-View-→-Checkout-chromium/error-context.md --------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/buyer-journey-Buyer-Journe-4676a--→-Search-→-View-→-Checkout-chromium/error-context.md              4            0            3            1
+-- ./test-results/buyer-journey-Buyer-Journe-4676a--→-Search-→-View-→-Checkout-firefox/error-context.md ---------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/buyer-journey-Buyer-Journe-4676a--→-Search-→-View-→-Checkout-firefox/error-context.md              4            0            3            1
+-- ./test-results/buyer-journey-Buyer-Journe-7e3a0-h-with-different-parameters-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     64           64            0            0
+ ./test-results/buyer-journey-Buyer-Journe-7e3a0-h-with-different-parameters-chromium/error-context.md              4            0            3            1
+-- ./test-results/buyer-journey-Buyer-Journe-7e3a0-h-with-different-parameters-firefox/error-context.md ---------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     73           73            0            0
+ ./test-results/buyer-journey-Buyer-Journe-7e3a0-h-with-different-parameters-firefox/error-context.md              4            0            3            1
+-- ./test-results/buyer-journey-Buyer-Journe-c42f5-avigate-between-buyer-pages-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                      8            8            0            0
+ ./test-results/buyer-journey-Buyer-Journe-c42f5-avigate-between-buyer-pages-chromium/error-context.md              4            0            3            1
+-- ./test-results/buyer-journey-Buyer-Journey-should-show-empty-cart-state-chromium/error-context.md ------------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                      8            8            0            0
+ ./test-results/buyer-journey-Buyer-Journey-should-show-empty-cart-state-chromium/error-context.md              4            0            3            1
+-- ./test-results/seller-journey-Seller-Jour-7f9ba-→-Add-Product-→-View-Orders-chromium/error-context.md ----------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     99           99            0            0
+ ./test-results/seller-journey-Seller-Jour-7f9ba-→-Add-Product-→-View-Orders-chromium/error-context.md              4            0            3            1
+-- ./test-results/seller-journey-Seller-Jour-cde59--product-freshness-warnings-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                    108          108            0            0
+ ./test-results/seller-journey-Seller-Jour-cde59--product-freshness-warnings-chromium/error-context.md              4            0            3            1
+-- ./test-results/seller-journey-Seller-Jour-e1ea6-llow-seller-profile-updates-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                     77           77            0            0
+ ./test-results/seller-journey-Seller-Jour-e1ea6-llow-seller-profile-updates-chromium/error-context.md              4            0            3            1
+-- ./test-results/seller-journey-Seller-Journey-should-handle-product-deletion-chromium/error-context.md --------------
+ |- Markdown                                                                  4            0            3            1
+ |- YAML                                                                    108          108            0            0
+ ./test-results/seller-journey-Seller-Journey-should-handle-product-deletion-chromium/error-context.md              4            0            3            1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Total                                                         381       172085        82813        76423        12849
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
