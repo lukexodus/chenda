@@ -27,6 +27,8 @@ services:
       - ./chenda-frontend:/app
       - frontend_node_modules:/app/node_modules
       - frontend_next:/app/.next
+      # Ensure public assets (logo, favicon, etc.) are accessible in dev server
+      - ./chenda-frontend/public:/app/public
 
 volumes:
   backend_node_modules:

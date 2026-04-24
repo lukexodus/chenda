@@ -548,6 +548,27 @@ If it shows `unhealthy`, inspect:
 docker compose logs db
 ```
 
+### Static assets (logo, favicon, etc.) not loading in dev mode
+
+If images or icons in `chenda-frontend/public/` are returning 404 in dev mode, ensure the public volume mount is present in `docker-compose.dev.yml`:
+
+```yaml
+frontend:
+  volumes:
+    - ./chenda-frontend:/app
+    - ./chenda-frontend/public:/app/public  # ← This line is required
+    - frontend_node_modules:/app/node_modules
+    - frontend_next:/app/.next
+```
+
+After adding the mount, restart the dev stack:
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+```
+
+The `public/` directory is served by Next.js at the root path (`/`). Files like `chenda-frontend/public/chenda.png` are accessible as `http://localhost:3000/chenda.png`.
+
 ### Data persists after `docker compose down`
 
 This is expected. Named volumes (`postgres_data`, `uploads_data`) survive `down`. To start completely fresh:
