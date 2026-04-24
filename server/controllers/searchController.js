@@ -115,6 +115,10 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
   };
 
   try {
+    // Track if we expand the radius due to no results
+    let radiusExpanded = false;
+    const requestedRadius = filters.max_radius_km;
+
     // Step 1: Get products from database with metrics
     let products = await Product.getProductsWithMetrics(buyerLocation, filters);
 
@@ -126,6 +130,8 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
         max_radius_km: null
       });
       if (products.length > 0) {
+        // Mark that we expanded the radius
+        radiusExpanded = true;
         // Disable the algorithm's internal radius filter too — show all products ranked by score
         config.max_radius = 50000;
       }
@@ -147,6 +153,8 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
         success: true,
         message: 'No products found matching your criteria',
         results: [],
+        radiusExpanded: false,
+        requestedRadius: requestedRadius,
         config: {
           mode: config.mode,
           max_radius: config.max_radius,
@@ -195,6 +203,8 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
       success: true,
       count: finalProducts.length,
       results: finalProducts,
+      radiusExpanded: radiusExpanded,
+      requestedRadius: requestedRadius,
       config: {
         mode: config.mode,
         max_radius: config.max_radius,

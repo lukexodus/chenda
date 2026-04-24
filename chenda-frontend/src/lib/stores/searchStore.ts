@@ -55,6 +55,8 @@ interface SearchState {
   results: Product[];
   loading: boolean;
   error: string | null;
+  radiusExpanded: boolean;
+  requestedRadius: number | null;
   history: SearchHistory[];
 
   // Actions
@@ -92,6 +94,8 @@ export const useSearchStore = create<SearchState>()(
       results: [],
       loading: false,
       error: null,
+      radiusExpanded: false,
+      requestedRadius: null,
       history: [],
 
       setFilters: (newFilters) => {
@@ -158,6 +162,8 @@ export const useSearchStore = create<SearchState>()(
           });
 
           const products = response.data.results || response.data.data?.products || response.data.products || [];
+          const radiusExpanded = response.data.radiusExpanded ?? false;
+          const requestedRadius = response.data.requestedRadius ?? null;
 
           // Add rank to products
           const rankedProducts = products.map((p: Product, index: number) => ({
@@ -165,7 +171,15 @@ export const useSearchStore = create<SearchState>()(
             rank: index + 1,
           }));
 
-          set({ results: rankedProducts, loading: false });
+          set({ results: rankedProducts, loading: false, radiusExpanded, requestedRadius });
+
+          // Show warning if radius was expanded
+          if (radiusExpanded && requestedRadius) {
+            toast.warning(
+              `No products found within ${requestedRadius}km. Showing results from all locations.`,
+              { description: 'You can adjust your search radius and try again.' }
+            );
+          }
 
           // Add to history
           get().addToHistory(filters, rankedProducts.length);
@@ -173,13 +187,13 @@ export const useSearchStore = create<SearchState>()(
           const message =
             (err as { response?: { data?: { message?: string } } })?.response?.data
               ?.message || "Search failed. Please try again.";
-          set({ error: message, loading: false, results: [] });
+          set({ error: message, loading: false, results: [], radiusExpanded: false, requestedRadius: null });
           toast.error(message);
         }
       },
 
       clearResults: () => {
-        set({ results: [], error: null });
+        set({ results: [], error: null, radiusExpanded: false, requestedRadius: null });
       },
 
       clearError: () => {
