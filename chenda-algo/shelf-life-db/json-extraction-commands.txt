@@ -1,0 +1,2 @@
+jq -r '.[] | map(select(has("Name")).Name)[]' products.json >> products-list.json
+sort -u names.txt
