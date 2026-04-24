@@ -76,7 +76,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message ?? "Login failed";
       set({ error: message, loading: false });
-      throw err;
+      return null;
     }
   },
 
@@ -92,7 +92,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message ?? "Registration failed";
       set({ error: message, loading: false });
-      throw err;
+      return null;
     }
   },
 
@@ -119,7 +119,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message ?? "Profile update failed";
       set({ error: message });
-      throw err;
     }
   },
 
@@ -136,7 +135,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message ?? "Preferences update failed";
       set({ error: message });
-      throw err;
     }
   },
 
@@ -156,7 +154,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         (err as { response?: { data?: { message?: string } } })?.response?.data
           ?.message ?? "Location update failed";
       set({ error: message });
-      throw err;
     }
   },
 
