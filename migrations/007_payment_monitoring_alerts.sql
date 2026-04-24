@@ -38,6 +38,9 @@ CREATE INDEX IF NOT EXISTS idx_payment_alerts_status_created
 CREATE INDEX IF NOT EXISTS idx_payment_alerts_alert_type
   ON payment_alerts(alert_type);
 
+-- Drop trigger if it already exists (idempotent)
+DROP TRIGGER IF EXISTS update_payment_alerts_updated_at ON payment_alerts CASCADE;
+
 CREATE TRIGGER update_payment_alerts_updated_at
   BEFORE UPDATE ON payment_alerts
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS rider_profiles (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Drop trigger if it already exists (idempotent)
+DROP TRIGGER IF EXISTS update_rider_profiles_updated_at ON rider_profiles CASCADE;
+
 CREATE TRIGGER update_rider_profiles_updated_at
   BEFORE UPDATE ON rider_profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
@@ -64,6 +67,9 @@ CREATE INDEX IF NOT EXISTS idx_deliveries_assigned_rider_id ON deliveries(assign
 CREATE INDEX IF NOT EXISTS idx_deliveries_status ON deliveries(status);
 CREATE INDEX IF NOT EXISTS idx_deliveries_fulfillment_type ON deliveries(fulfillment_type);
 CREATE INDEX IF NOT EXISTS idx_deliveries_eta_at ON deliveries(eta_at);
+
+-- Drop trigger if it already exists (idempotent)
+DROP TRIGGER IF EXISTS update_deliveries_updated_at ON deliveries CASCADE;
 
 CREATE TRIGGER update_deliveries_updated_at
   BEFORE UPDATE ON deliveries

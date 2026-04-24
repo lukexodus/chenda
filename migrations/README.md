@@ -6,15 +6,34 @@ This directory contains all database migration files for the Chenda project.
 
 The database uses **PostgreSQL 16** with **PostGIS 3.6** for geospatial functionality.
 
-## Structure
+## Quick Start
 
+```bash
+# Run all pending migrations (safe to run multiple times)
+docker compose run --rm backend node migrations/migrate.js up
+
+# Check which migrations have been applied
+docker compose run --rm backend node migrations/migrate.js status
 ```
-migrations/
-├── migrate.js              # Migration runner script
-├── 001_create_tables.sql   # Creates core tables (users, products, etc.)
-├── 002_create_indexes.sql  # Creates spatial indexes and helper functions
-└── README.md              # This file
-```
+
+## Why migration tracking matters
+
+Running migrations without tracking is fragile:
+
+| Risk | What happens | With tracking |
+|---|---|---|
+| **Partial migrations** | If a migration fails halfway, schema is inconsistent | Transactions + rollback keep schema consistent |
+| **Duplicate runs** | Rerunning migrations causes errors (table already exists, trigger exists, etc.) | Migrations table prevents reruns |
+| **Environment drift** | Local DB differs from prod (local "accidentally" has new columns) | Audit trail shows exactly what's deployed where |
+| **Silent failures** | `CREATE TABLE IF NOT EXISTS` hides real problems | Explicit tracking catches issues |
+
+## How the migration runner works
+
+1. **Tracking table**: Creates `migrations` table (if needed) to record which files have been applied
+2. **Pending detection**: Compares files on disk against the `migrations` table
+3. **Ordered execution**: Runs pending migrations in filename order (001, 002, 003, etc.)
+4. **Transactional safety**: Wraps each migration in `BEGIN...COMMIT/ROLLBACK`
+5. **Audit log**: Records filename and timestamp for every applied migration
 
 ## Usage
 
@@ -192,14 +211,81 @@ WHERE schemaname = 'public'
 ORDER BY idx_scan DESC;
 ```
 
-## Next Steps
+## Handling Already-Migrated Databases
 
-After running migrations:
+If your database was already migrated (e.g., via manual SQL piping before the tracking system was in place), you may see errors like:
 
-1. ✅ Task 1.1.2: Create database schema - **COMPLETE**
-2. ✅ Task 1.1.3: Create spatial indexes - **COMPLETE**
-3. ✅ Task 1.1.4: Write migration scripts - **COMPLETE**
-4. ⬜ Task 1.1.5: Seed initial data (USDA products, mock users, mock products)
-5. ⬜ Task 1.1.6: Test database connections
+```
+ERROR: relation "idx_users_email" already exists
+ERROR: trigger "update_users_updated_at" already exists
+```
 
-See `seeds/` directory for data seeding scripts.
+This is expected — the schema exists, but the `migrations` table doesn't have a record. **This is safe.**
+
+### Option 1: Let migrate.js catch up (Recommended)
+
+Simply run the migration runner:
+
+```bash
+docker compose run --rm backend node migrations/migrate.js up
+```
+
+The runner will:
+1. Create the `migrations` tracking table
+2. See that tables already exist (via `CREATE TABLE IF NOT EXISTS`)
+3. Skip recreating them
+4. **Insert the migration records into `migrations` table for future tracking**
+
+Future runs will see the records and never attempt to re-apply them.
+
+### Option 2: Bootstrap the migrations table manually
+
+If you want to verify the state first:
+
+```bash
+docker compose exec db psql -U postgres -d chenda -c "
+  CREATE TABLE IF NOT EXISTS migrations (
+    id SERIAL PRIMARY KEY,
+    filename VARCHAR(255) UNIQUE NOT NULL,
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+  
+  INSERT INTO migrations (filename) VALUES 
+    ('001_create_tables.sql'),
+    ('002_create_indexes.sql'),
+    ('003_create_session_table.sql'),
+    ('004_optimize_indexes.sql'),
+    ('005_payment_integration.sql'),
+    ('006_refunds_reconciliation.sql'),
+    ('007_payment_monitoring_alerts.sql'),
+    ('008_courier_delivery_fulfillment.sql')
+  ON CONFLICT (filename) DO NOTHING;
+  
+  SELECT * FROM migrations ORDER BY id;
+"
+```
+
+Then run the migration checker:
+
+```bash
+docker compose run --rm backend node migrations/migrate.js status
+```
+
+You should see all 8 migrations marked as applied.
+
+### Verification
+
+After handling the already-migrated state, verify your schema is consistent:
+
+```bash
+docker compose exec db psql -U postgres -d chenda -c "
+  SELECT COUNT(*) as migration_count FROM migrations;
+  SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = 'public';
+  SELECT COUNT(*) as index_count FROM pg_indexes WHERE schemaname = 'public';
+"
+```
+
+Expected output:
+- `migration_count`: 8 (all migrations recorded)
+- `table_count`: 16+ (users, products, product_types, orders, deliveries, session, etc.)
+- `index_count`: 40+ (spatial, B-tree, and composite indexes)

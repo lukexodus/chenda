@@ -291,41 +291,50 @@ docker compose logs db
 
 Migrations create the entire database schema: all tables, indexes, the session table, payment columns, delivery columns, etc. **The backend does not run migrations automatically on startup** — you must trigger them once after the containers are first brought up.
 
-### Where the migration files live
+### Migration runner and tracking
 
-The `migrations/` directory is in the **project root** — it is not copied into the backend container image (the image only contains `server/`). Migration SQL files are applied directly against the `db` container using `psql`.
+The `migrations/` directory contains:
+- `migrate.js` — Migration runner that tracks which migrations have been applied
+- `001_create_tables.sql` → `008_courier_delivery_fulfillment.sql` — Numbered SQL files
+
+The `migrate.js` runner:
+1. Creates a `migrations` table to track applied migrations
+2. Runs each SQL file only once (safely skips if already applied)
+3. Wraps each migration in a transaction for consistency
+4. Prevents partial migrations and schema drift
 
 ### Running migrations
 
-From the project root, pipe each SQL file into the `db` container in order:
+From the **project root** (where `migrations/` directory exists):
 
 ```bash
-# Run all migrations in order (paste as a single block)
-docker compose exec -T db psql -U postgres -d chenda < migrations/001_create_tables.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/002_create_indexes.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/003_create_session_table.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/004_optimize_indexes.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/005_payment_integration.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/006_refunds_reconciliation.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/007_payment_monitoring_alerts.sql
-docker compose exec -T db psql -U postgres -d chenda < migrations/008_courier_delivery_fulfillment.sql
+# Run all pending migrations
+node migrations/migrate.js up
+
+# Check migration status
+node migrations/migrate.js status
 ```
 
-Or as a one-liner loop:
-```bash
-for f in migrations/00*.sql; do
-  echo "Applying $f..."
-  docker compose exec -T db psql -U postgres -d chenda < "$f"
-done
-```
-
-Windows (PowerShell) equivalent:
+Windows (PowerShell):
 ```powershell
-Get-ChildItem migrations/00*.sql | Sort-Object Name | ForEach-Object {
-  Write-Host "Applying $($_.FullName)..."
-  Get-Content $_.FullName | docker compose exec -T db psql -U postgres -d chenda
-}
+# Run all pending migrations
+node migrations/migrate.js up
+
+# Check migration status
+node migrations/migrate.js status
 ```
+
+This will automatically:
+- Detect your database configuration from `.env.docker`
+- Create the `migrations` tracking table if it doesn't exist
+- Apply each pending migration in order
+- Skip any migrations already recorded in the tracking table
+- Show a summary of applied vs available migrations
+
+The runner connects to the database specified in `.env.docker`:
+- `DB_HOST=db` (Docker service hostname)
+- `DB_PORT=5432` (internal container port)
+- `DB_NAME=chenda`
 
 Verify the schema was applied:
 ```bash
@@ -334,9 +343,36 @@ docker compose exec db psql -U postgres -d chenda -c "\dt"
 
 You should see all application tables listed (users, products, product_types, orders, deliveries, session, etc.).
 
-> **Why `-T`?** The `-T` flag disables pseudo-TTY allocation, which is required when piping stdin (`<`) to `docker compose exec`. Without it, the pipe will hang.
+### Why this approach is safer
 
-> **Re-running is safe.** All migration SQL files use `CREATE TABLE IF NOT EXISTS` and similar idempotent statements — running them again on an existing schema produces no errors and makes no changes.
+- **Idempotent**: Each migration is tracked, so running `migrate.js` multiple times is safe — it only applies pending migrations.
+- **Transactional**: If a migration fails halfway, the transaction rolls back and the schema remains consistent.
+- **Auditable**: The `migrations` table records exactly which migrations have been applied and when.
+- **No partial state**: Manual SQL piping can leave the schema in an inconsistent state if a command fails; the migration runner prevents this.
+
+### Already-migrated databases
+
+If you previously applied migrations manually (with `docker compose exec -T db psql ...`), the `migrations` table won't have records, but the schema will exist. On the next run, `migrate.js` will:
+- See the tables exist (via `CREATE TABLE IF NOT EXISTS`)
+- Skip creating them again without error
+- Still insert the migration records into the `migrations` table for future tracking
+
+This is safe — subsequent runs will never try to recreate what already exists.
+
+**To bootstrap tracking for an already-migrated Docker database:**
+
+```bash
+# From the project root (where migrations/ exists)
+node migrations/migrate.js up
+```
+
+This single command will establish the tracking table and record all applied migrations, even if they were previously applied manually. Verify with:
+
+```bash
+node migrations/migrate.js status
+```
+
+See [migrations/README.md](../../migrations/README.md#handling-already-migrated-databases) for more details.
 
 ---
 

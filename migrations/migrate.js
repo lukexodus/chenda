@@ -5,18 +5,27 @@
  * Executes SQL migration files in order
  */
 
-// Load environment variables from .env file
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { promises as fs } from 'fs';
+import pg from 'pg';
 
-const path = require('path');
-const { Client } = require('pg');
-const fs = require('fs').promises;
+const { Client } = pg;
+
+// Calculate __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from .env.docker file (for Docker) or .env file (for local)
+dotenv.config({ path: path.join(__dirname, '..', '.env.docker') });
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 // Database connection configuration
 const dbPassword = process.env.DB_PASSWORD;
 const DB_CONFIG = {
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
+  host: process.env.DB_HOST || 'db',
+  port: parseInt(process.env.DB_PORT || '5432'),
   database: process.env.DB_NAME || 'chenda',
   user: process.env.DB_USER || 'postgres'
 };
