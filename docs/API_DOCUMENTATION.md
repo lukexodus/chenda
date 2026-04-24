@@ -42,6 +42,19 @@ The API uses **session-based authentication** with PostgreSQL session storage po
 
 ## API Endpoints
 
+**Quick Navigation:**
+- [🏥 Health Check](#-health-check)
+- [🔐 Authentication](#-authentication)
+- [🔍 Product Search](#-product-search-chenda-algorithm)
+- [📦 Product Management](#-product-management)
+- [🏷️ Product Types](#-product-types-usda-classification)
+- [👤 User Management](#-user-management)
+- [🛒 Order Management](#-order-management) *(includes Payment, Refunds, Reconciliation, Monitoring, Settlements)*
+- [🚚 Delivery, Rider, and Notifications](#-delivery-rider-and-notifications)
+- [📊 Analytics](#-analytics)
+
+---
+
 ### 🏥 Health Check
 
 #### `GET /api/health`
@@ -439,6 +452,73 @@ The API uses **session-based authentication** with PostgreSQL session storage po
 
 ---
 
+### 🏷️ Product Types (USDA Classification)
+
+#### `GET /api/product-types`
+**Access**: Public  
+**Description**: Get all product types with optional search (used for product creation form)
+
+**Query Parameters**:
+- `search` (optional): Search by name, subtitle, or keywords (e.g., "tomato", "fresh")
+
+**Response**:
+```json
+{
+  "success": true,
+  "product_types": [
+    {
+      "id": 1,
+      "name": "Tomatoes",
+      "name_subtitle": "Cherry tomatoes",
+      "category_id": 5,
+      "keywords": "tomato,cherry,vegetable",
+      "default_shelf_life_days": 7,
+      "default_storage_condition": "room_temp"
+    },
+    {
+      "id": 2,
+      "name": "Lettuce",
+      "name_subtitle": "Romaine",
+      "category_id": 3,
+      "keywords": "lettuce,salad,green",
+      "default_shelf_life_days": 5,
+      "default_storage_condition": "refrigerated"
+    }
+  ],
+  "total": 2
+}
+```
+
+#### `GET /api/product-types/:id`
+**Access**: Public  
+**Description**: Get details for a specific product type
+
+**Response**:
+```json
+{
+  "success": true,
+  "product_type": {
+    "id": 1,
+    "name": "Tomatoes",
+    "name_subtitle": "Cherry tomatoes",
+    "category_id": 5,
+    "keywords": "tomato,cherry,vegetable",
+    "default_shelf_life_days": 7,
+    "default_storage_condition": "room_temp"
+  }
+}
+```
+
+**Error Response** (if not found):
+```json
+{
+  "success": false,
+  "message": "Product type not found"
+}
+```
+
+---
+
 ### 👤 User Management
 
 #### `GET /api/users/profile`
@@ -710,6 +790,252 @@ The API uses **session-based authentication** with PostgreSQL session storage po
 {
   "status": "completed",
   "notes": "Order fulfilled and delivered"
+}
+```
+
+#### `POST /api/orders/batch`
+**Access**: Buyer  
+**Description**: Create multiple orders in a single request for bulk purchasing
+
+**Request Body**:
+```json
+{
+  "orders": [
+    {
+      "product_id": 1,
+      "quantity": 3,
+      "payment_method": "gcash",
+      "delivery_address": "Manila, Philippines"
+    },
+    {
+      "product_id": 2,
+      "quantity": 2,
+      "payment_method": "gcash",
+      "delivery_address": "Manila, Philippines"
+    }
+  ]
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Batch orders created successfully",
+  "orders": [
+    {
+      "id": 10,
+      "product_id": 1,
+      "quantity": 3,
+      "total_amount": 450.00,
+      "status": "pending"
+    },
+    {
+      "id": 11,
+      "product_id": 2,
+      "quantity": 2,
+      "total_amount": 300.00,
+      "status": "pending"
+    }
+  ],
+  "batch_total": 750.00
+}
+```
+
+#### `POST /api/orders/:id/refunds`
+**Access**: Seller  
+**Description**: Create full or partial refund for a completed order
+
+**Request Body**:
+```json
+{
+  "amount": 150.00,
+  "reason": "Customer requested partial refund for damaged goods"
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Refund processed successfully",
+  "refund": {
+    "id": 5,
+    "order_id": 1,
+    "amount": 150.00,
+    "reason": "Customer requested partial refund for damaged goods",
+    "status": "processed",
+    "processed_at": "2026-02-15T14:30:00.000Z"
+  }
+}
+```
+
+#### `POST /api/orders/reconciliation/run`
+**Access**: Seller  
+**Description**: Run payment reconciliation to verify payment records against delivery status
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Payment reconciliation completed",
+  "reconciliation": {
+    "total_orders_checked": 42,
+    "matched_payments": 40,
+    "unmatched_payments": 2,
+    "discrepancies": [
+      {
+        "order_id": 15,
+        "issue": "Payment recorded but delivery not marked complete",
+        "recommendation": "Verify delivery status or contact buyer"
+      }
+    ],
+    "run_at": "2026-02-15T14:35:00.000Z"
+  }
+}
+```
+
+#### `GET /api/orders/payment-monitoring/summary`
+**Access**: Seller  
+**Description**: Get payment monitoring dashboard and active payment alerts
+
+**Query Parameters**:
+- `include_acknowledged`: true|false (default: false) - Include acknowledged alerts
+
+**Response**:
+```json
+{
+  "success": true,
+  "monitoring": {
+    "total_active_alerts": 3,
+    "alerts": [
+      {
+        "id": 1,
+        "order_id": 22,
+        "alert_type": "payment_timeout",
+        "severity": "warning",
+        "message": "Payment pending for 30+ minutes",
+        "created_at": "2026-02-15T13:45:00.000Z",
+        "acknowledged": false
+      },
+      {
+        "id": 2,
+        "order_id": 25,
+        "alert_type": "payment_mismatch",
+        "severity": "critical",
+        "message": "Amount received differs from order total",
+        "created_at": "2026-02-15T14:00:00.000Z",
+        "acknowledged": false
+      }
+    ],
+    "payment_stats": {
+      "today_processed": 45,
+      "today_pending": 3,
+      "success_rate_percent": 93.75
+    }
+  }
+}
+```
+
+#### `POST /api/orders/payment-monitoring/alerts/:alertId/ack`
+**Access**: Seller  
+**Description**: Acknowledge a payment alert (seller confirms review)
+
+**Request Body**:
+```json
+{
+  "action_taken": "Verified payment received and order shipped"
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "message": "Alert acknowledged",
+  "alert": {
+    "id": 1,
+    "acknowledged": true,
+    "acknowledged_at": "2026-02-15T14:45:00.000Z",
+    "action_taken": "Verified payment received and order shipped"
+  }
+}
+```
+
+#### `GET /api/orders/seller/payments/settlements`
+**Access**: Seller  
+**Description**: Get seller payment settlement history with detailed breakdown
+
+**Query Parameters**:
+- `status`: all|pending|completed|failed (default: all) - Filter by settlement status
+- `period`: 7d|30d|90d (default: 30d) - Date range
+- `limit`: 1..100 (default: 50)
+- `offset`: Pagination offset
+
+**Response**:
+```json
+{
+  "success": true,
+  "settlements": [
+    {
+      "id": 1,
+      "period_start": "2026-02-01",
+      "period_end": "2026-02-14",
+      "total_revenue": 5000.00,
+      "total_commissions": -500.00,
+      "platform_fees": -100.00,
+      "refunds": -200.00,
+      "net_amount": 4200.00,
+      "status": "completed",
+      "payout_method": "bank_transfer",
+      "payout_reference": "SETTLE-2026-02-1",
+      "settled_at": "2026-02-15T09:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 8,
+    "limit": 50,
+    "offset": 0
+  }
+}
+```
+
+#### `GET /api/orders/seller/payments/overview`
+**Access**: Seller  
+**Description**: Get seller payment overview including total earnings, pending amounts, and payout trends
+
+**Response**:
+```json
+{
+  "success": true,
+  "overview": {
+    "lifetime_earnings": 125000.00,
+    "pending_amount": 3500.00,
+    "last_payout": {
+      "amount": 4200.00,
+      "date": "2026-02-15",
+      "reference": "SETTLE-2026-02-1"
+    },
+    "monthly_trend": [
+      {
+        "month": "December 2025",
+        "revenue": 8500.00,
+        "payouts": 7850.00
+      },
+      {
+        "month": "January 2026",
+        "revenue": 9200.00,
+        "payouts": 8500.00
+      },
+      {
+        "month": "February 2026",
+        "revenue": 5000.00,
+        "payouts": 4200.00
+      }
+    ],
+    "average_payout_days": 7,
+    "next_payout_estimate": "2026-02-28"
+  }
 }
 ```
 

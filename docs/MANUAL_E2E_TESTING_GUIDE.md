@@ -1133,4 +1133,181 @@ All tests should:
 - ✅ All delivery events generate notifications
 - ✅ Unread badge and read-all work as expected
 - ✅ Notifications are timely and accurate
+
+---
+
+## Test Suite 8: Seller Payment Management and Refunds
+
+### Test 8.1: Batch Order Creation
+**Objective**: Verify seller can create multiple orders at once for bulk purchasing.
+
+**Steps:**
+1. Login as buyer.
+2. Navigate to a seller's product page or use a product search result.
+3. **Method A: Bulk Order Form (if UI implemented)**
+   - Click **"Add Multiple Products"** or **"Batch Order"** button
+   - Select 2-3 products with different quantities
+   - Set same delivery address for all
+   - Click **"Place Batch Order"**
+   - ✅ Verify all orders are created with pending status
+4. **Method B: API Testing (using Postman or terminal)**
+   - Send POST to `/api/orders/batch` with multiple order objects
+   - ✅ Verify response includes all created orders with unique IDs
+   - ✅ Verify batch_total matches sum of individual totals
+
+**Expected Results:**
+- ✅ Multiple orders created in single request
+- ✅ Each order has correct product ID, quantity, and total
+- ✅ All orders appear in buyer's order history
+
+---
+
+### Test 8.2: Refund Creation and Processing
+**Objective**: Verify seller can issue full/partial refunds for orders.
+
+**Steps:**
+1. Login as seller.
+2. Navigate to completed orders list (`/seller/orders`).
+3. Select an order with paid status.
+4. Look for **"Issue Refund"** button or menu option.
+5. **If UI implemented:**
+   - Click **"Issue Refund"**
+   - Choose: Full Refund or Partial Refund
+   - If partial: Enter refund amount (e.g., 50% of total)
+   - Enter refund reason (e.g., "Damaged goods", "Customer request")
+   - Click **"Process Refund"**
+   - ✅ Verify confirmation message
+   - ✅ Verify refund status shows "processed"
+6. **Via API Testing:**
+   - POST to `/api/orders/{orderId}/refunds` with amount and reason
+   - ✅ Verify refund ID is returned
+   - ✅ Verify amount matches request
+
+**Expected Results:**
+- ✅ Seller can issue full or partial refunds
+- ✅ Refund reason is recorded
+- ✅ Buyer receives notification of refund
+
+---
+
+### Test 8.3: Payment Monitoring Dashboard
+**Objective**: Verify seller can monitor active payment alerts and discrepancies.
+
+**Steps:**
+1. Login as seller.
+2. Navigate to **Dashboard** → **Payment Monitoring** (or `/seller/payments/monitoring`).
+3. ✅ Verify dashboard shows:
+   - Total active alerts count
+   - List of recent payment alerts with severity (warning/critical)
+   - Payment stats: today's processed, pending, success rate
+4. Review alert types:
+   - **Payment Timeout**: Shows orders where payment is pending >30 min
+   - **Payment Mismatch**: Shows orders where received amount ≠ order total
+5. For each alert:
+   - ✅ Verify order ID, alert type, and message are clear
+   - ✅ Verify creation timestamp
+   - ✅ Verify "Acknowledge" button available for unread alerts
+
+**Expected Results:**
+- ✅ Dashboard displays all active payment alerts
+- ✅ Alert details are accurate and actionable
+- ✅ Alerts can be filtered/sorted
+
+---
+
+### Test 8.4: Acknowledge Payment Alerts
+**Objective**: Verify seller can acknowledge and dismiss payment alerts.
+
+**Steps:**
+1. From payment monitoring dashboard (Test 8.3), select an unacknowledged alert.
+2. Click **"Acknowledge"** or alert menu option.
+3. **If prompted**, enter action taken (e.g., "Verified payment received", "Customer contacted").
+4. Click **"Confirm"**.
+5. ✅ Verify alert status changes to "acknowledged"
+6. ✅ Verify action note is recorded
+7. ✅ Verify unacknowledged count decreases by 1
+
+**Expected Results:**
+- ✅ Seller can mark alerts as acknowledged
+- ✅ Action notes are recorded for audit trail
+- ✅ Dashboard updates to reflect acknowledged status
+
+---
+
+### Test 8.5: Payment Reconciliation
+**Objective**: Verify seller can run payment reconciliation to verify payment records match delivery status.
+
+**Steps:**
+1. Login as seller.
+2. Navigate to **Dashboard** → **Payment Tools** or use API endpoint `/api/orders/reconciliation/run`.
+3. **If UI implemented:**
+   - Click **"Run Reconciliation"** button
+   - ✅ Verify loading indicator shows during processing
+4. **Via API Testing:**
+   - POST to `/api/orders/reconciliation/run`
+   - ✅ Verify response includes:
+     - total_orders_checked
+     - matched_payments
+     - unmatched_payments count
+     - list of discrepancies with recommendations
+5. Review reconciliation results:
+   - ✅ Verify matched count is highest
+   - ✅ If discrepancies exist, verify recommendations (e.g., "Verify delivery status")
+
+**Expected Results:**
+- ✅ Reconciliation completes successfully
+- ✅ Results show clear match/mismatch breakdown
+- ✅ Recommendations guide seller to resolve discrepancies
+
+---
+
+### Test 8.6: Settlement History and Payout Overview
+**Objective**: Verify seller can view settlement history and payment overview.
+
+**Steps:**
+1. Login as seller.
+2. Navigate to **Dashboard** → **Payments** → **Settlement History** (or `/seller/payments/settlements`).
+3. ✅ Verify settlement records display:
+   - Period (e.g., Feb 1-14)
+   - Revenue total
+   - Commissions and fees breakdown
+   - Net payout amount
+   - Status (completed/pending/failed)
+   - Payout date and reference
+4. Use filters (if available):
+   - Filter by status (all/pending/completed/failed)
+   - Filter by period (7d/30d/90d)
+   - ✅ Verify results update correctly
+5. Navigate to **Payout Overview** (or `/seller/payments/overview`).
+6. ✅ Verify overview shows:
+   - Lifetime earnings
+   - Pending amount to be settled
+   - Last payout date and amount
+   - Monthly revenue trend graph
+   - Average payout days
+   - Next payout estimate
+
+**Expected Results:**
+- ✅ Settlement history shows all past payouts with detail
+- ✅ Payout overview provides financial summary and trends
+- ✅ All amounts are accurate and match order data
+
+---
+
+## Notes
+
+### Payment Endpoints Reference
+The following endpoints support seller payment management and are tested above:
+- `POST /api/orders/batch` - Batch order creation
+- `POST /api/orders/:id/refunds` - Issue full/partial refunds
+- `POST /api/orders/reconciliation/run` - Run payment reconciliation
+- `GET /api/orders/payment-monitoring/summary` - Retrieve payment alerts
+- `POST /api/orders/payment-monitoring/alerts/:alertId/ack` - Acknowledge alerts
+- `GET /api/orders/seller/payments/settlements` - Settlement history
+- `GET /api/orders/seller/payments/overview` - Payout overview
+
+For full endpoint documentation, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md).
+
+---
+
 *Last Updated: March 6, 2026*
