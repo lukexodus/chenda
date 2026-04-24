@@ -35,15 +35,22 @@ Chenda is a full-stack web application that helps buyers discover nearby fresh p
 ### For Sellers
 - Product listing management — create, edit, delete, image upload
 - Freshness warnings for products expiring within 3 days
-- Order management with status updates
-- Analytics dashboard (active listings, freshness overview)
+- Order management with status updates and bulk order creation
+- Payment monitoring with alerts and discrepancy detection
+- Payment reconciliation to verify payment records match delivery status
+- Refund management (full/partial refunds)
+- Settlement history and payout tracking
+- Analytics dashboard (active listings, freshness overview, revenue trends)
 
 ### Platform
-- Role-based access: **buyer**, **seller**, or **both**
+- Role-based access: **buyer**, **seller**, **rider**, or **both**
 - Session-based authentication using PostgreSQL-stored sessions
 - 180 USDA product type taxonomy with searchable combobox
 - Geocoding with 7-day result caching and rate limiting
-- 25+ REST API endpoints with full request/response documentation
+- **66 REST API endpoints** with full request/response documentation and examples
+- Delivery tracking and rider assignment (in-house and third-party)
+- In-app delivery notifications with real-time status updates
+- Analytics dashboard (algorithm, business, performance, seller, user activity, real-time)
 
 ---
 
@@ -72,8 +79,11 @@ Chenda is a full-stack web application that helps buyers discover nearby fresh p
 - **Node.js 20+**
 - **PostgreSQL 15+** with the **PostGIS** extension enabled
 - **Git**
+- **(Optional) Docker & Docker Compose** for containerized setup
 
-See [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) for a full setup walkthrough, including PostgreSQL + PostGIS installation.
+**Setup options:**
+- **Docker** (recommended): See [docs/setup/DOCKER_SETUP.md](docs/setup/DOCKER_SETUP.md)
+- **Local development**: See [docs/setup/QUICK_SETUP.md](docs/setup/QUICK_SETUP.md) or [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
 
 ### 1. Clone the repository
 
@@ -141,7 +151,7 @@ cd chenda-frontend && npm run dev
 ## Running Tests
 
 ```bash
-# Backend unit tests (71 tests across 4 suites)
+# Backend unit tests
 cd server && npm test
 
 # Backend with coverage report
@@ -155,6 +165,9 @@ npm run test:e2e
 
 # E2E with HTML report (opens in browser after run)
 npm run test:e2e:report
+
+# Manual E2E testing (recommended for comprehensive feature validation)
+# See: docs/MANUAL_E2E_TESTING_GUIDE.md (7 test suites covering all major features)
 ```
 
 ---
@@ -199,7 +212,7 @@ chenda/
 
 ## API Reference
 
-Full endpoint documentation: [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
+Full endpoint documentation: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
 
 **Base URL**: `http://localhost:3001`
 
@@ -207,10 +220,14 @@ Full endpoint documentation: [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
 |----------|--------------|
 | Auth | `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me` |
 | Search | `POST /api/products/search`, `GET /api/products/nearby` |
-| Products | `GET/POST/PUT/DELETE /api/products` |
+| Products | `GET/POST/PUT/DELETE /api/products`, `GET /api/product-types` |
 | Users | `GET/PUT /api/users/profile`, `PUT /api/users/preferences` |
-| Orders | `POST /api/orders`, `POST /api/orders/:id/payment` |
-| Analytics | `GET /api/analytics/seller-dashboard`, `GET /api/analytics/overview` |
+| Orders | `POST /api/orders`, `POST /api/orders/batch`, `POST /api/orders/:id/payment`, `POST /api/orders/:id/refunds` |
+| Payments | `POST /api/orders/reconciliation/run`, `GET /api/orders/payment-monitoring/summary`, `GET /api/orders/seller/payments/settlements` |
+| Deliveries | `POST /api/deliveries/orders/:orderId/assign-in-house`, `GET /api/deliveries/rider/dashboard`, `POST /api/deliveries/:id/proof-photo` |
+| Analytics | `GET /api/analytics/seller-dashboard`, `GET /api/analytics/business`, `GET /api/analytics/realtime` |
+
+**Total: 66 endpoints** across 10 API categories.
 
 Import the Postman collection for ready-to-run requests: [`postman/Chenda_API.postman_collection.json`](postman/Chenda_API.postman_collection.json)
 
@@ -218,15 +235,42 @@ Import the Postman collection for ready-to-run requests: [`postman/Chenda_API.po
 
 ## Documentation
 
+### Getting Started
 | File | Contents |
 |------|----------|
-| [USER_GUIDE.md](USER_GUIDE.md) | How to register, search, sell, and manage preferences |
-| [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) | Full dev setup, architecture, and how to contribute |
-| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | Local and cloud (VPS) deployment instructions |
-| [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | Complete REST API reference with examples |
-| [docs/TASK_BREAKDOWN.md](docs/TASK_BREAKDOWN.md) | Phase-by-phase development task history |
-| [docs/architecture.md](docs/architecture.md) | Architecture and technology decisions |
-| [FRONTEND_DESIGN.md](FRONTEND_DESIGN.md) | Design system, colour tokens, component patterns |
+| [docs/setup/QUICK_SETUP.md](docs/setup/QUICK_SETUP.md) | Fast 5-minute setup for development |
+| [docs/setup/DOCKER_SETUP.md](docs/setup/DOCKER_SETUP.md) | Docker Compose setup with dev/prod configs, bind mounts, troubleshooting |
+| [docs/setup/USER_GUIDE.md](docs/setup/USER_GUIDE.md) | How to register, search, sell, and manage preferences |
+
+### Development
+| File | Contents |
+|------|----------|
+| [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) | Full dev setup, architecture, coding patterns, and contribution guide |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture, database design, and technology decisions |
+| [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) | Complete PostgreSQL schema with tables, indexes, and relationships |
+| [docs/FRONTEND_DESIGN.md](docs/FRONTEND_DESIGN.md) | Design system, colour tokens, component patterns, and UI guidelines |
+| [docs/COMPONENT_CATALOG.md](docs/COMPONENT_CATALOG.md) | Interactive component library with usage examples |
+
+### API & Testing
+| File | Contents |
+|------|----------|
+| [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) | Complete REST API reference (66 endpoints) with request/response examples |
+| [docs/MANUAL_E2E_TESTING_GUIDE.md](docs/MANUAL_E2E_TESTING_GUIDE.md) | Step-by-step manual E2E testing procedures for all features (7 test suites) |
+| [docs/ALIGNMENT_AUDIT.md](docs/ALIGNMENT_AUDIT.md) | Audit of implementation vs. documentation vs. test coverage |
+
+### Deployment & Operations
+| File | Contents |
+|------|----------|
+| [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) | Local and cloud (VPS) deployment instructions |
+| [docs/ENVIRONMENT_CONFIG_GUIDE.md](docs/ENVIRONMENT_CONFIG_GUIDE.md) | Environment variables, secrets, and configuration management |
+| [docs/BACKUP_RESTORE_RUNBOOK.md](docs/BACKUP_RESTORE_RUNBOOK.md) | Database backup and restore procedures |
+| [docs/BROWSE_DB_GUIDE.md](docs/BROWSE_DB_GUIDE.md) | How to browse and query the database |
+
+### Reference
+| File | Contents |
+|------|----------|
+| [docs/BACKEND_CORE_USE_CASES.md](docs/BACKEND_CORE_USE_CASES.md) | Core backend business logic and workflows |
+| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Design tokens, typography, spacing, and visual guidelines |
 
 ---
 
