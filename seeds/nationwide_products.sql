@@ -1,7 +1,7 @@
 -- Seed Data: Nationwide Sellers & Products (Philippines)
 -- Date: 2026-03-09
--- Total sellers: 15 (one per major city/region)
--- Total products: ~135 (mixed fruits, vegetables, meats, dairy)
+-- Total sellers: 23 (major cities/regions + additional provinces + Region I Ilocos Norte expansion)
+-- Total products: ~213 (mixed fruits, vegetables, meats, dairy + Regional I multi-town coverage)
 -- Note: No images used (image_url = NULL)
 -- Requires: product_types.sql and mock_users.sql to be seeded first
 
@@ -1424,6 +1424,816 @@ INSERT INTO products (
     NULL, 'active'
   );
 
+-- ============================================================
+-- ADDITIONAL SELLERS ACROSS MORE PROVINCES
+-- ============================================================
+
+INSERT INTO users (
+  name, email, password_hash, type,
+  location, address, preferences, email_verified, created_at
+) VALUES
+  (
+    'Nueva Ecija Harvest Hub',
+    'nuevaecija.harvesthub@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2025-12-20T08:00:00Z'
+  ),
+  (
+    'Legazpi Agri Fresh',
+    'legazpi.agrifresh@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2025-12-22T08:00:00Z'
+  ),
+  (
+    'Butuan Valley Produce',
+    'butuan.valleyproduce@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2025-12-24T08:00:00Z'
+  ),
+  (
+    'San Fernando La Union Fresh Mart',
+    'launion.freshmart@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2025-12-28T08:00:00Z'
+  ),
+  (
+    'Batac Heritage Foods',
+    'batac.heritagefoods@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2025-12-30T08:00:00Z'
+  ),
+  (
+    'Paoay Market Hub',
+    'paoay.markethub@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2026-01-02T08:00:00Z'
+  ),
+  (
+    'Currimao Fresh Farms',
+    'currimao.freshfarms@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2026-01-05T08:00:00Z'
+  ),
+  (
+    'Vigan Ilocos South Produce',
+    'vigan.ilocos@email.com',
+    '$2b$10$AtjpogwC/AW9rSWwVGJs4.9nWtU.Vlw4TUtR6zN.GqP075cJI29hq',
+    'seller',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    '{"proximity_weight":50,"shelf_life_weight":50,"max_radius_km":50,"min_freshness_percent":null,"display_mode":"ranking"}'::jsonb,
+    true, '2026-01-08T08:00:00Z'
+  )
+ON CONFLICT (email) DO NOTHING;
+
+-- ============================================================
+-- ADDITIONAL PRODUCTS: NUEVA ECIJA HARVEST HUB
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
+    251, 1, '2026-03-09T06:00:00Z',
+    48, 10, 'kg',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    'refrigerated_opened',
+    'Lakatan bananas sourced from nearby farms in Nueva Ecija.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
+    273, 1, '2026-03-09T06:30:00Z',
+    58, 7, 'kg',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    'refrigerated_opened',
+    'Fresh yard-long beans and snap peas.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
+    295, 2, '2026-03-08T07:00:00Z',
+    44, 8, 'kg',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    'refrigerated_opened',
+    'Red and white onions from local cooperatives.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
+    21, 1, '2026-03-09T08:00:00Z',
+    168, 6, 'dozen',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    'refrigerated_opened',
+    'Free-range eggs, packed this week.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
+    283, 1, '2026-03-09T08:30:00Z',
+    36, 6, 'kg',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    'refrigerated_opened',
+    'Crisp cucumbers for salads and pickling.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
+    113, 1, '2026-03-09T09:00:00Z',
+    210, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
+    'Cabanatuan City, Nueva Ecija',
+    'refrigerated_opened',
+    'Fresh whole chicken from Nueva Ecija poultry farms.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- ADDITIONAL PRODUCTS: LEGAZPI AGRI FRESH
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
+    265, 1, '2026-03-09T06:00:00Z',
+    85, 6, 'kg',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    'refrigerated_opened',
+    'Bicol papaya and ripe mango mix, harvest from Albay farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
+    267, 1, '2026-03-09T06:30:00Z',
+    62, 9, 'pcs',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    'refrigerated',
+    'Sweet pineapples from Guinobatan and Camalig.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
+    296, 1, '2026-03-09T07:00:00Z',
+    52, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    'refrigerated_opened',
+    'Mixed bell and native chili peppers.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
+    284, 2, '2026-03-08T07:30:00Z',
+    38, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    'refrigerated_opened',
+    'Purple eggplant suitable for pinakbet and torta.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
+    21, 1, '2026-03-09T08:00:00Z',
+    162, 5, 'dozen',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    'refrigerated_opened',
+    'Farm eggs from upland barangays in Albay.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
+    258, 1, '2026-03-09T08:30:00Z',
+    40, 12, 'pcs',
+    ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
+    'Legazpi City, Albay',
+    'refrigerated_opened',
+    'Young coconuts with high water content, freshly cut.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- ADDITIONAL PRODUCTS: BUTUAN VALLEY PRODUCE
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
+    251, 1, '2026-03-09T06:00:00Z',
+    46, 9, 'kg',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    'refrigerated_opened',
+    'Bananas from Agusan valley growers.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
+    480, 1, '2026-03-09T06:30:00Z',
+    118, 5, 'pcs',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    'refrigerated_opened',
+    'Dragon fruit from northern Mindanao farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
+    262, 1, '2026-03-09T07:00:00Z',
+    74, 6, 'kg',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    'refrigerated_opened',
+    'Fresh guava, aromatic and ripe.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
+    423, 1, '2026-03-09T07:30:00Z',
+    60, 6, 'bundles',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    'refrigerated_opened',
+    'Fresh kale for salads and stir fry.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
+    60, 1, '2026-03-09T08:00:00Z',
+    295, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    'refrigerated_opened',
+    'Pork loin roast cut from local butcher supply.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
+    21, 1, '2026-03-09T08:30:00Z',
+    158, 5, 'dozen',
+    ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
+    'Butuan City, Agusan del Norte',
+    'refrigerated_opened',
+    'Fresh eggs from nearby poultry producers.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- ADDITIONAL PRODUCTS: ILOCOS NORTE EXPANSION
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    285, 0, '2026-03-09T10:00:00Z',
+    75, 6, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Fresh garlic bulbs from Ilocos farms, harvested this week.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    115, 1, '2026-03-09T10:30:00Z',
+    185, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Ground turkey from Ilocos Norte poultry, lean and fresh.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    33, 1, '2026-03-09T11:00:00Z',
+    95, 5, 'containers',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Yogurt from local dairy cooperative, plain flavor.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    73, 1, '2026-03-09T11:30:00Z',
+    220, 3, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Ground pork for adobo and sausage making.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    256, 2, '2026-03-08T12:00:00Z',
+    52, 10, 'pcs',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Fresh calamansi lemons, juicy and aromatic.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    113, 1, '2026-03-09T12:30:00Z',
+    195, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Whole chicken from Ilocos Norte farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    9, 1, '2026-03-09T13:00:00Z',
+    145, 3, 'containers',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Cottage cheese from local dairy producers.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
+    10, 1, '2026-03-09T13:30:00Z',
+    138, 5, 'blocks',
+    ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
+    'Laoag City, Ilocos Norte',
+    'refrigerated_opened',
+    'Cream cheese for pastries and sandwiches.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- PRODUCTS: SAN FERNANDO LA UNION FRESH MART
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    251, 0, '2026-03-09T06:00:00Z',
+    44, 12, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Fresh Lakatan bananas from La Union fruit orchards.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    113, 1, '2026-03-09T06:30:00Z',
+    190, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Whole chicken raised in La Union poultry farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    273, 1, '2026-03-09T07:00:00Z',
+    54, 8, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Yard-long beans and snap peas from La Union farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    21, 0, '2026-03-09T07:30:00Z',
+    152, 6, 'dozen',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Farm eggs from La Union, packed fresh this morning.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    60, 1, '2026-03-09T08:00:00Z',
+    280, 3, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Pork loin roast from local butchers in La Union.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    33, 1, '2026-03-09T08:30:00Z',
+    92, 4, 'containers',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Plain yogurt from La Union dairy cooperatives.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    283, 1, '2026-03-09T09:00:00Z',
+    38, 6, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Crisp cucumbers, ideal for fresh salads.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    296, 1, '2026-03-09T09:30:00Z',
+    48, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Mixed bell peppers and hot chili peppers.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
+    265, 1, '2026-03-09T10:00:00Z',
+    78, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
+    'San Fernando City, La Union',
+    'refrigerated_opened',
+    'Ripe papaya and mango from La Union orchards.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- PRODUCTS: BATAC HERITAGE FOODS (Batac City, Ilocos Norte)
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    21, 1, '2026-03-09T06:00:00Z',
+    158, 5, 'dozen',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Free-range eggs from Batac poultry, fresh yesterday.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    72, 1, '2026-03-09T06:30:00Z',
+    245, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Pork ribs for grilling and adobo preparation.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    113, 1, '2026-03-09T07:00:00Z',
+    200, 3, 'kg',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Whole chicken from Batac farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    295, 1, '2026-03-09T07:30:00Z',
+    46, 10, 'kg',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Red and white onions from Batac agricultural cooperative.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    33, 1, '2026-03-09T08:00:00Z',
+    88, 6, 'containers',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Flavored yogurt from Batac dairy.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    5, 1, '2026-03-09T08:30:00Z',
+    280, 2, 'kg',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Shredded cheddar cheese for cooking.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
+    256, 2, '2026-03-08T09:00:00Z',
+    50, 8, 'pcs',
+    ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
+    'Batac City, Ilocos Norte',
+    'refrigerated_opened',
+    'Fresh citrus mix (lemons and limes) from Batac.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- PRODUCTS: PAOAY MARKET HUB (Paoay, Ilocos Norte)
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    251, 1, '2026-03-09T06:00:00Z',
+    45, 9, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Bananas from Paoay fruit gardens.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    73, 1, '2026-03-09T06:30:00Z',
+    225, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Ground pork for local meat recipes.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    21, 0, '2026-03-09T07:00:00Z',
+    155, 7, 'dozen',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Fresh eggs collected this morning from Paoay farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    283, 2, '2026-03-08T07:30:00Z',
+    35, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Fresh cucumbers for salads.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    287, 1, '2026-03-09T08:00:00Z',
+    40, 8, 'bundles',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Mixed greens and leafy vegetables.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    113, 1, '2026-03-09T08:30:00Z',
+    185, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Whole chicken from Paoay poultry.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
+    33, 1, '2026-03-09T09:00:00Z',
+    85, 5, 'containers',
+    ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
+    'Paoay, Ilocos Norte',
+    'refrigerated_opened',
+    'Yogurt from Paoay dairy facilities.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- PRODUCTS: CURRIMAO FRESH FARMS (Currimao, Ilocos Norte)
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    113, 1, '2026-03-09T06:00:00Z',
+    195, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Whole chicken from Currimao farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    60, 1, '2026-03-09T06:30:00Z',
+    290, 3, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Pork loin roast for special occasions.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    21, 1, '2026-03-09T07:00:00Z',
+    152, 6, 'dozen',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Farm-fresh eggs from Currimao chicken coops.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    273, 1, '2026-03-09T07:30:00Z',
+    56, 6, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Beans and snap peas from Currimao gardens.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    33, 1, '2026-03-09T08:00:00Z',
+    90, 4, 'containers',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Plain yogurt from local dairy.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    296, 1, '2026-03-09T08:30:00Z',
+    54, 4, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Mixed peppers (bell and chili).',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
+    251, 1, '2026-03-09T09:00:00Z',
+    42, 10, 'kg',
+    ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
+    'Currimao, Ilocos Norte',
+    'refrigerated_opened',
+    'Bananas from Currimao orchards.',
+    NULL, 'active'
+  );
+
+-- ============================================================
+-- PRODUCTS: VIGAN ILOCOS SOUTH PRODUCE (Vigan, Ilocos Sur)
+-- ============================================================
+
+INSERT INTO products (
+  seller_id, product_type_id, days_already_used, listed_date,
+  price, quantity, unit, location, address,
+  storage_condition, description, image_url, status
+) VALUES
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    113, 1, '2026-03-09T06:00:00Z',
+    192, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Heritage breed chicken from Vigan farms.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    72, 1, '2026-03-09T06:30:00Z',
+    250, 3, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Pork ribs (special cut) for traditional Ilocos recipes.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    21, 1, '2026-03-09T07:00:00Z',
+    160, 5, 'dozen',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Premium eggs from Vigan heritage poultry.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    285, 1, '2026-03-09T07:30:00Z',
+    80, 5, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Garlic bulbs (specialty crop) from Vigan region.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    295, 1, '2026-03-09T08:00:00Z',
+    48, 9, 'kg',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Ilocos Sur onions, perfect for local dishes.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    256, 2, '2026-03-08T08:30:00Z',
+    54, 7, 'pcs',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Calamansi citrus fruits from heritage gardens.',
+    NULL, 'active'
+  ),
+  (
+    (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
+    33, 1, '2026-03-09T09:00:00Z',
+    86, 5, 'containers',
+    ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
+    'Vigan City, Ilocos Sur',
+    'refrigerated_opened',
+    'Yogurt (specialty) from Vigan cooperatives.',
+    NULL, 'active'
+  );
+
 -- Re-enable triggers
 SET session_replication_role = 'origin';
 
@@ -1435,5 +2245,5 @@ SELECT setval('products_id_seq', (SELECT MAX(id) FROM products));
 REFRESH MATERIALIZED VIEW products_search_cache;
 
 -- Verify counts
-SELECT COUNT(*) AS new_sellers FROM users WHERE email LIKE '%freshfinds%' OR email LIKE '%organicfarms%' OR email LIKE '%highlands%' OR email LIKE '%freshharvest%' OR email LIKE '%harvesthub%' OR email LIKE '%agrimarket%' OR email LIKE '%freshhub%' OR email LIKE '%heritage%' OR email LIKE '%sweetharvest%' OR email LIKE '%freshmarket%' OR email LIKE '%harvest%' OR email LIKE '%freshcorner%' OR email LIKE '%greenmarket%' OR email LIKE '%freshpicks%' OR email LIKE '%organic%';
+SELECT COUNT(*) AS new_sellers FROM users WHERE email LIKE '%freshfinds%' OR email LIKE '%organicfarms%' OR email LIKE '%highlands%' OR email LIKE '%freshharvest%' OR email LIKE '%harvesthub%' OR email LIKE '%agrimarket%' OR email LIKE '%freshhub%' OR email LIKE '%heritage%' OR email LIKE '%sweetharvest%' OR email LIKE '%freshmarket%' OR email LIKE '%harvest%' OR email LIKE '%freshcorner%' OR email LIKE '%greenmarket%' OR email LIKE '%freshpicks%' OR email LIKE '%organic%' OR email LIKE '%agrifresh%' OR email LIKE '%valleyproduce%' OR email LIKE '%freshmart%' OR email LIKE '%heritagefoods%' OR email LIKE '%markethub%' OR email LIKE '%freshfarms%' OR email LIKE '%ilocos%';
 SELECT COUNT(*) AS total_products FROM products WHERE status = 'active';

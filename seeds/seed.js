@@ -75,7 +75,13 @@ async function getSeedFiles(productsOnly = false) {
   // Order matters because later files depend on data from earlier files.
   const order = productsOnly
     ? ['mock_products.sql', 'nationwide_products.sql']
-    : ['product_types.sql', 'mock_users.sql', 'mock_products.sql', 'nationwide_products.sql'];
+    : [
+        'product_types.sql',
+        'philippines_regional_products.sql',
+        'mock_users.sql',
+        'mock_products.sql',
+        'nationwide_products.sql'
+      ];
   return order.filter(f => files.includes(f));
 }
 
@@ -92,6 +98,56 @@ async function runSeedFile(client, filename) {
     log(`✗ Failed to seed: ${filename}`, 'red');
     throw error;
   }
+}
+
+/**
+ * Read the product-images-manifest.json produced by fetch-product-images.js
+ * and bulk-UPDATE product_types.image_url for every entry with a resolved image.
+ * Then propagate the type image to any seeded products that have no image of their own.
+ */
+async function applyImageManifest(client) {
+  const manifestPath = path.join(__dirname, 'product-images-manifest.json');
+
+  try {
+    await fs.access(manifestPath);
+  } catch {
+    log('\n⚠️  No product-images-manifest.json found — skipping image population.', 'yellow');
+    log('   Run: node seeds/fetch-product-images.js --download --all', 'yellow');
+    return;
+  }
+
+  const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf-8'));
+  const entries  = (manifest.products || []).filter(p => p.image);
+
+  if (entries.length === 0) {
+    log('\n⚠️  Manifest has no resolved images — skipping image population.', 'yellow');
+    return;
+  }
+
+  log(`\n→ Applying image manifest (${entries.length} entries)...`, 'cyan');
+
+  let matched = 0;
+  for (const { name, image } of entries) {
+    const result = await client.query(
+      `UPDATE product_types SET image_url = $1
+       WHERE LOWER(name) = LOWER($2) AND (image_url IS NULL OR image_url = '')`,
+      [image, name]
+    );
+    if (result.rowCount > 0) matched++;
+  }
+
+  log(`✓ Updated ${matched} / ${entries.length} product type images`, 'green');
+
+  // Propagate type image to seeded products that have no seller-uploaded photo
+  const propagated = await client.query(
+    `UPDATE products p
+     SET image_url = pt.image_url
+     FROM product_types pt
+     WHERE pt.id = p.product_type_id
+       AND (p.image_url IS NULL OR p.image_url = '')
+       AND pt.image_url IS NOT NULL`
+  );
+  log(`✓ Propagated images to ${propagated.rowCount} products`, 'green');
 }
 
 async function checkExistingData(client) {
@@ -175,8 +231,11 @@ async function seed(force = false, productsOnly = false) {
     for (const seedFile of seedFiles) {
       await runSeedFile(client, seedFile);
     }
-    
-    // Final counts provide a quick verification summary in CI/local runs.
+
+    // Populate product_types.image_url from the downloaded manifest,
+    // then cascade those images to products.
+    await applyImageManifest(client);
+
     const finalData = await checkExistingData(client);
     
     log('\n━'.repeat(50), 'cyan');
