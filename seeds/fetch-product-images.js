@@ -36,12 +36,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // ─── Configuration ────────────────────────────────────────────────────────────
 
 const CONFIG = {
-  outputDir:               path.join(__dirname, '..', 'public', 'images', 'products'),
-  manifestPath:            path.join(__dirname, 'product-images-manifest.json'),
+  outputDir: path.join(__dirname, '..', 'chenda-frontend', 'public', 'images', 'products'),
+  manifestPath: path.join(__dirname, 'product-images-manifest.json'),
   /** USDA product names (474 entries) */
-  usda_listPath:           path.join(__dirname, 'products-list-unique.txt'),
+  usda_listPath: path.join(__dirname, 'products-list-unique.txt'),
   /** Philippine regional product names (23 entries) */
-  regional_listPath:       path.join(__dirname, 'regional-products-list.txt'),
+  regional_listPath: path.join(__dirname, 'regional-products-list.txt'),
 
   /** ms to wait between DDG requests — stay polite */
   throttleMs: 1000,
@@ -63,9 +63,9 @@ const c = {
   yellow: '\x1b[33m', blue: '\x1b[34m', cyan: '\x1b[36m',
   gray: '\x1b[90m', bold: '\x1b[1m',
 };
-const log  = (m, col = 'reset') => console.log(`${c[col]}${m}${c.reset}`);
-const ok   = (m) => log(`  ✓ ${m}`, 'green');
-const err  = (m) => log(`  ✗ ${m}`, 'red');
+const log = (m, col = 'reset') => console.log(`${c[col]}${m}${c.reset}`);
+const ok = (m) => log(`  ✓ ${m}`, 'green');
+const err = (m) => log(`  ✗ ${m}`, 'red');
 const info = (m) => log(`  → ${m}`, 'cyan');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -185,10 +185,10 @@ async function searchDDGImages(query) {
  */
 function extFromContentType(contentType) {
   if (!contentType) return '.jpg';
-  if (contentType.includes('webp'))  return '.webp';
-  if (contentType.includes('png'))   return '.png';
-  if (contentType.includes('gif'))   return '.gif';
-  if (contentType.includes('avif'))  return '.avif';
+  if (contentType.includes('webp')) return '.webp';
+  if (contentType.includes('png')) return '.png';
+  if (contentType.includes('gif')) return '.gif';
+  if (contentType.includes('avif')) return '.avif';
   return '.jpg'; // jpeg, jfif, pjpeg, etc.
 }
 
@@ -215,8 +215,8 @@ async function downloadImage(imageUrl, destPathStem) {
     throw new Error(`Not an image (Content-Type: ${contentType})`);
   }
 
-  const ext    = extFromContentType(contentType);
-  const dest   = destPathStem + ext;
+  const ext = extFromContentType(contentType);
+  const dest = destPathStem + ext;
   const buffer = Buffer.from(await res.arrayBuffer());
 
   if (buffer.byteLength > CONFIG.maxImageBytes) {
@@ -241,8 +241,8 @@ async function downloadImage(imageUrl, destPathStem) {
  * @param {'usda'|'regional'} source
  */
 async function resolveProductImage(productName, dryRun, force, source = 'usda') {
-  const query    = buildQuery(productName, source);
-  const slug     = toSlug(productName);
+  const query = buildQuery(productName, source);
+  const slug = toSlug(productName);
   const destStem = path.join(CONFIG.outputDir, slug); // extension added by downloadImage
 
   // Check for existing file unless --force is used
@@ -287,11 +287,11 @@ async function resolveProductImage(productName, dryRun, force, source = 'usda') 
 // ─── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const args        = process.argv.slice(2);
-  const dryRun      = !args.includes('--download');
-  const force       = args.includes('--force');
-  const limitArg    = args.indexOf('--limit');
-  const limit       = limitArg !== -1 ? parseInt(args[limitArg + 1], 10) : Infinity;
+  const args = process.argv.slice(2);
+  const dryRun = !args.includes('--download');
+  const force = args.includes('--force');
+  const limitArg = args.indexOf('--limit');
+  const limit = limitArg !== -1 ? parseInt(args[limitArg + 1], 10) : Infinity;
 
   if (args.includes('--help') || args.includes('-h')) {
     log('\n🖼️  Product Image Fetcher\n', 'blue');
@@ -309,7 +309,7 @@ async function main() {
     process.exit(0);
   }
 
-  const includeUsda     = !args.includes('--regional') || args.includes('--all');
+  const includeUsda = !args.includes('--regional') || args.includes('--all');
   const includeRegional = args.includes('--regional') || args.includes('--all');
 
   // Load product names from the selected source(s)
@@ -326,8 +326,8 @@ async function main() {
   }
 
   const sourcesLabel = [
-    includeUsda     ? `USDA (${(await fs.readFile(CONFIG.usda_listPath,'utf-8')).split('\n').filter(Boolean).length})` : null,
-    includeRegional ? `Regional (${(await fs.readFile(CONFIG.regional_listPath,'utf-8')).split('\n').filter(Boolean).length})` : null,
+    includeUsda ? `USDA (${(await fs.readFile(CONFIG.usda_listPath, 'utf-8')).split('\n').filter(Boolean).length})` : null,
+    includeRegional ? `Regional (${(await fs.readFile(CONFIG.regional_listPath, 'utf-8')).split('\n').filter(Boolean).length})` : null,
   ].filter(Boolean).join(' + ');
 
   const sliced = isFinite(limit) ? products.slice(0, limit) : products;
@@ -349,13 +349,13 @@ async function main() {
     ok(`Output directory ready: ${path.relative(process.cwd(), CONFIG.outputDir)}\n`);
   }
 
-  const manifest  = [];
+  const manifest = [];
   let successCount = 0;
-  let failCount    = 0;
+  let failCount = 0;
 
   for (let i = 0; i < sliced.length; i++) {
     const { name, source } = sliced[i];
-    const pad  = String(i + 1).padStart(3);
+    const pad = String(i + 1).padStart(3);
 
     process.stdout.write(
       `${c.gray}[${pad}/${sliced.length}]${c.reset} ${name.padEnd(40)} `
@@ -406,16 +406,16 @@ async function main() {
 
   // Write manifest
   const out = {
-    generatedAt:  new Date().toISOString(),
-    mode:         dryRun ? 'dry-run' : 'download',
-    source:       'DuckDuckGo Image Search',
-    sources:      { usda: includeUsda, regional: includeRegional },
-    total:        sliced.length,
-    succeeded:    successCount,
-    failed:       failCount,
-    successRate:  `${successRate}%`,
-    outputDir:    dryRun ? null : path.relative(process.cwd(), CONFIG.outputDir),
-    products:     manifest,
+    generatedAt: new Date().toISOString(),
+    mode: dryRun ? 'dry-run' : 'download',
+    source: 'DuckDuckGo Image Search',
+    sources: { usda: includeUsda, regional: includeRegional },
+    total: sliced.length,
+    succeeded: successCount,
+    failed: failCount,
+    successRate: `${successRate}%`,
+    outputDir: dryRun ? null : path.relative(process.cwd(), CONFIG.outputDir),
+    products: manifest,
   };
   await fs.writeFile(CONFIG.manifestPath, JSON.stringify(out, null, 2), 'utf-8');
   log('');

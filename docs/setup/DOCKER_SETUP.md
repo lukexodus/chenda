@@ -214,21 +214,40 @@ The `migrate.js` runner:
 From the **project root** (where `migrations/` directory exists):
 
 ```bash
-# Run all pending migrations
-node migrations/migrate.js up
+# Run all pending migrations inside a backend container
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/migrations \
+  --entrypoint node \
+  backend migrate.js up
 
 # Check migration status
-node migrations/migrate.js status
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/migrations \
+  --entrypoint node \
+  backend migrate.js status
 ```
 
 Windows (PowerShell):
 ```powershell
-# Run all pending migrations
-node migrations/migrate.js up
+# Run all pending migrations inside a backend container
+docker compose run --rm `
+  -v "${PWD}:/workspace" `
+  -w /workspace/migrations `
+  --entrypoint node `
+  backend migrate.js up
 
 # Check migration status
-node migrations/migrate.js status
+docker compose run --rm `
+  -v "${PWD}:/workspace" `
+  -w /workspace/migrations `
+  --entrypoint node `
+  backend migrate.js status
 ```
+
+> **Why run inside Docker?**
+> If you run `node migrations/migrate.js up` directly on your host machine, it might read `.env.docker` and connect to port `5432` — which will target your *local* PostgreSQL installation instead of the Docker database running on port `5433`! Running it inside the `backend` container guarantees it hits the correct database.
 
 This will automatically:
 - Detect your database configuration from `.env.docker`
@@ -289,14 +308,22 @@ This is safe — subsequent runs will never try to recreate what already exists.
 **To bootstrap tracking for an already-migrated Docker database:**
 
 ```bash
-# From the project root (where migrations/ exists)
-node migrations/migrate.js up
+# From the project root
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/migrations \
+  --entrypoint node \
+  backend migrate.js up
 ```
 
 This single command will establish the tracking table and record all applied migrations, even if they were previously applied manually. Verify with:
 
 ```bash
-node migrations/migrate.js status
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/migrations \
+  --entrypoint node \
+  backend migrate.js status
 ```
 
 See [migrations/README.md](../../migrations/README.md#handling-already-migrated-databases) for more details.
@@ -357,8 +384,16 @@ node seeds/seed.js
 Or in a temporary backend container:
 
 ```bash
-docker compose run --rm backend node seeds/seed.js
+docker compose run --rm \
+  -e NODE_PATH=/app/node_modules \
+  -v "$(pwd)":/workspace \
+  -w /workspace/seeds \
+  --entrypoint node \
+  backend seed.js
 ```
+
+> **Why do we use `/workspace` here?**
+> The `backend` container's `/app` folder only contains the code from your `server/` directory. The `seeds/` folder lives at your project root, so it's not normally accessible inside the container. We use `-v "$(pwd)":/workspace` to temporarily mount your entire project root so the container can access and run the seed files.
 
 ### Already seeded database? (Migrating to Migration 009)
 
@@ -433,10 +468,14 @@ Password: password123
 
 ### Apply image manifest to Docker DB (existing seeded database)
 
-If you already ran `fetch-product-images.js` and want those results reflected in the **Docker** database state, run seeding from the backend container:
+If you already ran `fetch-product-images.js` and want those results reflected in the **Docker** database state, run seeding from a backend container (not host Node):
 
 ```bash
-docker compose exec backend node seeds/seed.js --products-only
+docker compose run --rm \
+  -v "$(pwd)":/workspace \
+  -w /workspace/seeds \
+  --entrypoint node \
+  backend seed.js --products-only
 ```
 
 Why this is required:

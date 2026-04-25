@@ -118,12 +118,16 @@ Note: `--products-only` does not generate new timestamps dynamically. It reloads
 
 ```bash
 # 1. Apply new migrations
-node migrations/migrate.js up
+docker compose run --rm \
+	-v "$(pwd)":/workspace \
+	-w /workspace/migrations \
+	--entrypoint node \
+	backend migrate.js up
 # Applies 010_custom_product_types.sql and 011_product_type_images.sql
 
 # 2. (Optional) Download images (Skip if already in repo)
 node seeds/fetch-product-images.js --download --all
-node seeds/seed.js --products-only   # triggers applyImageManifest
+docker compose run --rm -v "$(pwd)":/workspace -w /workspace/seeds --entrypoint node backend seed.js --products-only
 ```
 
 **Pros:** No data loss, custom product creation works immediately  
@@ -135,13 +139,17 @@ Clean slate with all new data.
 
 ```bash
 # 1. Apply all pending migrations
-node migrations/migrate.js up
+docker compose run --rm \
+	-v "$(pwd)":/workspace \
+	-w /workspace/migrations \
+	--entrypoint node \
+	backend migrate.js up
 
 # 2. (Optional) Download images first (Skip if already in repo)
 node seeds/fetch-product-images.js --download --all
 
 # 3. Full reseed — images applied automatically
-node seeds/seed.js --force
+docker compose run --rm -v "$(pwd)":/workspace -w /workspace/seeds --entrypoint node backend seed.js --force
 ```
 
 **Pros:** Clean start, all features active, images populated  
@@ -151,10 +159,14 @@ node seeds/seed.js --force
 
 ```bash
 # 1. Apply all pending migrations
-node migrations/migrate.js up
+docker compose run --rm \
+	-v "$(pwd)":/workspace \
+	-w /workspace/migrations \
+	--entrypoint node \
+	backend migrate.js up
 
 # 2. Reseed products (keeps users and types)
-node seeds/seed.js --products-only
+docker compose run --rm -v "$(pwd)":/workspace -w /workspace/seeds --entrypoint node backend seed.js --products-only
 ```
 
 **Pros:** Test users remain, new migrations active, images applied  
@@ -168,26 +180,50 @@ If Node is not installed on the host, run the seeder inside a temporary backend 
 
 ```bash
 # Safe seed (if DB is empty)
-docker compose exec backend node seeds/seed.js
+docker compose run --rm \
+	-v "$(pwd)":/workspace \
+	-w /workspace/seeds \
+	--entrypoint node \
+	backend seed.js
 
 # Full reset
-docker compose exec backend node seeds/seed.js --force
+docker compose run --rm \
+	-v "$(pwd)":/workspace \
+	-w /workspace/seeds \
+	--entrypoint node \
+	backend seed.js --force
 
 # Products-only reseed
-docker compose exec backend node seeds/seed.js --products-only
+docker compose run --rm \
+	-v "$(pwd)":/workspace \
+	-w /workspace/seeds \
+	--entrypoint node \
+	backend seed.js --products-only
 ```
 
 Windows PowerShell equivalent:
 
 ```powershell
 # Safe seed
-docker compose exec backend node seeds/seed.js
+docker compose run --rm `
+	-v "${PWD}:/workspace" `
+	-w /workspace/seeds `
+	--entrypoint node `
+	backend seed.js
 
 # Full reset
-docker compose exec backend node seeds/seed.js --force
+docker compose run --rm `
+	-v "${PWD}:/workspace" `
+	-w /workspace/seeds `
+	--entrypoint node `
+	backend seed.js --force
 
 # Products-only reseed
-docker compose exec backend node seeds/seed.js --products-only
+docker compose run --rm `
+	-v "${PWD}:/workspace" `
+	-w /workspace/seeds `
+	--entrypoint node `
+	backend seed.js --products-only
 ```
 
 ### Running SQL seeds directly via psql
