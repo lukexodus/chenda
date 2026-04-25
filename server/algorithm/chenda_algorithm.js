@@ -65,7 +65,7 @@ function chendaAlgorithm(buyer, products, config = {}) {
     },
     min_freshness_score: 0,
     mode: 'ranking',
-    sort_by: 'score',
+    sort_by: 'price',
     sort_order: 'desc'
   };
   
@@ -150,6 +150,13 @@ function chendaAlgorithm(buyer, products, config = {}) {
   const filteredProducts = filterResult.filtered;
   stats.filtered_products = filteredProducts.length;
   stats.filter_stats = filterResult.stats;
+
+  // Reuse the same minimal buyer shape for ranking/sorting decisions.
+  const rankBuyer = {
+    preferences: {
+      max_radius: finalConfig.max_radius
+    }
+  };
   
   // STEP 3: DISPLAY/RANKING
   // Process products based on mode (ranking or filter)
@@ -157,16 +164,9 @@ function chendaAlgorithm(buyer, products, config = {}) {
   
   if (finalConfig.mode === 'ranking') {
     // Ranking mode: score all products and sort by combined score
-    // Create a mock buyer object for the ranker
-    const mockBuyer = {
-      preferences: {
-        max_radius: finalConfig.max_radius
-      }
-    };
-    
     finalProducts = productRanker.scoreAndRankProducts(
       filteredProducts, 
-      mockBuyer,
+      rankBuyer,
       {
         proximityWeight: (finalConfig.weights.proximity_weight * 100),
         freshnessWeight: (finalConfig.weights.freshness_weight * 100)
@@ -174,11 +174,22 @@ function chendaAlgorithm(buyer, products, config = {}) {
     );
   } else {
     // Filter mode: sort by specified criterion
-    finalProducts = productSorter.sortProducts(
-      filteredProducts,
-      finalConfig.sort_by,
-      finalConfig.sort_order
-    );
+    if (finalConfig.sort_by === 'score') {
+      finalProducts = productRanker.scoreAndRankProducts(
+        filteredProducts,
+        rankBuyer,
+        {
+          proximityWeight: (finalConfig.weights.proximity_weight * 100),
+          freshnessWeight: (finalConfig.weights.freshness_weight * 100)
+        }
+      );
+    } else {
+      finalProducts = productSorter.sortProducts(
+        filteredProducts,
+        finalConfig.sort_by,
+        finalConfig.sort_order
+      );
+    }
   }
   
   stats.output_products = finalProducts.length;
