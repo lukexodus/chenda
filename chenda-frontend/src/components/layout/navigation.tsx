@@ -33,7 +33,6 @@ interface NavItem {
 const buyerNav: NavItem[] = [
   { href: "/buyer", label: "Search", icon: Search },
   { href: "/buyer/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/buyer/profile", label: "Profile", icon: User },
 ];
 
@@ -42,7 +41,6 @@ const sellerNav: NavItem[] = [
   { href: "/seller/products", label: "Products", icon: Package },
   { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
   { href: "/seller/payments", label: "Payments", icon: WalletCards },
-  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/seller/profile", label: "Profile", icon: User },
 ];
 
@@ -52,7 +50,6 @@ const bothNav: NavItem[] = [
   { href: "/seller/products", label: "Products", icon: Package },
   { href: "/seller/orders", label: "Orders", icon: ShoppingCart },
   { href: "/seller/payments", label: "Payments", icon: WalletCards },
-  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/buyer/profile", label: "Profile", icon: User },
 ];
 
@@ -61,7 +58,6 @@ const riderNav: NavItem[] = [
   { href: "/rider/jobs", label: "Jobs", icon: Bike },
   { href: "/rider/history", label: "History", icon: WalletCards },
   { href: "/rider/tracking", label: "Tracking", icon: MapPinned },
-  { href: "/notifications", label: "Alerts", icon: Bell },
   { href: "/rider/profile", label: "Profile", icon: User },
 ];
 
@@ -190,30 +186,6 @@ export function TopHeader() {
 export function BottomNav() {
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-
-  useEffect(() => {
-    if (!user) {
-      setUnreadNotificationCount(0);
-      return;
-    }
-
-    const loadUnreadCount = async () => {
-      try {
-        const response = await api.get("/deliveries/notifications/me/unread-count");
-
-        if (!response.data?.success) {
-          return;
-        }
-
-        setUnreadNotificationCount(Number(response.data.unread_count || 0));
-      } catch {
-        // Ignore badge fetch errors in navigation UI.
-      }
-    };
-
-    loadUnreadCount();
-  }, [user?.id, pathname]);
 
   let items: NavItem[] = buyerNav;
   if (user?.type === "both") {
@@ -248,14 +220,6 @@ export function BottomNav() {
             >
               <span className="relative inline-flex">
                 <item.icon className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" aria-hidden="true" />
-                {item.href === "/notifications" && unreadNotificationCount > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-fresh-primary px-1 text-[10px] font-bold text-white"
-                  >
-                    {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
-                  </span>
-                )}
               </span>
               <span className="truncate w-full">{item.label}</span>
             </Link>
