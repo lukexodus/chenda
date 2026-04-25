@@ -100,13 +100,13 @@ export function ProductTypeCombobox({ value, onSelect, disabled }: ProductTypeCo
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] p-0">
-        <DialogHeader className="px-4 pt-4">
+      <DialogContent className="max-h-[80vh] p-0 flex flex-col">
+        <DialogHeader className="px-4 pt-4 shrink-0">
           <DialogTitle>Select Product Type</DialogTitle>
         </DialogHeader>
 
         {/* Search Input */}
-        <div className="px-4 pb-2">
+        <div className="px-4 pb-2 shrink-0">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -120,7 +120,7 @@ export function ProductTypeCombobox({ value, onSelect, disabled }: ProductTypeCo
         </div>
 
         {/* Product Types List */}
-        <div className="max-h-[400px] overflow-y-auto px-2 pb-2">
+        <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
           {isLoading && (
             <div className="py-6 text-center text-sm text-muted-foreground">
               Loading product types...
