@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-04-24T13:11:33.180Z",
+  "mode": "download",
+  "source": "DuckDuckGo Image Search",
+  "total": 2,
+  "succeeded": 2,
+  "failed": 0,
+  "successRate": "100.0%",
+  "outputDir": "public/images/products",
+  "products": [
+    {
+      "name": "Aioli",
+      "image": "/images/products/aioli.webp",
+      "imageUrl": null,
+      "query": null,
+      "cached": true
+    },
+    {
+      "name": "Almond butter",
+      "image": "/images/products/almond-butter.webp",
+      "imageUrl": null,
+      "query": null,
+      "cached": true
+    }
+  ]
+}
