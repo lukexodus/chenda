@@ -67,7 +67,7 @@ export default function RiderDeliveryDetailPage() {
     const status = data?.delivery?.status;
     if (!status) return [] as string[];
 
-    if (status === "assigned") return ["picked_up"];
+    if (status === "accepted") return ["picked_up"];
     if (status === "picked_up") return ["in_transit"];
     if (status === "in_transit") return ["failed"];
     return [] as string[];
@@ -89,6 +89,38 @@ export default function RiderDeliveryDetailPage() {
     } catch (error: unknown) {
       const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Status update failed";
       toast({ variant: "destructive", title: "Update failed", description: message });
+    } finally {
+      setSavingStatus(false);
+    }
+  };
+
+  const acceptDelivery = async () => {
+    if (!deliveryId) return;
+    setSavingStatus(true);
+    try {
+      const res = await api.post(`/deliveries/${deliveryId}/accept`);
+      if (!res.data?.success) throw new Error(res.data?.message || "Accept failed");
+      toast({ title: "Job Accepted", description: "You have accepted this delivery." });
+      await load();
+    } catch (error: unknown) {
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Accept failed";
+      toast({ variant: "destructive", title: "Action failed", description: message });
+    } finally {
+      setSavingStatus(false);
+    }
+  };
+
+  const declineDelivery = async () => {
+    if (!deliveryId) return;
+    setSavingStatus(true);
+    try {
+      const res = await api.post(`/deliveries/${deliveryId}/decline`);
+      if (!res.data?.success) throw new Error(res.data?.message || "Decline failed");
+      toast({ title: "Job Declined", description: "You have declined this delivery." });
+      await load();
+    } catch (error: unknown) {
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Decline failed";
+      toast({ variant: "destructive", title: "Action failed", description: message });
     } finally {
       setSavingStatus(false);
     }
@@ -208,7 +240,18 @@ export default function RiderDeliveryDetailPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap gap-2">
-            {nextStatusOptions.map((status) => (
+            {data.delivery.status === "assigned" && (
+              <>
+                <Button onClick={acceptDelivery} disabled={savingStatus} className="bg-green-600 hover:bg-green-700">
+                  {savingStatus ? "Saving..." : "Accept Job"}
+                </Button>
+                <Button onClick={declineDelivery} variant="destructive" disabled={savingStatus}>
+                  {savingStatus ? "Saving..." : "Decline Job"}
+                </Button>
+              </>
+            )}
+
+            {data.delivery.status !== "assigned" && nextStatusOptions.map((status) => (
               <Button key={status} onClick={() => updateStatus(status)} disabled={savingStatus}>
                 {savingStatus ? "Saving..." : `Mark ${status.replace("_", " ")}`}
               </Button>

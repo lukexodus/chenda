@@ -266,11 +266,15 @@ Import the Postman collection for ready-to-run requests: [`postman/Chenda_API.po
 | [docs/operations/BACKUP_RESTORE_RUNBOOK.md](docs/operations/BACKUP_RESTORE_RUNBOOK.md) | Database backup and restore procedures |
 | [docs/operations/BROWSE_DB_GUIDE.md](docs/operations/BROWSE_DB_GUIDE.md) | How to browse and query the database |
 
-### Reference
+### Reference & Learning
 | File | Contents |
 |------|----------|
+| [docs/learning/PROCESS_FLOWS.md](docs/learning/PROCESS_FLOWS.md) | Visual and step-by-step guides for core business processes (Dispatch, Delivery, etc.) |
+| [docs/learning/CHENDA_ALGORITHM_EXPLANATION.md](docs/learning/CHENDA_ALGORITHM_EXPLANATION.md) | Deep dive into the proximity-freshness scoring logic |
+| [docs/learning/PROJECT_LEARNING_GUIDE.md](docs/learning/PROJECT_LEARNING_GUIDE.md) | Curated guide for mastering the codebase and architecture |
 | [docs/architecture/BACKEND_CORE_USE_CASES.md](docs/architecture/BACKEND_CORE_USE_CASES.md) | Core backend business logic and workflows |
 | [docs/architecture/DESIGN_SYSTEM.md](docs/architecture/DESIGN_SYSTEM.md) | Design tokens, typography, spacing, and visual guidelines |
+| [docs/learning/TROUBLESHOOTING_GUIDE.md](docs/learning/TROUBLESHOOTING_GUIDE.md) | Common issues and how to resolve them |
 
 ---
 
