@@ -107,6 +107,9 @@ export function AlgorithmPreferences() {
 
   // Check if user is buyer or both (algorithm preferences only for buyers)
   if (!user || (user.type !== "buyer" && user.type !== "both")) {
+    const isRider = user?.type === "rider";
+    const roleName = isRider ? "riders" : "sellers";
+
     return (
       <Card>
         <CardHeader>
@@ -119,10 +122,10 @@ export function AlgorithmPreferences() {
           <div className="flex items-start gap-3 p-4 bg-muted rounded-lg">
             <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium">Not available for sellers</p>
+              <p className="text-sm font-medium">Not available for {roleName}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                Algorithm preferences are only available for buyer accounts. 
-                Change your account type to "Buyer" or "Both" to access these settings.
+                Algorithm preferences are only available for buyer accounts.
+                {!isRider && ` Change your account type to "Buyer" or "Both" to access these settings.`}
               </p>
             </div>
           </div>
