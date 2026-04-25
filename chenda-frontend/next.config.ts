@@ -4,7 +4,7 @@ import path from "path";
 const internalApiUrl =
   process.env.INTERNAL_API_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:3001";
+  (process.env.NODE_ENV === "production" ? "http://backend:3001" : "http://localhost:3001");
 
 const nextConfig: NextConfig = {
   // Required for Docker: bundles only what is needed to run in a minimal image
