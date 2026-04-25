@@ -50,7 +50,14 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
     return condition;
   };
 
+  // ── Catalog-type mode (Path A) ───────────────────────────────────────────
   const [selectedType, setSelectedType] = useState<ProductType | null>(null);
+
+  // ── Custom-product mode (Path B) ─────────────────────────────────────────
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [customName, setCustomName] = useState("");
+  const [customShelfLife, setCustomShelfLife] = useState("");
+
   const [price, setPrice] = useState(product?.price.toString() || "");
   const [quantity, setQuantity] = useState(product?.quantity.toString() || "");
   const [unit, setUnit] = useState(product?.unit || "kg");
@@ -59,7 +66,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const [storageCondition, setStorageCondition] = useState(
     normalizeStorageCondition(product?.storage_condition)
   );
-  
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(getFullImageUrl(product?.image_url));
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(product?.image_url || null);
@@ -67,6 +74,11 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Effective shelf life for freshness preview: custom input or selected type
+  const effectiveShelfLife = isCustomMode
+    ? parseInt(customShelfLife) || 0
+    : selectedType?.default_shelf_life_days ?? 0;
 
   // Handle image selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,8 +134,27 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!selectedType) {
-      newErrors.productType = "Product type is required";
+    if (isCustomMode) {
+      if (!customName.trim()) {
+        newErrors.productType = "Product name is required";
+      }
+      const shelfLifeNum = parseInt(customShelfLife);
+      if (isNaN(shelfLifeNum) || shelfLifeNum < 1) {
+        newErrors.customShelfLife = "Shelf life must be at least 1 day";
+      } else if (parseInt(daysUsed) >= shelfLifeNum) {
+        newErrors.daysUsed = `Days used must be less than shelf life (${shelfLifeNum} days)`;
+      }
+    } else {
+      if (!selectedType) {
+        newErrors.productType = "Product type is required";
+      }
+      const daysUsedNum = parseInt(daysUsed);
+      if (isNaN(daysUsedNum) || daysUsedNum < 0) {
+        newErrors.daysUsed = "Valid days used is required";
+      }
+      if (selectedType && daysUsedNum >= selectedType.default_shelf_life_days) {
+        newErrors.daysUsed = `Days used must be less than shelf life (${selectedType.default_shelf_life_days} days)`;
+      }
     }
 
     if (!price || parseFloat(price) <= 0) {
@@ -132,15 +163,6 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
 
     if (!quantity || parseFloat(quantity) <= 0) {
       newErrors.quantity = "Valid quantity is required";
-    }
-
-    const daysUsedNum = parseInt(daysUsed);
-    if (isNaN(daysUsedNum) || daysUsedNum < 0) {
-      newErrors.daysUsed = "Valid days used is required";
-    }
-
-    if (selectedType && daysUsedNum >= selectedType.default_shelf_life_days) {
-      newErrors.daysUsed = `Days used must be less than shelf life (${selectedType.default_shelf_life_days} days)`;
     }
 
     setErrors(newErrors);
@@ -168,9 +190,8 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
       // Upload image if new one selected
       const finalImageUrl = imageFile ? await uploadImage() : uploadedImageUrl;
 
-      // Prepare product data
-      const productData: Record<string, unknown> = {
-        product_type_id: selectedType!.id,
+      // Prepare product data — branch on custom vs catalog path
+      const commonFields: Record<string, unknown> = {
         price: parseFloat(price),
         quantity: parseFloat(quantity),
         unit,
@@ -180,6 +201,17 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
         image_url: finalImageUrl || undefined,
         address: user?.address || undefined,
       };
+
+      const productData: Record<string, unknown> = isCustomMode
+        ? {
+            ...commonFields,
+            custom_product_name: customName.trim(),
+            custom_shelf_life_days: parseInt(customShelfLife),
+          }
+        : {
+            ...commonFields,
+            product_type_id: selectedType!.id,
+          };
 
       // Only include location if the user has GPS coordinates
       if (user?.location?.lat && user?.location?.lng) {
@@ -208,18 +240,17 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
     }
   };
 
-  // Compute live freshness preview
-  const freshnessPercent = selectedType
-    ? Math.max(
-        0,
-        Math.min(
-          100,
-          ((selectedType.default_shelf_life_days - parseInt(daysUsed || "0")) /
-            selectedType.default_shelf_life_days) *
-            100
+  // Compute live freshness preview (works for both catalog and custom modes)
+  const freshnessPercent =
+    effectiveShelfLife > 0
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            ((effectiveShelfLife - parseInt(daysUsed || "0")) / effectiveShelfLife) * 100
+          )
         )
-      )
-    : null;
+      : null;
 
   const freshnessColor =
     freshnessPercent === null
@@ -270,23 +301,91 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
           <div className="space-y-4">
             {/* Product Type */}
             <div className="space-y-1.5">
-              <Label htmlFor="productType" className="text-sm font-medium">
-                Product Type <span className="text-red-500">*</span>
-              </Label>
-              <ProductTypeCombobox
-                value={selectedType?.id || product?.product_type_id}
-                onSelect={(type) => {
-                  setSelectedType(type);
-                  setErrors({ ...errors, productType: "" });
-                }}
-                disabled={isSubmitting}
-              />
+              <div className="flex items-center justify-between">
+                <Label htmlFor="productType" className="text-sm font-medium">
+                  Product Type <span className="text-red-500">*</span>
+                </Label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCustomMode((v) => !v);
+                    setSelectedType(null);
+                    setCustomName("");
+                    setCustomShelfLife("");
+                    setErrors({ ...errors, productType: "", customShelfLife: "" });
+                  }}
+                  disabled={isSubmitting || isEdit}
+                  className="text-xs text-[var(--fresh-primary)] underline-offset-2 hover:underline disabled:pointer-events-none disabled:opacity-40"
+                >
+                  {isCustomMode ? "← Search catalog" : "Not in the list? Add custom →"}
+                </button>
+              </div>
+
+              {isCustomMode ? (
+                <div className="space-y-2">
+                  <input
+                    id="customName"
+                    type="text"
+                    value={customName}
+                    onChange={(e) => {
+                      setCustomName(e.target.value);
+                      setErrors({ ...errors, productType: "" });
+                    }}
+                    placeholder="e.g. Dayap Citrus, Salted Duck Egg"
+                    disabled={isSubmitting}
+                    className="w-full rounded-md border border-[var(--fresh-border,#E5E7EB)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--fresh-primary)]"
+                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="customShelfLife"
+                      type="number"
+                      min="1"
+                      value={customShelfLife}
+                      onChange={(e) => {
+                        setCustomShelfLife(e.target.value);
+                        setErrors({ ...errors, customShelfLife: "" });
+                      }}
+                      placeholder="Shelf life (days)"
+                      disabled={isSubmitting}
+                      className="w-full rounded-md border border-[var(--fresh-border,#E5E7EB)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--fresh-primary)]"
+                    />
+                    <span className="shrink-0 text-xs text-[var(--fresh-text-muted)]">days</span>
+                  </div>
+                  {errors.customShelfLife && (
+                    <p className="text-xs text-red-500">{errors.customShelfLife}</p>
+                  )}
+                  <p className="text-xs text-[var(--fresh-text-muted)]">
+                    Your shelf life estimate becomes part of the community reference for this product.
+                  </p>
+                </div>
+              ) : (
+                <ProductTypeCombobox
+                  value={selectedType?.id || product?.product_type_id}
+                  onSelect={(type) => {
+                    setSelectedType(type);
+                    setErrors({ ...errors, productType: "" });
+                    // Pre-fill the listing image from the type's canonical photo
+                    // if the seller hasn't already uploaded their own image
+                    if (type.image_url && !imageFile && !uploadedImageUrl) {
+                      setImagePreview(type.image_url);
+                      setUploadedImageUrl(type.image_url);
+                    }
+                  }}
+                  disabled={isSubmitting}
+                />
+              )}
+
               {errors.productType && (
                 <p className="text-xs text-red-500">{errors.productType}</p>
               )}
-              {selectedType && (
+              {!isCustomMode && selectedType && (
                 <p className="text-xs text-[var(--fresh-text-muted)]">
                   Shelf life: <span className="font-medium">{selectedType.default_shelf_life_days} days</span>
+                  {selectedType.community_avg_shelf_life_days != null && (
+                    <span className="ml-1 text-[var(--fresh-primary)]">
+                      · community avg: {Math.round(selectedType.community_avg_shelf_life_days)} days
+                    </span>
+                  )}
                   {" · "}Storage: <span className="font-medium capitalize">{selectedType.default_storage_condition}</span>
                 </p>
               )}
@@ -442,11 +541,8 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
                   />
                 </div>
                 <p className="text-xs text-[var(--fresh-text-muted)]">
-                  {Math.max(
-                    0,
-                    selectedType!.default_shelf_life_days - parseInt(daysUsed || "0")
-                  )}{" "}
-                  days remaining out of {selectedType!.default_shelf_life_days}
+                  {Math.max(0, effectiveShelfLife - parseInt(daysUsed || "0"))}{" "}
+                  days remaining out of {effectiveShelfLife}
                 </p>
               </div>
             )}

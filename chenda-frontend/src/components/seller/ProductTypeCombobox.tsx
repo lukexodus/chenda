@@ -144,16 +144,44 @@ export function ProductTypeCombobox({ value, onSelect, disabled }: ProductTypeCo
                     selectedType?.id === type.id && "bg-accent"
                   )}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="font-medium">{type.name}</div>
+                  <div className="flex items-center gap-3">
+                    {/* Type thumbnail */}
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border bg-muted">
+                      {type.image_url ? (
+                        <img
+                          src={type.image_url}
+                          alt={type.name}
+                          className="h-full w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-lg">
+                          🥦
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 font-medium">
+                        <span className="truncate">{type.name}</span>
+                        {type.source === "custom" && (
+                          <span className="shrink-0 rounded px-1 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-orange-100 text-orange-700">
+                            Custom
+                          </span>
+                        )}
+                      </div>
                       {type.name_subtitle && (
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-muted-foreground truncate">
                           {type.name_subtitle}
                         </div>
                       )}
-                      <div className="mt-1 text-xs text-muted-foreground">
-                        Shelf life: {type.default_shelf_life_days} days • {type.default_storage_condition}
+                      <div className="mt-0.5 text-xs text-muted-foreground">
+                        Shelf life: {type.default_shelf_life_days} days
+                        {type.community_avg_shelf_life_days != null && (
+                          <span className="ml-1 text-orange-600">
+                            · community avg: {Math.round(type.community_avg_shelf_life_days)} days
+                          </span>
+                        )}
+                        {" • "}{type.default_storage_condition}
                       </div>
                     </div>
                     {selectedType?.id === type.id && (
