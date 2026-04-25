@@ -14,7 +14,7 @@
 ### Automated Setup
 ```bash
 # Run setup script
-./setup-backend-windows.bat
+./scripts/setup-backend-windows.bat
 
 # Follow prompts and enter PostgreSQL password when asked
 ```
@@ -38,8 +38,8 @@ sudo dnf install postgresql-server postgis nodejs
 
 ### Automated Setup
 ```bash
-chmod +x setup-backend-linux.sh
-./setup-backend-linux.sh
+chmod +x scripts/setup-backend-linux.sh
+./scripts/setup-backend-linux.sh
 ```
 
 ---

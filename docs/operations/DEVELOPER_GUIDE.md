@@ -39,7 +39,7 @@
 
 ```powershell
 # From the repo root (PowerShell as Administrator)
-.\install-postgis.ps1
+.\scripts\install-postgis.ps1
 ```
 
 **Linux (Ubuntu/Debian)**

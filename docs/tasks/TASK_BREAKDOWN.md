@@ -15,10 +15,10 @@
 ### Quick Start
 ```bash
 # Windows (use Git Bash)
-./setup-backend-windows.bat
+./scripts/setup-backend-windows.bat
 
 # Linux
-./setup-backend-linux.sh
+./scripts/setup-backend-linux.sh
 
 # Then:
 node migrations/migrate.js up    # Run migrations
