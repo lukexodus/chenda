@@ -6,6 +6,25 @@
 
 ---
 
+## Visual Personality (Current Baseline)
+
+The current frontend tone is **clean, practical, and trust-first** for perishable-goods commerce:
+
+- **Safety and freshness first**: green primary + clear warning/danger signals
+- **Utility over ornament**: compact spacing, high information density, fast-scanning cards
+- **Mobile-native marketplace feel**: sticky top bar + fixed bottom tab nav on role pages
+- **Soft modern surfaces**: rounded cards, subtle shadows, translucent nav backgrounds with blur
+- **Action clarity**: primary actions are obvious; destructive states are explicit and rare
+
+If you ask another AI to increase personality, keep this baseline intact and evolve through:
+
+- richer product storytelling (imagery, regional flavor cues, marketplace warmth)
+- stronger typographic hierarchy and branded microcopy
+- motion and transitions that reinforce freshness/urgency (not decorative noise)
+- consistent use of existing semantic tokens (`--fresh-*`) for color decisions
+
+---
+
 ## Color Tokens
 
 Two layers of color tokens are used in this project:
@@ -141,12 +160,13 @@ className="shadow-[var(--shadow-small)] hover:shadow-[var(--shadow-medium)]"
 
 | Breakpoint | Min Width | Layout Change |
 |---|---|---|
-| (default) | 0 | Single column, `grid-cols-2` product grid |
-| `md` | 768px | `grid-cols-3` product grid |
-| `lg` | 1024px | `grid-cols-4`, side-by-side map + list |
+| (default) | 0 | Single-column layouts (`grid-cols-1`) |
+| `sm` | 640px | Product grids commonly shift to `grid-cols-2` |
+| `lg` | 1024px | Product grids commonly shift to `grid-cols-3` |
+| `xl` | 1280px | Product grids commonly shift to `grid-cols-4` |
 
 ```tsx
-<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" />
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" />
 <div className="p-4 sm:p-6 lg:p-8" />
 <div className="flex flex-col lg:flex-row gap-4" />
 ```
@@ -198,6 +218,7 @@ Source: `components/ui/button.tsx` (shadcn/ui + CVA)
 | `default` | 36px (h-9) | `px-4` | Standard buttons |
 | `lg` | 40px (h-10) | `px-6` | Full-width CTAs |
 | `icon` | 36×36px | — | Square icon-only button |
+| `icon-xs` | 24×24px | — | Compact icon-only controls |
 | `icon-sm` | 32×32px | — | Small icon button |
 | `icon-lg` | 40×40px | — | Large icon button |
 
@@ -228,6 +249,7 @@ Source: `components/ui/badge.tsx` (shadcn/ui + CVA)
 | `destructive` | Red fill, white text | Expired / unavailable |
 | `outline` | Border only, foreground text | Inactive states |
 | `ghost` | No background | Subtle tags |
+| `link` | Text-only, underline on hover | Inline linked labels |
 
 For semantic freshness/status badges, use inline `className` overrides on top of a base variant:
 
@@ -329,7 +351,7 @@ Used in seller dashboard for switching between views. Composed of `<Tabs>`, `<Ta
 
 - `sticky top-0 z-40`, height `h-14`
 - Logo (`chenda.png`, 28×28px) + "Chenda" wordmark (`text-lg font-semibold`)
-- Right side: Cart icon (buyers only, with item count badge) + Logout button
+- Right side: Notifications icon (all authenticated users, with unread badge) + Cart icon (buyers only, with item count badge) + Logout button
 - Cart badge: `bg-[var(--fresh-primary)] text-white`, absolute position, capped at `9+`
 
 ### BottomNav (`components/layout/navigation.tsx`)
@@ -339,8 +361,10 @@ Used in seller dashboard for switching between views. Composed of `<Tabs>`, `<Ta
 
 | Role | Tabs |
 |---|---|
-| `buyer` | Search (`/buyer`) · Orders (`/buyer/orders`) · Profile (`/buyer/profile`) |
-| `seller` / `both` | Dashboard (`/seller/dashboard`) · Products (`/seller/products`) · Orders (`/seller/orders`) · Profile (`/seller/profile`) |
+| `buyer` | Search (`/buyer`) · Orders (`/buyer/orders`) · Alerts (`/notifications`) · Profile (`/buyer/profile`) |
+| `seller` | Dashboard (`/seller/dashboard`) · Products (`/seller/products`) · Orders (`/seller/orders`) · Payments (`/seller/payments`) · Alerts (`/notifications`) · Profile (`/seller/profile`) |
+| `both` | Search (`/buyer`) · Dashboard (`/seller/dashboard`) · Products (`/seller/products`) · Orders (`/seller/orders`) · Payments (`/seller/payments`) · Alerts (`/notifications`) · Profile (`/buyer/profile`) |
+| `rider` | Dashboard (`/rider/dashboard`) · Jobs (`/rider/jobs`) · History (`/rider/history`) · Tracking (`/rider/tracking`) · Alerts (`/notifications`) · Profile (`/rider/profile`) |
 
 - Active tab: `text-[var(--fresh-primary)] font-medium`
 - Inactive tab: `text-[var(--fresh-text-muted)] hover:text-[var(--fresh-text-primary)]`
@@ -393,7 +417,7 @@ Source: `components/layout/states.tsx`
 |---|---|
 | `<PageLoading />` | Full-page spinner (`min-h-[60vh]`) using `--fresh-primary` border spinner |
 | `<ProductCardSkeleton />` | Skeleton matching `ProductCard` shape (image + content rows) |
-| `<CardGridSkeleton />` | 2-column grid of `ProductCardSkeleton` |
+| `<CardGridSkeleton />` | Responsive grid of `ProductCardSkeleton` (`1/2/3/4` columns by breakpoint) |
 | `<FormSkeleton />` | Skeleton for profile/product forms |
 | `<MapSkeleton />` | Skeleton for Leaflet map areas |
 

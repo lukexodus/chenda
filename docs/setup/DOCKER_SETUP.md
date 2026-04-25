@@ -4,55 +4,20 @@ This guide explains how to set up and run the full Chenda stack (database, backe
 
 ---
 
-## How Migrations and Seeds Relate to Docker
+## Prerequisites
 
-Understanding these two processes and their place in the Docker lifecycle is important before running anything.
+Install these on the target machine:
 
-### The three-stage pipeline
+- **Docker Engine** ≥ 24 — [get-docker](https://docs.docker.com/get-docker/)
+- **Docker Compose** v2 (bundled with Docker Desktop, or install the CLI plugin separately)
 
+Verify:
+```bash
+docker --version        # Docker version 24.x.x
+docker compose version  # Docker Compose version v2.x.x
 ```
- docker compose up -d          →  containers start, DB volume is empty
-        ↓
- run migrations                →  creates the database schema (tables, indexes, etc.)
-        ↓
- run seeds (optional)          →  inserts mock data for development/testing
-```
 
-**This pipeline only needs to run once per fresh volume.** Data survives container restarts and rebuilds because it lives in the named `postgres_data` Docker volume — not inside the container filesystem. If you destroy the volume (`docker compose down -v`), you must run the pipeline again from scratch.
-
-### Migrations
-
-| Property | Detail |
-|---|---|
-| Script | `migrations/migrate.js` |
-| What it does | Creates all tables, indexes, the session table, payment columns, delivery columns, etc. via numbered SQL files (`001_create_tables.sql` → `008_courier_delivery_fulfillment.sql`) |
-| Tracking | Records each applied migration in a `migrations` table so it never runs the same file twice |
-| Automatic? | **No.** The backend (`app.js`) does NOT run migrations on startup. You must trigger them manually. |
-| When to run | Once after `docker compose up` on a fresh volume, and again after adding a new `.sql` migration file |
-
-### Seeds
-
-| Property | Detail |
-|---|---|
-| Script | `seeds/seed.js` |
-| What it seeds | 180 USDA product types, 10 mock users (with PostGIS locations), 30 mock products |
-| Depends on | Migrations — `seed.js` explicitly checks that the `migrations` table exists and has ≥ 2 rows before inserting anything. It exits with an error if migrations haven't run. |
-| Safe by default | Won't overwrite existing data unless you pass `--force` |
-| Required for production? | **No.** Seeds are mock data for development and testing only. Never seed a real production database. |
-| When to run | Once after migrations, on a fresh/empty database |
-
-### Why migrations aren't automatic in this project
-
-The backend is stateless — it only calls `testConnection()` at startup, not `migrate()`. This is a deliberate choice: running DDL automatically on every container start is risky in production (e.g., a bad migration would take down the API). Migrations are a **one-time operator action**, not an application concern.
-
-### Data persistence across operations
-
-| Operation | Schema (migrations) | Data (seeds/user data) |
-|---|---|---|
-| `docker compose restart backend` | ✅ Preserved | ✅ Preserved |
-| `docker compose up -d --build` | ✅ Preserved | ✅ Preserved |
-| `docker compose down` | ✅ Preserved | ✅ Preserved |
-| `docker compose down -v` | ❌ Destroyed | ❌ Destroyed |
+> **Note:** This guide uses `docker compose` (Compose v2 CLI plugin). If you have the older standalone binary, use `docker-compose` instead.
 
 ---
 
@@ -71,65 +36,6 @@ The `db` container must pass its healthcheck before `backend` starts. `frontend`
 Named Docker volumes keep data and uploads alive across container restarts:
 - `postgres_data` — PostgreSQL data directory
 - `uploads_data` — user-uploaded product images
-
----
-
-## Prerequisites
-
-Install these on the target machine:
-
-- **Docker Engine** ≥ 24 — [get-docker](https://docs.docker.com/get-docker/)
-- **Docker Compose** v2 (bundled with Docker Desktop, or install the CLI plugin separately)
-
-Verify:
-```bash
-docker --version        # Docker version 24.x.x
-docker compose version  # Docker Compose version v2.x.x
-```
-
-> **Note:** This guide uses `docker compose` (Compose v2 CLI plugin). If you have the older standalone binary, use `docker-compose` instead.
-
----
-
-## Docker Desktop and Image Distribution FAQ
-
-### Do Docker Desktop users need separate instructions?
-
-Usually no. Docker Desktop still uses the same Docker Engine and Compose commands, so this guide works for Docker Desktop users as-is.
-
-### Do Docker Desktop users still need the terminal?
-
-For this project, yes for most setup tasks.
-
-- Docker Desktop UI is great for viewing container status, logs, resource usage, and starting/stopping/restarting containers.
-- Initial setup steps here (running ordered migrations, seeding, and one-off compose run commands) are terminal-first operations.
-- On Windows, use PowerShell equivalents included in this guide.
-
-### Is cloning/pulling the repo enough to run the app?
-
-For local development and internal testing, yes.
-
-Use this flow:
-1. Pull latest source.
-2. Run `docker compose up -d --build`.
-3. Run migrations (required on fresh volume).
-4. Run seeds if needed (optional).
-
-You do not need a container registry for this local workflow because images are built from source on each machine.
-
-### When should we push images to a registry?
-
-Push images to a registry (Docker Hub, GHCR, ECR, etc.) when you need consistent, prebuilt deployment artifacts.
-
-Common cases:
-- Production/staging deployments on servers that should pull immutable image tags.
-- CI/CD pipelines that build once and deploy the same image everywhere.
-- Faster onboarding where users should run without local image builds.
-- Environments where source code is not copied to the runtime host.
-
-Rule of thumb:
-- Local dev: repo pull + local build is enough.
-- Shared/prod deployment: publish versioned images to a registry.
 
 ---
 
@@ -295,7 +201,7 @@ Migrations create the entire database schema: all tables, indexes, the session t
 
 The `migrations/` directory contains:
 - `migrate.js` — Migration runner that tracks which migrations have been applied
-- `001_create_tables.sql` → `008_courier_delivery_fulfillment.sql` — Numbered SQL files
+- `001_create_tables.sql` → `011_product_type_images.sql` — Numbered SQL files
 
 The `migrate.js` runner:
 1. Creates a `migrations` table to track applied migrations
@@ -336,12 +242,33 @@ The runner connects to the database specified in `.env.docker`:
 - `DB_PORT=5432` (internal container port)
 - `DB_NAME=chenda`
 
+#### Recent migrations
+
+| Migration | Date | What it adds |
+|---|---|---|
+| `009_hybrid_product_types.sql` | 2026-04-24 | `source`/`region` columns, `product_shelf_life_overrides` table |
+| `010_custom_product_types.sql` | 2026-04-25 | `source='custom'` support, community avg trigger, dedup index, custom ID sequence |
+| `011_product_type_images.sql` | 2026-04-25 | `image_url TEXT` on `product_types` |
+
 Verify the schema was applied:
 ```bash
 docker compose exec db psql -U postgres -d chenda -c "\dt"
 ```
 
-You should see all application tables listed (users, products, product_types, orders, deliveries, session, etc.).
+You should see all application tables listed including:
+- users, products, product_types, product_shelf_life_overrides (new), orders, deliveries, session, etc.
+
+Check specifically for the new columns:
+```bash
+docker compose exec db psql -U postgres -d chenda -c "
+  SELECT column_name, data_type 
+  FROM information_schema.columns 
+  WHERE table_name = 'product_types' 
+  ORDER BY ordinal_position;
+"
+```
+
+Should show: id, name, name_subtitle, category_id, keywords, default_shelf_life_days, default_storage_condition, shelf_life_source, **source**, **region**, **is_available_in_philippines**, created_at, updated_at
 
 ### Why this approach is safer
 
@@ -380,92 +307,172 @@ See [migrations/README.md](../../migrations/README.md#handling-already-migrated-
 
 Seeds populate the database with mock data for development and testing. **Do not seed a real production database.**
 
-Choose one seeding path depending on what you need.
+**What gets seeded:**
+- **~180 USDA product types** (baseline universal items)
+- **23 Philippine regional product types** (local specialties)
+- **10 mock users** with PostGIS locations
+- **30–200+ mock products** depending on seed file
+- **Product type images** — populated automatically from `seeds/product-images-manifest.json` if it exists (only required if assets are missing from repo)
 
-### Option A — SQL pipeline (recommended for first-time Docker setup)
+### First-time setup (fresh database)
 
-The `seeds/` directory is also in the project root (not inside the container). The seed SQL files are piped directly into the `db` container, in dependency order:
+Choose one approach:
+
+#### Approach A: Full workflow with images (recommended)
 
 ```bash
-# 1. Product types (must be first — products FK to this table)
+# 1. Download product images (Skip if already in repo)
+# Only required if seeds/product-images-manifest.json is missing
+node seeds/fetch-product-images.js --download --all
+
+# 2. Seed — images applied automatically
+node seeds/seed.js
+```
+
+#### Approach B: SQL pipeline (minimal)
+```bash
+# 1. USDA product types (must be first)
 docker compose exec -T db psql -U postgres -d chenda < seeds/product_types.sql
 
-# 2. Mock users
+# 2. Philippine regional product types (NEW — Migration 009)
+docker compose exec -T db psql -U postgres -d chenda < seeds/philippines_regional_products.sql
+
+# 3. Mock users
 docker compose exec -T db psql -U postgres -d chenda < seeds/mock_users.sql
 
-# 3. Mock products (requires users and product_types to exist)
+# 4. Mock products
 docker compose exec -T db psql -U postgres -d chenda < seeds/mock_products.sql
 
-# 4. Nationwide products (large dataset, optional)
+# 5. Nationwide products (optional, large dataset)
 docker compose exec -T db psql -U postgres -d chenda < seeds/nationwide_products.sql
 ```
 
-### Option B — Seeder CLI modes (`seed.js`)
-
-Use this when you need selective reseeding behavior.
-
-Available modes:
-
-| Mode | Command | Behavior |
-|---|---|---|
-| Safe default | `node seeds/seed.js` | Seeds only if data is empty |
-| Full reset | `node seeds/seed.js --force` | Clears and reseeds `product_types`, `users`, `products` |
-| Products only | `node seeds/seed.js --products-only` | Clears `orders` + `products`, then reseeds product files only |
-
-If Node is installed on your host, run these commands directly from the project root.
-
-If Node is **not** installed on your host, run the seeder in a temporary backend container:
+#### Approach C: Seeder CLI (all-in-one)
 
 ```bash
-# Safe default
-docker compose run --rm \
-  -e NODE_PATH=/app/node_modules \
-  -v "$(pwd)":/workspace \
-  --entrypoint node \
-  backend /workspace/seeds/seed.js
-
-# Full reset
-docker compose run --rm \
-  -e NODE_PATH=/app/node_modules \
-  -v "$(pwd)":/workspace \
-  --entrypoint node \
-  backend /workspace/seeds/seed.js --force
-
-# Products-only reseed
-docker compose run --rm \
-  -e NODE_PATH=/app/node_modules \
-  -v "$(pwd)":/workspace \
-  --entrypoint node \
-  backend /workspace/seeds/seed.js --products-only
+# From project root, seeds automatically included
+node seeds/seed.js
 ```
 
-Windows (PowerShell) equivalent:
-```powershell
-# Safe default
-docker compose run --rm `
-  -e NODE_PATH=/app/node_modules `
-  -v "${PWD}:/workspace" `
-  --entrypoint node `
-  backend /workspace/seeds/seed.js
+Or in a temporary backend container:
 
-# Full reset
-docker compose run --rm `
-  -e NODE_PATH=/app/node_modules `
-  -v "${PWD}:/workspace" `
-  --entrypoint node `
-  backend /workspace/seeds/seed.js --force
-
-# Products-only reseed
-docker compose run --rm `
-  -e NODE_PATH=/app/node_modules `
-  -v "${PWD}:/workspace" `
-  --entrypoint node `
-  backend /workspace/seeds/seed.js --products-only
+```bash
+docker compose run --rm backend node seeds/seed.js
 ```
 
-> **Note 1:** The `seed.js` script checks that migrations have been applied before inserting data. If you get a `migrations table not found` error, run Step 5 first.
+### Already seeded database? (Migrating to Migration 009)
 
-> **Note 2:** `--products-only` requires existing `users` and `product_types` data. If those tables are empty, run a full seed first.
+If you have an existing seeded database from before Migration 009, **choose one path:**
+
+#### Path 1: Minimal update (keep existing data)
+
+```bash
+# Add new regional products without disturbing existing data
+docker compose exec -T db psql -U postgres -d chenda < seeds/philippines_regional_products.sql
+```
+
+Pros: No data loss, new types available immediately  
+Cons: Existing shelf life override features unused on old products
+
+#### Path 2: Full reset (clean slate)
+
+```bash
+# Clear everything and reseed with all new data
+node seeds/seed.js --force
+```
+
+Pros: Clean start, all features active  
+Cons: All existing products/orders/users deleted
+
+#### Path 3: Keep users, refresh products
+
+```bash
+# Refresh products while keeping test users
+node seeds/seed.js --products-only
+```
+
+**See [SEEDING_GUIDE.md](SEEDING_GUIDE.md) for detailed migration paths and validation commands.**
+
+### Verification
+
+After seeding, check product type counts:
+
+```bash
+docker compose exec db psql -U postgres -d chenda -c "
+  SELECT source, COUNT(*) FROM product_types GROUP BY source;
+"
+
+# Expected (after full seed + image fetch):
+#  source   | count
+# ----------+-------
+#  regional  |    23
+#  usda      |   180
+# (custom rows appear as sellers create products)
+
+# Image population
+docker compose exec db psql -U postgres -d chenda -c "
+  SELECT COUNT(*) FILTER (WHERE image_url IS NOT NULL) AS types_with_images,
+         COUNT(*) AS total
+  FROM product_types;
+"
+```
+
+Test credentials:
+```
+Email:    maria.santos@email.com
+Password: password123
+```
+
+### Available CLI modes
+
+| Mode | Command | Use case |
+|---|---|---|
+| Safe default | `node seeds/seed.js` | First seed on empty DB |
+| Full reset | `node seeds/seed.js --force` | Clear all, reseed everything |
+| Products only | `node seeds/seed.js --products-only` | Refresh listings, keep users/types |
+
+### Apply image manifest to Docker DB (existing seeded database)
+
+If you already ran `fetch-product-images.js` and want those results reflected in the **Docker** database state, run seeding from the backend container:
+
+```bash
+docker compose exec backend node seeds/seed.js --products-only
+```
+
+Why this is required:
+- `fetch-product-images.js` only writes files + `seeds/product-images-manifest.json`
+- DB updates happen when `seed.js` runs `applyImageManifest()`
+- Running `seed.js` on host can target local Postgres (`localhost`) instead of Docker `db`
+
+### Image file path alignment in Docker
+
+`fetch-product-images.js` currently writes to `public/images/products/...` at repo root. In Docker setups, make sure your served static path includes those files; otherwise DB `image_url` values can exist but return `404` in UI.
+
+Choose one:
+
+1. Copy/move generated files to `chenda-frontend/public/images/products`
+2. Update `fetch-product-images.js` `outputDir` to `chenda-frontend/public/images/products` and regenerate
+3. Add compose/static serving config so root `public/images/products` is served
+
+### Quick verification after Docker manifest apply
+
+```bash
+# DB verification
+docker compose exec db psql -U postgres -d chenda -c "
+  SELECT COUNT(*)
+  FROM product_types
+  WHERE image_url IS NOT NULL AND image_url <> '';
+"
+
+# Asset verification (replace with a real file)
+curl -I http://localhost:3000/images/products/<slug>.jpg
+```
+
+Expected:
+- SQL count > 0
+- HTTP status `200` for valid image files
+
+See [SEEDING_GUIDE.md](SEEDING_GUIDE.md) for full details.
 
 What gets seeded:
 - **180 USDA product types** (real FoodKeeper data — categories, shelf life defaults)
@@ -531,6 +538,113 @@ docker compose restart backend
 | Frontend source code changed | `docker compose up -d --build frontend` |
 | Both changed | `docker compose up -d --build` |
 | `docker-compose.yml` changed | `docker compose up -d` (Compose re-creates affected containers) |
+
+---
+
+## How Migrations and Seeds Relate to Docker
+
+Understanding these two processes and their place in the Docker lifecycle is important before running anything.
+
+### The three-stage pipeline
+
+```
+ docker compose up -d          →  containers start, DB volume is empty
+        ↓
+ run migrations                →  creates the database schema (tables, indexes, etc.)
+        ↓
+ run seeds (optional)          →  inserts mock data for development/testing
+```
+
+**This pipeline only needs to run once per fresh volume.** Data survives container restarts and rebuilds because it lives in the named `postgres_data` Docker volume — not inside the container filesystem. If you destroy the volume (`docker compose down -v`), you must run the pipeline again from scratch.
+
+### Migrations
+
+| Property | Detail |
+|---|---|
+| Script | `migrations/migrate.js` |
+| What it does | Creates all tables, indexes, the session table, payment columns, delivery columns, extensible product type system, and product image support via numbered SQL files (`001_create_tables.sql` → `011_product_type_images.sql`) |
+| Tracking | Records each applied migration in a `migrations` table so it never runs the same file twice |
+| Automatic? | **No.** The backend (`app.js`) does NOT run migrations on startup. You must trigger them manually. |
+| When to run | Once after `docker compose up` on a fresh volume, and again after adding a new `.sql` migration file |
+
+### Seeds
+
+| Property | Detail |
+|---|---|
+| Script | `seeds/seed.js` |
+| What it seeds | ~180 USDA product types, 23 Philippine regional product types, 10 mock users (with PostGIS locations), 30+ mock products; also populates `product_types.image_url` from manifest if available |
+| Depends on | Migrations — `seed.js` explicitly checks that the `migrations` table exists and has ≥ 2 rows before inserting anything. It exits with an error if migrations haven't run. |
+| Safe by default | Won't overwrite existing data unless you pass `--force` |
+| Required for production? | **No.** Seeds are mock data for development and testing only. Never seed a real production database. |
+| When to run | Once after migrations, on a fresh/empty database |
+
+### Why migrations aren't automatic in this project
+
+The backend is stateless — it only calls `testConnection()` at startup, not `migrate()`. This is a deliberate choice: running DDL automatically on every container start is risky in production (e.g., a bad migration would take down the API). Migrations are a **one-time operator action**, not an application concern.
+
+### Data persistence across operations
+
+| Operation | Schema (migrations) | Data (seeds/user data) |
+|---|---|---|
+| `docker compose restart backend` | ✅ Preserved | ✅ Preserved |
+| `docker compose up -d --build` | ✅ Preserved | ✅ Preserved |
+| `docker compose down` | ✅ Preserved | ✅ Preserved |
+| `docker compose down -v` | ❌ Destroyed | ❌ Destroyed |
+
+---
+
+## Docker Desktop and Image Distribution FAQ
+
+### Do Docker Desktop users need separate instructions?
+
+Usually no. Docker Desktop still uses the same Docker Engine and Compose commands, so this guide works for Docker Desktop users as-is.
+
+### Do Docker Desktop users still need the terminal?
+
+For this project, yes for most setup tasks.
+
+- Docker Desktop UI is great for viewing container status, logs, resource usage, and starting/stopping/restarting containers.
+- Initial setup steps here (running ordered migrations, seeding, and one-off compose run commands) are terminal-first operations.
+- On Windows, use PowerShell equivalents included in this guide.
+
+### Is cloning/pulling the repo enough to run the app?
+
+For local development and internal testing, yes.
+
+Use this flow:
+1. Pull latest source.
+2. Run `docker compose up -d --build`.
+3. Run migrations (required on fresh volume).
+4. Run seeds if needed (optional).
+
+You do not need a container registry for this local workflow because images are built from source on each machine.
+
+### When should we push images to a registry?
+
+Push images to a registry (Docker Hub, GHCR, ECR, etc.) when you need consistent, prebuilt deployment artifacts.
+
+Common cases:
+- Production/staging deployments on servers that should pull immutable image tags.
+- CI/CD pipelines that build once and deploy the same image everywhere.
+- Faster onboarding where users should run without local image builds.
+- Environments where source code is not copied to the runtime host.
+
+Rule of thumb:
+- Local dev: repo pull + local build is enough.
+- Shared/prod deployment: publish versioned images to a registry.
+
+---
+
+## How environment variables flow
+
+```
+.env.docker  ──► docker-compose.yml (env_file)
+                    ├─► db container   (DB_PASSWORD, DB_HOST_PORT)
+                    ├─► backend container (DB_PORT=5432, DB_PASSWORD, SESSION_SECRET, FRONTEND_URL, ...)
+                    └─► frontend container (NEXT_PUBLIC_API_URL, INTERNAL_API_URL, ...)
+```
+
+The containers do **not** read `server/.env` or `chenda-frontend/.env.local`. Those files are for local (non-Docker) development only.
 
 ---
 
@@ -612,19 +726,6 @@ This is expected. Named volumes (`postgres_data`, `uploads_data`) survive `down`
 docker compose down -v   # removes volumes
 docker compose up -d --build
 ```
-
----
-
-## How environment variables flow
-
-```
-.env.docker  ──► docker-compose.yml (env_file)
-                    ├─► db container   (DB_PASSWORD, DB_HOST_PORT)
-                    ├─► backend container (DB_PORT=5432, DB_PASSWORD, SESSION_SECRET, FRONTEND_URL, ...)
-                    └─► frontend container (NEXT_PUBLIC_API_URL, INTERNAL_API_URL, ...)
-```
-
-The containers do **not** read `server/.env` or `chenda-frontend/.env.local`. Those files are for local (non-Docker) development only.
 
 ---
 
