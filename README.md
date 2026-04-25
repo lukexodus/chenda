@@ -83,7 +83,7 @@ Chenda is a full-stack web application that helps buyers discover nearby fresh p
 
 **Setup options:**
 - **Docker** (recommended): See [docs/setup/DOCKER_SETUP.md](docs/setup/DOCKER_SETUP.md)
-- **Local development**: See [docs/setup/QUICK_SETUP.md](docs/setup/QUICK_SETUP.md) or [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
+- **Local development**: See [docs/setup/QUICK_SETUP.md](docs/setup/QUICK_SETUP.md) or [docs/operations/DEVELOPER_GUIDE.md](docs/operations/DEVELOPER_GUIDE.md)
 
 ### 1. Clone the repository
 
@@ -167,7 +167,7 @@ npm run test:e2e
 npm run test:e2e:report
 
 # Manual E2E testing (recommended for comprehensive feature validation)
-# See: docs/MANUAL_E2E_TESTING_GUIDE.md (7 test suites covering all major features)
+# See: docs/operations/MANUAL_E2E_TESTING_GUIDE.md (7 test suites covering all major features)
 ```
 
 ---
@@ -212,7 +212,7 @@ chenda/
 
 ## API Reference
 
-Full endpoint documentation: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+Full endpoint documentation: [docs/architecture/API_DOCUMENTATION.md](docs/architecture/API_DOCUMENTATION.md)
 
 **Base URL**: `http://localhost:3001`
 
@@ -245,32 +245,32 @@ Import the Postman collection for ready-to-run requests: [`postman/Chenda_API.po
 ### Development
 | File | Contents |
 |------|----------|
-| [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) | Full dev setup, architecture, coding patterns, and contribution guide |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture, database design, and technology decisions |
-| [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md) | Complete PostgreSQL schema with tables, indexes, and relationships |
-| [docs/FRONTEND_DESIGN.md](docs/FRONTEND_DESIGN.md) | Design system, colour tokens, component patterns, and UI guidelines |
-| [docs/COMPONENT_CATALOG.md](docs/COMPONENT_CATALOG.md) | Interactive component library with usage examples |
+| [docs/operations/DEVELOPER_GUIDE.md](docs/operations/DEVELOPER_GUIDE.md) | Full dev setup, architecture, coding patterns, and contribution guide |
+| [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md) | System architecture, database design, and technology decisions |
+| [docs/architecture/DATABASE_SCHEMA.md](docs/architecture/DATABASE_SCHEMA.md) | Complete PostgreSQL schema with tables, indexes, and relationships |
+| [docs/architecture/FRONTEND_DESIGN.md](docs/architecture/FRONTEND_DESIGN.md) | Design system, colour tokens, component patterns, and UI guidelines |
+| [docs/architecture/COMPONENT_CATALOG.md](docs/architecture/COMPONENT_CATALOG.md) | Interactive component library with usage examples |
 
 ### API & Testing
 | File | Contents |
 |------|----------|
-| [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) | Complete REST API reference (66 endpoints) with request/response examples |
-| [docs/MANUAL_E2E_TESTING_GUIDE.md](docs/MANUAL_E2E_TESTING_GUIDE.md) | Step-by-step manual E2E testing procedures for all features (7 test suites) |
-| [docs/ALIGNMENT_AUDIT.md](docs/ALIGNMENT_AUDIT.md) | Audit of implementation vs. documentation vs. test coverage |
+| [docs/architecture/API_DOCUMENTATION.md](docs/architecture/API_DOCUMENTATION.md) | Complete REST API reference (66 endpoints) with request/response examples |
+| [docs/operations/MANUAL_E2E_TESTING_GUIDE.md](docs/operations/MANUAL_E2E_TESTING_GUIDE.md) | Step-by-step manual E2E testing procedures for all features (7 test suites) |
+| [docs/architecture/ALIGNMENT_AUDIT.md](docs/architecture/ALIGNMENT_AUDIT.md) | Audit of implementation vs. documentation vs. test coverage |
 
 ### Deployment & Operations
 | File | Contents |
 |------|----------|
-| [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) | Local and cloud (VPS) deployment instructions |
-| [docs/ENVIRONMENT_CONFIG_GUIDE.md](docs/ENVIRONMENT_CONFIG_GUIDE.md) | Environment variables, secrets, and configuration management |
-| [docs/BACKUP_RESTORE_RUNBOOK.md](docs/BACKUP_RESTORE_RUNBOOK.md) | Database backup and restore procedures |
-| [docs/BROWSE_DB_GUIDE.md](docs/BROWSE_DB_GUIDE.md) | How to browse and query the database |
+| [docs/operations/DEPLOYMENT_GUIDE.md](docs/operations/DEPLOYMENT_GUIDE.md) | Local and cloud (VPS) deployment instructions |
+| [docs/setup/ENVIRONMENT_CONFIG_GUIDE.md](docs/setup/ENVIRONMENT_CONFIG_GUIDE.md) | Environment variables, secrets, and configuration management |
+| [docs/operations/BACKUP_RESTORE_RUNBOOK.md](docs/operations/BACKUP_RESTORE_RUNBOOK.md) | Database backup and restore procedures |
+| [docs/operations/BROWSE_DB_GUIDE.md](docs/operations/BROWSE_DB_GUIDE.md) | How to browse and query the database |
 
 ### Reference
 | File | Contents |
 |------|----------|
-| [docs/BACKEND_CORE_USE_CASES.md](docs/BACKEND_CORE_USE_CASES.md) | Core backend business logic and workflows |
-| [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Design tokens, typography, spacing, and visual guidelines |
+| [docs/architecture/BACKEND_CORE_USE_CASES.md](docs/architecture/BACKEND_CORE_USE_CASES.md) | Core backend business logic and workflows |
+| [docs/architecture/DESIGN_SYSTEM.md](docs/architecture/DESIGN_SYSTEM.md) | Design tokens, typography, spacing, and visual guidelines |
 
 ---
 

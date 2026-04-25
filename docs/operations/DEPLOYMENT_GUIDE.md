@@ -20,7 +20,7 @@
 ### Prerequisites
 
 - Node.js 20+ — <https://nodejs.org/>
-- PostgreSQL 15+ with PostGIS — see [DEVELOPER_GUIDE.md §Prerequisites](DEVELOPER_GUIDE.md#prerequisites)
+- PostgreSQL 15+ with PostGIS — see [DEVELOPER_GUIDE.md §Prerequisites](operations/DEVELOPER_GUIDE.md#prerequisites)
 - Git for Windows (includes Git Bash) — <https://git-scm.com/>
 
 All commands below run in **Git Bash** unless noted.

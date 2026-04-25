@@ -243,7 +243,7 @@ If requirement is strictly "disable in UI only," backend changes are optional. S
 
 7. `server/.env`
 8. `server/.env.example`
-9. `docs/ENVIRONMENT_CONFIG_GUIDE.md`
+9. `docs/setup/ENVIRONMENT_CONFIG_GUIDE.md`
 
 Potential updates:
 
@@ -282,17 +282,17 @@ These are optional but strongly recommended for temporary-feature behavior.
 
 If/when GCash is disabled in UI, update docs to avoid mismatch:
 
-12. `docs/task-progress/TASK_4.11_WEBHOOK_SETUP.md`
-13. `docs/API_DOCUMENTATION.md`
+12. `docs/tasks/TASK_4.11_WEBHOOK_SETUP.md`
+13. `docs/architecture/API_DOCUMENTATION.md`
 14. `docs/setup/USER_GUIDE.md`
-15. `docs/MANUAL_E2E_TESTING_GUIDE.md`
+15. `docs/operations/MANUAL_E2E_TESTING_GUIDE.md`
 
 Also check historical references mentioning GCash-first or mock multi-method flows:
 
 - `README.md`
-- `docs/ARCHITECTURE.md`
-- `docs/learn/PROJECT_LEARNING_GUIDE.md`
-- `docs/task-progress/TASK_BREAKDOWN.md`
+- `docs/architecture/ARCHITECTURE.md`
+- `docs/learning/PROJECT_LEARNING_GUIDE.md`
+- `docs/tasks/TASK_BREAKDOWN.md`
 
 ## 2.6 Functional areas to verify after implementation
 

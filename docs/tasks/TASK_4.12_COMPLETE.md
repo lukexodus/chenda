@@ -151,7 +151,7 @@ External channels:
 
 Documented in:
 
-- `docs/ENVIRONMENT_CONFIG_GUIDE.md`
+- `docs/setup/ENVIRONMENT_CONFIG_GUIDE.md`
 - `docs/setup/SETUP_GUIDE.md`
 - `docs/setup/QUICK_SETUP.md`
 - `server/.env.example`
@@ -172,7 +172,7 @@ Key variables:
 
 Use:
 
-- `docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md`
+- `docs/tasks/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md`
 
 Covers:
 

@@ -36,22 +36,22 @@ Derived from implemented system behavior and docs:
   - optional external notification hooks (email/SMS/push scaffolds)
 
 Primary references:
-- [docs/BACKEND_CORE_USE_CASES.md](docs/BACKEND_CORE_USE_CASES.md)
-- [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- [docs/ENVIRONMENT_CONFIG_GUIDE.md](docs/ENVIRONMENT_CONFIG_GUIDE.md)
+- [docs/architecture/BACKEND_CORE_USE_CASES.md](docs/architecture/BACKEND_CORE_USE_CASES.md)
+- [docs/architecture/API_DOCUMENTATION.md](docs/architecture/API_DOCUMENTATION.md)
+- [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)
+- [docs/setup/ENVIRONMENT_CONFIG_GUIDE.md](docs/setup/ENVIRONMENT_CONFIG_GUIDE.md)
 
 ## Evidence Sources Inventory
 Already available in the repository:
-- Functional/API behavior: [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
-- Backend use-case catalog: [docs/BACKEND_CORE_USE_CASES.md](docs/BACKEND_CORE_USE_CASES.md)
-- Data model and constraints: [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md)
-- Manual E2E scenario coverage: [docs/MANUAL_E2E_TESTING_GUIDE.md](docs/MANUAL_E2E_TESTING_GUIDE.md)
-- Delivery notification operational runbook: [docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md](docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md)
-- Backup/restore and integrity controls: [docs/BACKUP_RESTORE_RUNBOOK.md](docs/BACKUP_RESTORE_RUNBOOK.md)
+- Functional/API behavior: [docs/architecture/API_DOCUMENTATION.md](docs/architecture/API_DOCUMENTATION.md)
+- Backend use-case catalog: [docs/architecture/BACKEND_CORE_USE_CASES.md](docs/architecture/BACKEND_CORE_USE_CASES.md)
+- Data model and constraints: [docs/architecture/DATABASE_SCHEMA.md](docs/architecture/DATABASE_SCHEMA.md)
+- Manual E2E scenario coverage: [docs/operations/MANUAL_E2E_TESTING_GUIDE.md](docs/operations/MANUAL_E2E_TESTING_GUIDE.md)
+- Delivery notification operational runbook: [docs/tasks/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md](docs/tasks/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md)
+- Backup/restore and integrity controls: [docs/operations/BACKUP_RESTORE_RUNBOOK.md](docs/operations/BACKUP_RESTORE_RUNBOOK.md)
 - Migration reliability controls: [docs/migrations/MIGRATION_SAFETY_GUIDELINES.md](docs/migrations/MIGRATION_SAFETY_GUIDELINES.md)
-- Deployment/installability evidence: [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)
-- Developer maintainability workflow: [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
+- Deployment/installability evidence: [docs/operations/DEPLOYMENT_GUIDE.md](docs/operations/DEPLOYMENT_GUIDE.md)
+- Developer maintainability workflow: [docs/operations/DEVELOPER_GUIDE.md](docs/operations/DEVELOPER_GUIDE.md)
 - Test framework configurations:
   - [playwright.config.ts](playwright.config.ts)
   - [chenda-frontend/jest.config.ts](chenda-frontend/jest.config.ts)
@@ -74,8 +74,8 @@ Current evidence in code/docs:
 - Role-based flows (buyer/seller/rider) are explicit.
 
 Evidence references:
-- [docs/BACKEND_CORE_USE_CASES.md](docs/BACKEND_CORE_USE_CASES.md)
-- [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- [docs/architecture/BACKEND_CORE_USE_CASES.md](docs/architecture/BACKEND_CORE_USE_CASES.md)
+- [docs/architecture/API_DOCUMENTATION.md](docs/architecture/API_DOCUMENTATION.md)
 - [server/routes](server/routes)
 - [server/controllers](server/controllers)
 
@@ -96,7 +96,7 @@ Evidence references:
 - [server/middleware/analyticsMiddleware.js](server/middleware/analyticsMiddleware.js)
 - [docker-compose.yml](docker-compose.yml)
 - [playwright.config.ts](playwright.config.ts)
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)
 
 UAT design decisions needed:
 - User-facing response-time targets per critical flow (search, checkout, dispatch updates).
@@ -110,7 +110,7 @@ Current evidence in code/docs:
 - Seller/buyer/rider interaction flows are documented and implemented.
 
 Evidence references:
-- [docs/MANUAL_E2E_TESTING_GUIDE.md](docs/MANUAL_E2E_TESTING_GUIDE.md)
+- [docs/operations/MANUAL_E2E_TESTING_GUIDE.md](docs/operations/MANUAL_E2E_TESTING_GUIDE.md)
 - [e2e](e2e)
 - [chenda-frontend/src/__tests__/error-states.test.tsx](chenda-frontend/src/__tests__/error-states.test.tsx)
 
@@ -128,7 +128,7 @@ Current evidence in code/docs:
 
 Evidence references:
 - [server/routes/health.js](server/routes/health.js)
-- [docs/BACKUP_RESTORE_RUNBOOK.md](docs/BACKUP_RESTORE_RUNBOOK.md)
+- [docs/operations/BACKUP_RESTORE_RUNBOOK.md](docs/operations/BACKUP_RESTORE_RUNBOOK.md)
 - [scripts/db-integrity-check.sql](scripts/db-integrity-check.sql)
 - [docs/migrations/MIGRATION_SAFETY_GUIDELINES.md](docs/migrations/MIGRATION_SAFETY_GUIDELINES.md)
 - [server/services/paymentReconciliationService.js](server/services/paymentReconciliationService.js)
@@ -153,7 +153,7 @@ Evidence references:
 - [server/routes/auth.js](server/routes/auth.js)
 - [server/routes/xenditWebhooks.js](server/routes/xenditWebhooks.js)
 - [server/__tests__/auth.test.js](server/__tests__/auth.test.js)
-- [docs/ENVIRONMENT_CONFIG_GUIDE.md](docs/ENVIRONMENT_CONFIG_GUIDE.md)
+- [docs/setup/ENVIRONMENT_CONFIG_GUIDE.md](docs/setup/ENVIRONMENT_CONFIG_GUIDE.md)
 
 UAT design decisions needed:
 - Security scope for UAT vs separate security testing (e.g., penetration testing not part of UAT).
@@ -168,7 +168,7 @@ Current evidence in code/docs:
 - Migration discipline and operational runbooks are documented.
 
 Evidence references:
-- [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
+- [docs/operations/DEVELOPER_GUIDE.md](docs/operations/DEVELOPER_GUIDE.md)
 - [server](server)
 - [chenda-frontend](chenda-frontend)
 - [docs/migrations/MIGRATION_SAFETY_GUIDELINES.md](docs/migrations/MIGRATION_SAFETY_GUIDELINES.md)
@@ -184,9 +184,9 @@ Current evidence in code/docs:
 - Optional integrations are toggleable (payments, delivery notifications).
 
 Evidence references:
-- [docs/ENVIRONMENT_CONFIG_GUIDE.md](docs/ENVIRONMENT_CONFIG_GUIDE.md)
+- [docs/setup/ENVIRONMENT_CONFIG_GUIDE.md](docs/setup/ENVIRONMENT_CONFIG_GUIDE.md)
 - [docker-compose.yml](docker-compose.yml)
-- [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)
+- [docs/operations/DEPLOYMENT_GUIDE.md](docs/operations/DEPLOYMENT_GUIDE.md)
 - [server/services/paymentService.js](server/services/paymentService.js)
 - [server/services/deliveryNotificationService.js](server/services/deliveryNotificationService.js)
 

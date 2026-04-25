@@ -79,7 +79,7 @@ Key changes:
 - `source` and `region` columns on `product_types`
 - `product_shelf_life_overrides` table for per-seller customization
 
-**See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../HYBRID_PRODUCT_TYPES_SYSTEM.md) for API documentation and shelf life override usage.**
+**See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../architecture/HYBRID_PRODUCT_TYPES_SYSTEM.md) for API documentation and shelf life override usage.**
 
 ### Migration Path: Already Seeded Database
 
@@ -383,7 +383,7 @@ VALUES (5, 21, 21, 'Tropical storage reduces shelf life; must consume sooner in 
 
 When freshness is calculated, the algorithm checks for overrides and uses custom shelf life if found.
 
-See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../HYBRID_PRODUCT_TYPES_SYSTEM.md) for API endpoints to manage overrides.
+See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../architecture/HYBRID_PRODUCT_TYPES_SYSTEM.md) for API endpoints to manage overrides.
 
 ### Mock Users (10 users)
 
@@ -582,7 +582,7 @@ curl -X POST http://localhost:3001/api/products \
 
 The freshness calculation will automatically use the 200-day override instead of the default 180 days.
 
-See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../HYBRID_PRODUCT_TYPES_SYSTEM.md) for complete API documentation.
+See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../architecture/HYBRID_PRODUCT_TYPES_SYSTEM.md) for complete API documentation.
 
 ## Troubleshooting
 

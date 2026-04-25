@@ -33,7 +33,7 @@ cd chenda-frontend && npm run dev # Start frontend
 
 **Status**: ✅ **Backend API Complete** (Task 1.8 - Analytics & Logging)  
 **Base URL**: `http://localhost:3001`  
-**Documentation**: [API_DOCUMENTATION.md](API_DOCUMENTATION.md)  
+**Documentation**: [API_DOCUMENTATION.md](architecture/API_DOCUMENTATION.md)  
 **Postman Collection**: [postman/Chenda_API.postman_collection.json](postman/Chenda_API.postman_collection.json)
 
 ### **Available Endpoints** (25+ endpoints)
@@ -73,7 +73,7 @@ curl -X POST http://localhost:3001/api/auth/register \
 ```
 
 ### **Documentation Links**
-- **Complete API Reference**: [API_DOCUMENTATION.md](API_DOCUMENTATION.md)
+- **Complete API Reference**: [API_DOCUMENTATION.md](architecture/API_DOCUMENTATION.md)
 - **Postman Collection**: [Chenda_API.postman_collection.json](postman/Chenda_API.postman_collection.json)
 - **Environment Setup**: [Chenda_Environment.postman_environment.json](postman/Chenda_Environment.postman_environment.json)
 - **Search Algorithm Performance**: 1-4ms execution, <50ms total response time
@@ -1142,7 +1142,7 @@ curl -X POST http://localhost:3001/api/auth/register \
 - **Backup script**: [`scripts/backup-db.sh`](../../scripts/backup-db.sh)
 - **Restore script**: [`scripts/restore-db.sh`](../../scripts/restore-db.sh)
 - **Integrity check SQL**: [`scripts/db-integrity-check.sql`](../../scripts/db-integrity-check.sql)
-- **Runbook**: [`docs/BACKUP_RESTORE_RUNBOOK.md`](../../docs/BACKUP_RESTORE_RUNBOOK.md)
+- **Runbook**: [`docs/operations/BACKUP_RESTORE_RUNBOOK.md`](../../docs/operations/BACKUP_RESTORE_RUNBOOK.md)
 - **Migration safety guidelines**: [`docs/migrations/MIGRATION_SAFETY_GUIDELINES.md`](../../docs/migrations/MIGRATION_SAFETY_GUIDELINES.md)
 
 #### Restore Drill Checklist:
@@ -1333,8 +1333,8 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Current Status Note**:
 - 4.12.9 is implemented for current scope: in-app delivery notifications are end-to-end (backend events + unread-count API + notification endpoints + web UI with single/bulk mark-as-read + header/mobile badges), including near-destination event trigger from rider location updates.
 - Provider-ready external notification scaffolding (email/SMS/push hooks behind feature flags) is implemented; production provider integrations/credentials remain deployment-time work.
-- Verification runbook: `docs/task-progress/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md`
-- Completion summary: `docs/task-progress/TASK_4.12_COMPLETE.md`
+- Verification runbook: `docs/tasks/TASK_4.12_DELIVERY_NOTIFICATIONS_RUNBOOK.md`
+- Completion summary: `docs/tasks/TASK_4.12_COMPLETE.md`
 
 ---
 

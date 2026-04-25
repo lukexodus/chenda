@@ -109,7 +109,7 @@ chenda/                              ← Project root (monorepo)
 | **Both** | Can act as buyer AND seller | `both` |
 | **Rider** | Accepts delivery assignments, updates status/GPS | `rider` |
 
-> **📖 Deeper reading:** [ARCHITECTURE.md](ARCHITECTURE.md) for the tech stack, [SE_CONCEPTS.md](learn/SE_CONCEPTS.md) §1 for the architecture pattern explained.
+> **📖 Deeper reading:** [ARCHITECTURE.md](../learninging/architecture/ARCHITECTURE.md) for the tech stack, [SE_CONCEPTS.md](../learninging/learn/SE_CONCEPTS.md) §1 for the architecture pattern explained.
 
 ---
 
@@ -189,7 +189,7 @@ Run them with `node migrations/migrate.js up`. The runner tracks which have been
 
 **To modify the schema:** Add a new file `009_your_change.sql` and run the migrator. Never edit existing migration files that have already been applied.
 
-> **📖 Deeper reading:** [DATABASE_SCHEMA.md](DATABASE_SCHEMA.md) for the complete column reference, index catalog, and function reference.
+> **📖 Deeper reading:** [DATABASE_SCHEMA.md](../learninging/architecture/DATABASE_SCHEMA.md) for the complete column reference, index catalog, and function reference.
 
 ---
 
@@ -266,7 +266,7 @@ When the user moves the "Freshness" slider from 50 to 80 on the frontend:
 4. **Algorithm** uses these weights in `score = 0.2 × proximity + 0.8 × freshness`
 5. Products are re-ranked accordingly
 
-> **📖 Deeper reading:** [SE_CONCEPTS.md](learn/SE_CONCEPTS.md) §20 for the weighted scoring math, `chenda-algo/README.md` for the 7-phase development history.
+> **📖 Deeper reading:** [SE_CONCEPTS.md](../learninging/learn/SE_CONCEPTS.md) §20 for the weighted scoring math, `chenda-algo/README.md` for the 7-phase development history.
 
 ---
 
@@ -440,7 +440,7 @@ app.use('/api/products', productRoutes);   // CRUD routes SECOND (less specific 
 
 The search routes handle `/api/products/search` and `/api/products/nearby`. The product CRUD routes handle `/api/products`, `/api/products/:id`. Order matters because Express matches routes top-to-bottom.
 
-> **📖 Deeper reading:** [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for the full endpoint reference, [BACKEND_CORE_USE_CASES.md](BACKEND_CORE_USE_CASES.md) for the use case catalog.
+> **📖 Deeper reading:** [API_DOCUMENTATION.md](../learninging/architecture/API_DOCUMENTATION.md) for the full endpoint reference, [BACKEND_CORE_USE_CASES.md](../learninging/architecture/BACKEND_CORE_USE_CASES.md) for the use case catalog.
 
 ---
 
@@ -579,7 +579,7 @@ components/
 
 **The dependency rule:** Components are **domain-scoped**. A `products/` component never imports from `seller/`. Shared utilities (maps, layout, UI) are imported by any domain.
 
-> **📖 Deeper reading:** [COMPONENT_CATALOG.md](COMPONENT_CATALOG.md) for every component's props, purpose, and dependency relationships. [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for visual tokens.
+> **📖 Deeper reading:** [COMPONENT_CATALOG.md](../learninging/architecture/COMPONENT_CATALOG.md) for every component's props, purpose, and dependency relationships. [DESIGN_SYSTEM.md](../learninging/architecture/DESIGN_SYSTEM.md) for visual tokens.
 
 ---
 
@@ -724,7 +724,7 @@ Session expiry:
   AuthProvider listens → calls logout() → redirect to /login
 ```
 
-> **📖 Deeper reading:** [BACKEND_CORE_USE_CASES.md](BACKEND_CORE_USE_CASES.md) for all 50+ use cases, [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for curl examples of every workflow.
+> **📖 Deeper reading:** [BACKEND_CORE_USE_CASES.md](../learninging/architecture/BACKEND_CORE_USE_CASES.md) for all 50+ use cases, [API_DOCUMENTATION.md](../learninging/architecture/API_DOCUMENTATION.md) for curl examples of every workflow.
 
 ---
 
@@ -811,7 +811,7 @@ Docker:
   Injects DB_PASSWORD, SESSION_SECRET into containers
 ```
 
-> **📖 Deeper reading:** [ENVIRONMENT_CONFIG_GUIDE.md](ENVIRONMENT_CONFIG_GUIDE.md) for every env var, [SE_CONCEPTS.md](learn/SE_CONCEPTS.md) §24 for the full security layer breakdown.
+> **📖 Deeper reading:** [ENVIRONMENT_CONFIG_GUIDE.md](../learninging/setup/ENVIRONMENT_CONFIG_GUIDE.md) for every env var, [SE_CONCEPTS.md](../learninging/learn/SE_CONCEPTS.md) §24 for the full security layer breakdown.
 
 ---
 
@@ -929,13 +929,13 @@ Database schema
 
 | Document | What it tells you |
 |----------|------------------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Tech stack choices and POC setup |
-| [API_DOCUMENTATION.md](API_DOCUMENTATION.md) | Every endpoint with request/response examples |
-| [COMPONENT_CATALOG.md](COMPONENT_CATALOG.md) | Every React component: props, purpose, dependencies |
-| [DATABASE_SCHEMA.md](DATABASE_SCHEMA.md) | Tables, columns, indexes, functions, triggers |
-| [ENVIRONMENT_CONFIG_GUIDE.md](ENVIRONMENT_CONFIG_GUIDE.md) | Every env var explained |
-| [BACKEND_CORE_USE_CASES.md](BACKEND_CORE_USE_CASES.md) | 50+ implemented use cases by actor |
-| [SE_CONCEPTS.md](learn/SE_CONCEPTS.md) | 27 SE patterns/concepts with code examples |
-| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Colors, typography, spacing tokens |
-| [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) | Full setup walkthrough |
-| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | Local and cloud deployment |
+| [ARCHITECTURE.md](../learninging/architecture/ARCHITECTURE.md) | Tech stack choices and POC setup |
+| [API_DOCUMENTATION.md](../learninging/architecture/API_DOCUMENTATION.md) | Every endpoint with request/response examples |
+| [COMPONENT_CATALOG.md](../learninging/architecture/COMPONENT_CATALOG.md) | Every React component: props, purpose, dependencies |
+| [DATABASE_SCHEMA.md](../learninging/architecture/DATABASE_SCHEMA.md) | Tables, columns, indexes, functions, triggers |
+| [ENVIRONMENT_CONFIG_GUIDE.md](../learninging/setup/ENVIRONMENT_CONFIG_GUIDE.md) | Every env var explained |
+| [BACKEND_CORE_USE_CASES.md](../learninging/architecture/BACKEND_CORE_USE_CASES.md) | 50+ implemented use cases by actor |
+| [SE_CONCEPTS.md](../learninging/learn/SE_CONCEPTS.md) | 27 SE patterns/concepts with code examples |
+| [DESIGN_SYSTEM.md](../learninging/architecture/DESIGN_SYSTEM.md) | Colors, typography, spacing tokens |
+| [DEVELOPER_GUIDE.md](../learninging/operations/DEVELOPER_GUIDE.md) | Full setup walkthrough |
+| [DEPLOYMENT_GUIDE.md](../learninging/operations/DEPLOYMENT_GUIDE.md) | Local and cloud deployment |

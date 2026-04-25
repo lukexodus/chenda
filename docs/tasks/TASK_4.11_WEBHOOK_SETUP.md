@@ -60,7 +60,7 @@ Implemented backend work for Task 4.11.10:
 - `server/routes/xenditWebhooks.js` (new)
 - `server/app.js` (route mounting)
 - `server/.env.example` (added `XENDIT_CALLBACK_TOKEN`)
-- `docs/ENVIRONMENT_CONFIG_GUIDE.md` (variable docs)
+- `docs/setup/ENVIRONMENT_CONFIG_GUIDE.md` (variable docs)
 - `server/services/xenditService.js` (new)
 - `server/models/PaymentAttempt.js` (new)
 - `server/services/paymentService.js` (rewritten for production flow)

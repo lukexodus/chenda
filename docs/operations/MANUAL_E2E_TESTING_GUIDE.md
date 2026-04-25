@@ -1306,7 +1306,7 @@ The following endpoints support seller payment management and are tested above:
 - `GET /api/orders/seller/payments/settlements` - Settlement history
 - `GET /api/orders/seller/payments/overview` - Payout overview
 
-For full endpoint documentation, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md).
+For full endpoint documentation, see [API_DOCUMENTATION.md](architecture/API_DOCUMENTATION.md).
 
 ---
 

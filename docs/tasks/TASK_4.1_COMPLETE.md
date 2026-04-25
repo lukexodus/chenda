@@ -24,11 +24,11 @@ Implemented production-oriented environment hardening with strict startup valida
 - Updated workspace root env template:
   - `.env.example` now documents root vs backend/frontend env ownership
 - Updated environment documentation:
-  - `docs/ENVIRONMENT_CONFIG_GUIDE.md` updated for new loader and staging support
+  - `docs/setup/ENVIRONMENT_CONFIG_GUIDE.md` updated for new loader and staging support
 - Added secret rotation runbook:
   - `docs/setup/SECRET_ROTATION.md`
 - Updated roadmap tracking:
-  - Marked Task 4.1 as complete in `docs/task-progress/TASK_BREAKDOWN.md`
+  - Marked Task 4.1 as complete in `docs/tasks/TASK_BREAKDOWN.md`
 
 ## Verification Notes
 

@@ -450,7 +450,7 @@ psql chenda -c "SELECT source, COUNT(*) FROM product_types GROUP BY source;"
 - **API routes**: `server/routes/shelfLifeOverrides.js`
 - **Controller**: `server/controllers/shelfLifeOverridesController.js`
 - **Calculations**: `server/algorithm/calculations/shelf-life.js` (functions: `resolveShelfLifeWithOverride`, `calculateShelfLifeMetricsWithOverride`)
-- **Database schema**: `docs/DATABASE_SCHEMA.md`
+- **Database schema**: `docs/architecture/DATABASE_SCHEMA.md`
 
 ---
 

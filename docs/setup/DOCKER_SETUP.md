@@ -770,7 +770,7 @@ docker compose up -d --build
 
 ## Related documentation
 
-- [DEPLOYMENT_GUIDE.md](../DEPLOYMENT_GUIDE.md) — production deployment considerations
-- [ENVIRONMENT_CONFIG_GUIDE.md](../ENVIRONMENT_CONFIG_GUIDE.md) — full reference for all environment variables
+- [DEPLOYMENT_GUIDE.md](../operations/DEPLOYMENT_GUIDE.md) — production deployment considerations
+- [ENVIRONMENT_CONFIG_GUIDE.md](../setup/ENVIRONMENT_CONFIG_GUIDE.md) — full reference for all environment variables
 - [seeding-guide.md](seeding-guide.md) — more detail on the seed scripts
 - [SETUP_GUIDE.md](SETUP_GUIDE.md) — non-Docker local development setup

@@ -381,6 +381,6 @@ After completing API tests:
 
 ## Related Documentation
 
-- [API Documentation](../docs/API_DOCUMENTATION.md) - API endpoint reference
+- [API Documentation](../docs/architecture/API_DOCUMENTATION.md) - API endpoint reference
 - [Development Guide](../README.md) - Setup and development workflow
 - [Database Schema](../migrations/README.md) - Database structure

@@ -35,7 +35,7 @@ As of **Migration 009** (2026-04-24), Chenda added:
 - **Regional Philippine Products** (23 items) — Local specialties (Ilocos garlic, calamansi, bagoong, regional meats)
 - **Custom Shelf Life Overrides** — Sellers can override shelf life per product type
 
-See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../HYBRID_PRODUCT_TYPES_SYSTEM.md) for full details.
+See [HYBRID_PRODUCT_TYPES_SYSTEM.md](../architecture/HYBRID_PRODUCT_TYPES_SYSTEM.md) for full details.
 
 ## Preconditions
 
