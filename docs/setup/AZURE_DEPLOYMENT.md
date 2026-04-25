@@ -77,16 +77,15 @@ Because we did not upload the root `node_modules/` folder to Azure, running the 
 
 We must mount the `migrations` folder, the `.env.docker` file, and the root `package.json` (to force ES Module resolution) directly into the backend container's `/app` directory, where the required dependencies (`dotenv`, `pg`) already exist.
 
-Run this exact command:
+Run this simplified command:
 
 ```bash
 docker compose run --rm \
   -v "$(pwd)/migrations":/app/migrations \
   -v "$(pwd)/.env.docker":/app/.env.docker \
-  -v "$(pwd)/package.json":/app/migrations/package.json \
-  -w /app \
+  -w /app/migrations \
   --entrypoint node \
-  backend migrations/migrate.js up
+  backend migrate.js up
 ```
 
 You should see an output indicating all 12+ migrations have been applied successfully.
@@ -97,16 +96,15 @@ If you are using this Azure VM for development, testing, or presentations, you w
 
 Just like the migration script, `seed.js` is an ES module that requires access to `node_modules`. Because we didn't upload the root `node_modules`, we must use the same mounting trick we used for migrations.
 
-Run this command to safely inject the seeds folder and the root `package.json` into the container:
+Run this simplified command:
 
 ```bash
 docker compose run --rm \
   -v "$(pwd)/seeds":/app/seeds \
   -v "$(pwd)/.env.docker":/app/.env.docker \
-  -v "$(pwd)/package.json":/app/seeds/package.json \
-  -w /app \
+  -w /app/seeds \
   --entrypoint node \
-  backend seeds/seed.js
+  backend seed.js
 ```
 
 > [!TIP]
