@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Checkout</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.checkout-section {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  margin: 12px 16px 0;
+  overflow: hidden;
+}
+.cs-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--fresh-border);
+}
+.cs-title { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 800; }
+.cs-body { padding: 14px 16px; }
+
+/* Delivery address row */
+.addr-row {
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.addr-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--c-red-dim); display: flex; align-items: center; justify-content: center; color: var(--c-red); flex-shrink: 0; }
+.addr-icon svg { width: 16px; height: 16px; stroke-width: 2.5; }
+.addr-main { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; margin-bottom: 3px; }
+.addr-sub  { font-size: 0.8125rem; color: var(--fresh-text-muted); line-height: 1.5; }
+
+/* Payment method */
+.pay-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  border: 1.5px solid var(--fresh-border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast);
+  margin-bottom: 8px;
+  background: var(--fresh-surface-card);
+}
+.pay-option:last-child { margin-bottom: 0; }
+.pay-option.selected { border-color: var(--c-green); background: var(--c-green-dim); }
+.pay-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1.125rem; flex-shrink: 0; }
+.pay-info { flex: 1; }
+.pay-name { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; }
+.pay-sub  { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 1px; }
+.radio-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--fresh-border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.pay-option.selected .radio-circle { border-color: var(--c-green); background: var(--c-green); }
+.pay-option.selected .radio-circle::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+
+/* Order items summary in checkout */
+.oi-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--fresh-border);
+}
+.oi-row:last-child { border-bottom: none; }
+.oi-img { width: 38px; height: 38px; border-radius: 8px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1.125rem; flex-shrink: 0; }
+.oi-name { flex: 1; font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; }
+.oi-qty  { font-size: 0.75rem; color: var(--fresh-text-muted); }
+.oi-price { font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; color: var(--c-green); }
+
+/* Price summary */
+.price-sum { display: flex; flex-direction: column; gap: 0; }
+.ps-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.875rem; }
+.ps-row.total { border-top: 1px solid var(--fresh-border); padding-top: 12px; margin-top: 4px; }
+.ps-label { color: var(--fresh-text-muted); }
+.ps-val   { font-family: var(--font-display); font-weight: 700; }
+.ps-row.total .ps-label { font-size: 1rem; font-weight: 700; font-family: var(--font-display); color: var(--fresh-text-primary); }
+.ps-row.total .ps-val   { font-size: 1.125rem; color: var(--c-green); }
+
+/* Sticky CTA */
+.checkout-cta {
+  position: sticky; bottom: 0;
+  background: var(--nav-bg); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--fresh-border);
+  padding: 16px 16px 20px;
+}
+
+/* ---- MODAL STATES (shown via JS toggle) ---- */
+.payment-modal { display: none; }
+.payment-modal.show { display: flex; }
+
+/* Payment pending spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { width: 48px; height: 48px; border: 4px solid var(--fresh-border); border-top-color: var(--c-green); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+/* Success checkmark animation */
+@keyframes check-draw {
+  0%   { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+.check-circle { stroke-dasharray: 100; stroke-dashoffset: 100; animation: check-draw 0.6s 0.2s ease forwards; }
+
+/* Confetti dots */
+.confetti-ring { position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+.confetti-ring::before, .confetti-ring::after {
+  content: '🎉';
+  position: absolute; font-size: 1.5rem;
+  animation: confetti-pop 0.5s 0.4s ease both;
+  opacity: 0;
+}
+.confetti-ring::before { top: -10px; left: -10px; }
+.confetti-ring::after  { bottom: -10px; right: -10px; }
+@keyframes confetti-pop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <div class="top-header">
+    <div class="header-back">
+      <a href="04-cart.html" class="header-back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">Checkout</span>
+    </div>
+    <div style="font-family:var(--font-display);font-size:0.75rem;font-weight:700;color:var(--fresh-text-muted);">Step 1 of 2</div>
+  </div>
+
+  <div class="page-content" style="padding-bottom:100px;">
+
+    <!-- Delivery address -->
+    <div class="checkout-section">
+      <div class="cs-header">
+        <div class="cs-title">Delivery Address</div>
+        <button class="btn btn-ghost btn-sm" style="color:var(--c-green);">Change</button>
+      </div>
+      <div class="cs-body">
+        <div class="addr-row">
+          <div class="addr-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="addr-main">Home</div>
+            <div class="addr-sub">123 Rosario St., Barangay Kapitolyo<br>Pasig City, Metro Manila 1603</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery time slot -->
+    <div class="checkout-section">
+      <div class="cs-header">
+        <div class="cs-title">Delivery Time</div>
+      </div>
+      <div class="cs-body">
+        <div class="chip-row">
+          <button class="chip active">ASAP (~40 min)</button>
+          <button class="chip">11:00 – 12:00</button>
+          <button class="chip">12:00 – 13:00</button>
+          <button class="chip">14:00 – 15:00</button>
+        </div>
+        <div style="margin-top:10px;font-size:0.8125rem;color:var(--fresh-text-muted);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--c-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Lechon Manok expires in ~6 hrs — ASAP delivery recommended
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment method -->
+    <div class="checkout-section">
+      <div class="cs-header">
+        <div class="cs-title">Payment Method</div>
+      </div>
+      <div class="cs-body">
+        <div class="pay-option selected" onclick="selectPay(this)">
+          <div class="pay-icon">💳</div>
+          <div class="pay-info">
+            <div class="pay-name">GCash</div>
+            <div class="pay-sub">•••• 8892</div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+        <div class="pay-option" onclick="selectPay(this)">
+          <div class="pay-icon">💵</div>
+          <div class="pay-info">
+            <div class="pay-name">Cash on Delivery</div>
+            <div class="pay-sub">Pay when your order arrives</div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+        <div class="pay-option" onclick="selectPay(this)">
+          <div class="pay-icon">🏦</div>
+          <div class="pay-info">
+            <div class="pay-name">Bank Transfer</div>
+            <div class="pay-sub">BPI, BDO, UnionBank</div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+        <div class="pay-option" onclick="selectPay(this)">
+          <div class="pay-icon">📱</div>
+          <div class="pay-info">
+            <div class="pay-name">Maya (PayMaya)</div>
+            <div class="pay-sub">Digital wallet</div>
+          </div>
+          <div class="radio-circle"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order items summary -->
+    <div class="checkout-section">
+      <div class="cs-header">
+        <div class="cs-title">Order Items (3)</div>
+        <a href="04-cart.html" style="font-family:var(--font-display);font-size:0.8125rem;font-weight:700;color:var(--c-green);">Edit</a>
+      </div>
+      <div class="cs-body">
+        <div class="oi-row">
+          <div class="oi-img">🐟</div>
+          <div class="oi-name">Bangus Milkfish</div>
+          <div class="oi-qty">2.0 kg</div>
+          <div class="oi-price">₱370.00</div>
+        </div>
+        <div class="oi-row">
+          <div class="oi-img">🍗</div>
+          <div class="oi-name">Lechon Manok</div>
+          <div class="oi-qty">1 whole</div>
+          <div class="oi-price" style="color:var(--c-orange);">₱120.00</div>
+        </div>
+        <div class="oi-row">
+          <div class="oi-img">🥭</div>
+          <div class="oi-name">Carabao Mango</div>
+          <div class="oi-qty">3 pcs</div>
+          <div class="oi-price">₱195.00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Price summary -->
+    <div class="checkout-section">
+      <div class="cs-body">
+        <div class="price-sum">
+          <div class="ps-row"><span class="ps-label">Subtotal</span><span class="ps-val">₱685.00</span></div>
+          <div class="ps-row"><span class="ps-label">Delivery fee</span><span class="ps-val">₱55.00</span></div>
+          <div class="ps-row"><span class="ps-label" style="color:var(--c-green);">Freshness discount</span><span class="ps-val" style="color:var(--c-green);">−₱30.00</span></div>
+          <div class="ps-row total"><span class="ps-label">Total</span><span class="ps-val">₱710.00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:8px;"></div>
+  </div>
+
+  <!-- Checkout CTA -->
+  <div class="checkout-cta">
+    <button class="btn btn-primary btn-lg btn-full" onclick="showModal('pending')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Place Order · ₱710.00
+    </button>
+  </div>
+
+</div><!-- /app-shell -->
+
+<!-- ============================================================
+     PAYMENT MODALS (toggled by JS)
+     ============================================================ -->
+
+<!-- PENDING modal -->
+<div id="modal-pending" class="overlay payment-modal" style="z-index:var(--z-modal);">
+  <div class="modal">
+    <div class="modal-body" style="padding:36px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div class="spinner"></div>
+      <div>
+        <div class="modal-title" style="margin-bottom:6px;">Processing Payment…</div>
+        <p class="t-body-sm text-muted">Verifying your GCash payment. Please don't close this screen.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS modal -->
+<div id="modal-success" class="overlay payment-modal" style="z-index:var(--z-modal);">
+  <div class="modal">
+    <div class="modal-body" style="padding:36px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div class="confetti-ring">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--c-green-dim);display:flex;align-items:center;justify-content:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="var(--c-green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="18" r="16" stroke="var(--c-green)" stroke-opacity="0.3"/>
+            <polyline class="check-circle" points="10 18 16 24 26 12"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="modal-title" style="margin-bottom:6px;">Order Placed! 🎉</div>
+        <p class="t-body-sm text-muted">Your order is confirmed. Riders will pick up within 10 minutes.</p>
+        <div style="margin-top:14px;padding:12px;background:var(--fresh-surface-2);border-radius:10px;text-align:left;">
+          <div style="font-size:0.75rem;color:var(--fresh-text-muted);margin-bottom:3px;">Order reference</div>
+          <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;">CHN-20250425-0847</div>
+          <div style="font-size:0.75rem;color:var(--fresh-text-muted);margin-top:6px;">Est. arrival: <strong style="color:var(--fresh-text-primary);">11:20 AM · 40 min</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="06-orders.html" class="btn btn-primary btn-md" style="text-decoration:none;">Track Order</a>
+    </div>
+  </div>
+</div>
+
+<!-- FAILED modal -->
+<div id="modal-failed" class="overlay payment-modal" style="z-index:var(--z-modal);">
+  <div class="modal">
+    <div class="modal-body" style="padding:36px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;">
+      <div style="width:72px;height:72px;border-radius:50%;background:var(--c-red-dim);display:flex;align-items:center;justify-content:center;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--c-red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <div>
+        <div class="modal-title" style="margin-bottom:6px;">Payment Failed</div>
+        <p class="t-body-sm text-muted">Your GCash payment couldn't be processed. Check your balance and try again.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-md" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-md" onclick="closeModal()">Try Again</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal state switcher buttons (demo UI) -->
+<div style="position:fixed;bottom:80px;right:16px;display:flex;flex-direction:column;gap:6px;z-index:90;">
+  <button onclick="showModal('pending')" style="background:var(--c-orange);color:#fff;border:none;border-radius:8px;padding:6px 10px;font-family:var(--font-display);font-size:0.6875rem;font-weight:800;cursor:pointer;box-shadow:var(--shadow-md);">⏳ Pending</button>
+  <button onclick="showModal('success')" style="background:var(--c-green);color:#fff;border:none;border-radius:8px;padding:6px 10px;font-family:var(--font-display);font-size:0.6875rem;font-weight:800;cursor:pointer;box-shadow:var(--shadow-md);">✓ Success</button>
+  <button onclick="showModal('failed')"  style="background:var(--c-red);color:#fff;border:none;border-radius:8px;padding:6px 10px;font-family:var(--font-display);font-size:0.6875rem;font-weight:800;cursor:pointer;box-shadow:var(--shadow-md);">✗ Failed</button>
+</div>
+
+<script>
+function showModal(state) {
+  document.querySelectorAll('.payment-modal').forEach(m => m.classList.remove('show'));
+  document.getElementById('modal-' + state).classList.add('show');
+  if(state === 'pending') setTimeout(() => { closeModal(); showModal('success'); }, 2500);
+}
+function closeModal() {
+  document.querySelectorAll('.payment-modal').forEach(m => m.classList.remove('show'));
+}
+function selectPay(el) {
+  document.querySelectorAll('.pay-option').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', () => {
+    c.closest('.chip-row').querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+// Close modal on overlay click
+document.querySelectorAll('.payment-modal').forEach(m => {
+  m.addEventListener('click', (e) => { if(e.target === m) closeModal(); });
+});
+</script>
+</body>
+</html>

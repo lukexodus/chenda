@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Add Product</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ============================================================
+   SELLER PRODUCT FORM
+   Design intent: The seller's most important action after
+   listing is setting freshness correctly. The freshness
+   section is visually prominent and uses live preview color
+   cues — sellers understand their product matters.
+   ============================================================ */
+
+/* Form section wrapper */
+.form-section {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--fresh-border);
+  background: var(--fresh-surface-2);
+}
+.fsh-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+.fsh-icon.green  { background: var(--c-green-dim); }
+.fsh-icon.orange { background: var(--c-orange-dim); }
+.fsh-icon.blue   { background: rgba(59,130,246,0.12); }
+.fsh-icon.purple { background: rgba(139,92,246,0.12); }
+
+.fsh-title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 800;
+  flex: 1;
+}
+.fsh-badge {
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--c-red);
+  background: var(--c-red-dim);
+  border-radius: 99px;
+  padding: 2px 7px;
+}
+.fsh-badge.optional {
+  color: var(--fresh-text-muted);
+  background: var(--fresh-surface);
+}
+
+/* Form fields */
+.form-body { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-label {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--fresh-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.form-label .req-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--c-red);
+  flex-shrink: 0;
+}
+.form-hint {
+  font-size: 0.75rem;
+  color: var(--fresh-text-muted);
+  line-height: 1.5;
+}
+.form-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--fresh-surface);
+  border: 1.5px solid var(--fresh-border);
+  border-radius: var(--r-input);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--fresh-text-primary);
+  outline: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.form-input:focus {
+  border-color: var(--c-green);
+  box-shadow: 0 0 0 3px var(--c-green-dim);
+}
+.form-input::placeholder { color: var(--fresh-text-muted); }
+.form-input.error {
+  border-color: var(--c-red);
+  box-shadow: 0 0 0 3px var(--c-red-dim);
+}
+textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+  cursor: pointer;
+}
+
+/* Input with unit suffix */
+.input-with-unit {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-with-unit .form-input { padding-right: 52px; }
+.input-with-unit .unit-label {
+  position: absolute;
+  right: 14px;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--fresh-text-muted);
+  pointer-events: none;
+}
+
+/* Input with prefix (₱) */
+.input-with-prefix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-with-prefix .form-input { padding-left: 32px; }
+.input-with-prefix .prefix-label {
+  position: absolute;
+  left: 14px;
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--fresh-text-muted);
+  pointer-events: none;
+}
+
+/* Two-col grid */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Freshness config — the most critical section */
+.freshness-config {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.fc-header {
+  padding: 14px 16px;
+  background: linear-gradient(90deg, rgba(46,164,79,0.08), rgba(244,130,10,0.05), rgba(230,57,70,0.05));
+  border-bottom: 1px solid var(--fresh-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fc-title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 800;
+  flex: 1;
+}
+.fc-subtitle {
+  font-size: 0.75rem;
+  color: var(--fresh-text-muted);
+  margin-top: 1px;
+}
+
+/* Live freshness preview */
+.freshness-preview {
+  background: var(--fresh-surface-2);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.fp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.fp-label {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.fp-pct {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--c-green);
+  transition: color var(--t-mid);
+}
+.fp-status { font-size: 0.75rem; margin-top: 6px; color: var(--fresh-text-muted); }
+
+/* Freshness range slider */
+.slider-wrap {
+  position: relative;
+  padding: 4px 0;
+}
+.fresh-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(to right, var(--c-red) 0%, var(--c-orange) 40%, var(--c-green) 100%);
+}
+.fresh-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid var(--c-green);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: border-color var(--t-fast), transform var(--t-fast);
+}
+.fresh-slider::-webkit-slider-thumb:active { transform: scale(1.15); }
+.fresh-slider:focus-visible { outline: 2px solid var(--c-green); outline-offset: 2px; }
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.slider-labels span {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--fresh-text-muted);
+}
+
+/* Shelf life preset chips */
+.preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.preset-chip {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1.5px solid var(--fresh-border);
+  background: var(--fresh-surface);
+  color: var(--fresh-text-muted);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.preset-chip:hover { border-color: var(--c-green); color: var(--c-green); }
+.preset-chip.active {
+  background: var(--c-green-dim);
+  border-color: var(--c-green);
+  color: var(--c-green);
+}
+
+/* Photo upload area */
+.photo-upload {
+  border: 2px dashed var(--fresh-border);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--t-fast), background var(--t-fast);
+  position: relative;
+}
+.photo-upload:hover { border-color: var(--c-green); background: var(--c-green-dim); }
+.photo-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.photo-upload .pu-icon { font-size: 1.75rem; margin-bottom: 8px; }
+.photo-upload .pu-title { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; }
+.photo-upload .pu-sub { font-size: 0.75rem; color: var(--fresh-text-muted); }
+
+/* Uploaded photo thumbs */
+.photo-thumb-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.photo-thumb {
+  width: 64px; height: 64px;
+  border-radius: 10px;
+  background: var(--fresh-surface-2);
+  border: 1.5px solid var(--fresh-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.photo-thumb .remove-x {
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--c-red);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.625rem;
+  font-weight: 800;
+}
+
+/* Toggle switch */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fresh-border);
+  cursor: pointer;
+}
+.toggle-switch:last-child { border-bottom: none; }
+.ts-body { flex: 1; }
+.ts-label { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; }
+.ts-desc  { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 2px; }
+.ts-rail {
+  width: 44px; height: 24px;
+  border-radius: 99px;
+  background: var(--fresh-border);
+  position: relative;
+  flex-shrink: 0;
+  transition: background var(--t-mid);
+  cursor: pointer;
+}
+.ts-rail.on { background: var(--c-green); }
+.ts-knob {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 3px; left: 3px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--t-mid);
+}
+.ts-rail.on .ts-knob { transform: translateX(20px); }
+
+/* Sticky form submit bar */
+.form-submit-bar {
+  position: sticky;
+  bottom: 64px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--fresh-border);
+  padding: 12px 16px;
+  display: flex;
+  gap: 10px;
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-back">
+      <a href="08-seller-products.html" class="header-back-btn" aria-label="Back to products">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">Add Product</span>
+    </div>
+    <button class="btn btn-secondary btn-sm" style="font-size:0.75rem;">Save Draft</button>
+  </div>
+
+  <div class="page-content" style="padding-bottom: 140px;">
+    <form id="productForm" style="padding: 16px;">
+
+      <!-- 1. Basic Info -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="fsh-icon green">📦</div>
+          <div>
+            <div class="fsh-title">Product Info</div>
+          </div>
+          <span class="fsh-badge">Required</span>
+        </div>
+        <div class="form-body">
+          <div class="form-field">
+            <label class="form-label" for="pname">
+              <span class="req-dot" aria-hidden="true"></span>
+              Product Name
+            </label>
+            <input id="pname" class="form-input" type="text" placeholder="e.g. Bangus Milkfish, Carabao Mango" value="Bangus Milkfish" required>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="pcategory">
+              <span class="req-dot" aria-hidden="true"></span>
+              Category
+            </label>
+            <select id="pcategory" class="form-input">
+              <option value="">Select a category</option>
+              <option value="seafood" selected>🐟 Seafood & Fish</option>
+              <option value="meat">🥩 Meat & Poultry</option>
+              <option value="vegetables">🥦 Vegetables</option>
+              <option value="fruits">🍎 Fruits</option>
+              <option value="dairy">🥛 Dairy & Eggs</option>
+              <option value="cooked">🍗 Cooked / Ready-to-eat</option>
+              <option value="other">📦 Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="pdesc">Description</label>
+            <textarea id="pdesc" class="form-input" placeholder="Describe your product — origin, variety, how it's prepared. Buyers trust details.">Farm-raised bangus from Bulacan, deboned and cleaned. Delivered fresh this morning from the fish farm.</textarea>
+            <div class="form-hint">Good descriptions increase buyer confidence and orders.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Photos -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="fsh-icon blue">📸</div>
+          <div class="fsh-title">Photos</div>
+          <span class="fsh-badge optional">Optional</span>
+        </div>
+        <div class="form-body">
+          <!-- Existing thumbs -->
+          <div class="photo-thumb-row">
+            <div class="photo-thumb">
+              🐟
+              <button type="button" class="remove-x" aria-label="Remove photo">×</button>
+            </div>
+            <div class="photo-thumb" style="border-style:dashed;cursor:pointer;">
+              <span style="font-size:1rem;color:var(--fresh-text-muted);">+</span>
+            </div>
+          </div>
+          <div class="photo-upload">
+            <input type="file" accept="image/*" multiple aria-label="Upload product photos">
+            <div class="pu-icon">📷</div>
+            <div class="pu-title">Add more photos</div>
+            <div class="pu-sub">JPG or PNG · Up to 5 photos · Max 5MB each</div>
+          </div>
+          <div class="form-hint">First photo appears as the main thumbnail. Clear, well-lit photos drive more clicks.</div>
+        </div>
+      </div>
+
+      <!-- 3. Pricing & Stock -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="fsh-icon purple">💰</div>
+          <div class="fsh-title">Pricing & Stock</div>
+          <span class="fsh-badge">Required</span>
+        </div>
+        <div class="form-body">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="pprice">
+                <span class="req-dot" aria-hidden="true"></span>
+                Price
+              </label>
+              <div class="input-with-prefix">
+                <span class="prefix-label">₱</span>
+                <input id="pprice" class="form-input" type="number" step="0.5" min="1" placeholder="0.00" value="185">
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="punit">Unit</label>
+              <select id="punit" class="form-input">
+                <option value="kg" selected>per kg</option>
+                <option value="g">per 100g</option>
+                <option value="pc">per piece</option>
+                <option value="bundle">per bundle</option>
+                <option value="tray">per tray</option>
+                <option value="whole">per whole</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="pstock">
+                <span class="req-dot" aria-hidden="true"></span>
+                Stock available
+              </label>
+              <div class="input-with-unit">
+                <input id="pstock" class="form-input" type="number" step="0.5" min="0" placeholder="0" value="8.5">
+                <span class="unit-label">kg</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="pminorder">Min. order</label>
+              <div class="input-with-unit">
+                <input id="pminorder" class="form-input" type="number" step="0.5" min="0" placeholder="0.5" value="0.5">
+                <span class="unit-label">kg</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="pmaxorder">Max. order per customer</label>
+            <div class="input-with-unit">
+              <input id="pmaxorder" class="form-input" type="number" step="0.5" min="0" placeholder="5" value="5">
+              <span class="unit-label">kg</span>
+            </div>
+            <div class="form-hint">Limit per order to serve more buyers. Leave at max stock to allow any quantity.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. FRESHNESS — hero section -->
+      <div class="freshness-config">
+        <div class="fc-header">
+          <div>
+            <div class="fc-title">⏱ Freshness Configuration</div>
+            <div class="fc-subtitle">This is how buyers decide to buy. Set it honestly.</div>
+          </div>
+          <span class="fsh-badge">Required</span>
+        </div>
+
+        <div class="form-body">
+
+          <!-- Live preview -->
+          <div class="freshness-preview">
+            <div class="fp-row">
+              <div class="fp-label">Current freshness</div>
+              <div class="fp-pct" id="fpPct">87%</div>
+            </div>
+            <div class="freshness-bar" style="height: 10px; margin-bottom: 6px;">
+              <div class="fill fresh" id="fpBar" style="width: 87%; transition: width 0.2s ease;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="freshness-pill pill-fresh" id="fpPill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Fresh
+              </span>
+              <span class="fp-status" id="fpStatus">Buyers see: <strong style="color:var(--c-green);">Fresh · ~3 days remaining</strong></span>
+            </div>
+          </div>
+
+          <!-- Freshness slider -->
+          <div class="form-field">
+            <label class="form-label" for="freshSlider">
+              <span class="req-dot" aria-hidden="true"></span>
+              Set current freshness
+            </label>
+            <div class="slider-wrap">
+              <input
+                type="range"
+                id="freshSlider"
+                class="fresh-slider"
+                min="0" max="100"
+                value="87"
+                oninput="updateFreshness(this.value)"
+                aria-label="Freshness percentage"
+              >
+            </div>
+            <div class="slider-labels">
+              <span style="color:var(--c-red);">0% Expired</span>
+              <span style="color:var(--c-orange);">50% Expiring</span>
+              <span style="color:var(--c-green);">100% Fresh</span>
+            </div>
+          </div>
+
+          <!-- Harvest / pack date -->
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label" for="pharvest">
+                <span class="req-dot" aria-hidden="true"></span>
+                Harvest / pack date
+              </label>
+              <input id="pharvest" class="form-input" type="date" value="2025-04-23">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="pexpiry">Expiry / best before</label>
+              <input id="pexpiry" class="form-input" type="date" value="2025-04-27">
+            </div>
+          </div>
+
+          <!-- Shelf life presets -->
+          <div class="form-field">
+            <div class="form-label">Shelf life</div>
+            <div class="preset-chips">
+              <button type="button" class="preset-chip" onclick="selectPreset(this,'Same day')">Same day</button>
+              <button type="button" class="preset-chip" onclick="selectPreset(this,'1–2 days')">1–2 days</button>
+              <button type="button" class="preset-chip active" onclick="selectPreset(this,'3–5 days')">3–5 days</button>
+              <button type="button" class="preset-chip" onclick="selectPreset(this,'1 week')">1 week</button>
+              <button type="button" class="preset-chip" onclick="selectPreset(this,'2+ weeks')">2+ weeks</button>
+            </div>
+            <div class="form-hint">Used to help buyers plan their purchases. Pick the honest range.</div>
+          </div>
+
+          <!-- Storage instructions -->
+          <div class="form-field">
+            <label class="form-label" for="pstorage">Storage instructions</label>
+            <input id="pstorage" class="form-input" type="text" placeholder="e.g. Keep refrigerated 0–4°C" value="Keep refrigerated 0–4°C">
+          </div>
+
+          <!-- Origin -->
+          <div class="form-field">
+            <label class="form-label" for="porigin">Origin / source</label>
+            <input id="porigin" class="form-input" type="text" placeholder="e.g. Bulacan Fish Farm, Benguet Highlands" value="Bulacan Fish Farm">
+            <div class="form-hint">Buyers trust locally sourced goods. Adding origin builds confidence.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 5. Delivery settings -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="fsh-icon orange">🛵</div>
+          <div class="fsh-title">Delivery</div>
+          <span class="fsh-badge optional">Optional</span>
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <div class="toggle-switch" onclick="toggleSwitch(this)">
+            <div class="ts-body">
+              <div class="ts-label">Available for delivery</div>
+              <div class="ts-desc">Riders can pick up this product for buyers</div>
+            </div>
+            <div class="ts-rail on"><div class="ts-knob"></div></div>
+          </div>
+          <div class="toggle-switch" onclick="toggleSwitch(this)">
+            <div class="ts-body">
+              <div class="ts-label">Pickup allowed</div>
+              <div class="ts-desc">Buyers can pick up from your location</div>
+            </div>
+            <div class="ts-rail on"><div class="ts-knob"></div></div>
+          </div>
+          <div class="toggle-switch" onclick="toggleSwitch(this)">
+            <div class="ts-body">
+              <div class="ts-label">Freshness discount enabled</div>
+              <div class="ts-desc">Automatically discount as freshness drops below 40%</div>
+            </div>
+            <div class="ts-rail"><div class="ts-knob"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Visibility -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <div class="fsh-icon green">👁</div>
+          <div class="fsh-title">Listing Status</div>
+        </div>
+        <div class="form-body">
+          <div class="form-field">
+            <label class="form-label" for="pstatus">Set listing status</label>
+            <select id="pstatus" class="form-input">
+              <option value="active" selected>✅ Active — visible to buyers</option>
+              <option value="draft">📝 Draft — not visible yet</option>
+              <option value="paused">⏸ Paused — temporarily hidden</option>
+            </select>
+            <div class="form-hint">You can pause a listing any time without deleting it.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validation error state (visible when form has errors) -->
+      <div id="formError" style="display:none;background:var(--c-red-dim);border:1px solid rgba(230,57,70,0.3);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-red)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--c-red);">Please fix the following:</div>
+        </div>
+        <ul style="margin-top:8px;padding-left:24px;font-size:0.8125rem;color:var(--fresh-text-primary);display:flex;flex-direction:column;gap:4px;list-style:disc;">
+          <li>Product name is required</li>
+          <li>Set a valid price greater than ₱0</li>
+          <li>Freshness must be set honestly — cannot be 0% for active listing</li>
+        </ul>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Sticky submit -->
+  <div class="form-submit-bar">
+    <button type="button" class="btn btn-secondary" style="flex:1;" onclick="window.history.back()">Cancel</button>
+    <button type="button" class="btn btn-primary" style="flex:2;" onclick="submitForm()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+      Publish Product
+    </button>
+  </div>
+
+  <!-- Seller Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="07-seller-dashboard.html" class="nav-tab" aria-label="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dash</span>
+    </a>
+    <a href="08-seller-products.html" class="nav-tab active" aria-label="Products">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Products</span>
+    </a>
+    <a href="09-seller-orders.html" class="nav-tab" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      <span>Orders</span>
+    </a>
+    <button class="nav-tab" aria-label="Payouts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Payouts</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* Live freshness preview */
+function updateFreshness(val) {
+  const pct  = parseInt(val);
+  const bar  = document.getElementById('fpBar');
+  const pctEl = document.getElementById('fpPct');
+  const pill  = document.getElementById('fpPill');
+  const status = document.getElementById('fpStatus');
+
+  bar.style.width = pct + '%';
+  pctEl.textContent = pct + '%';
+
+  // Reset bar class
+  bar.className = 'fill';
+
+  if (pct >= 60) {
+    bar.classList.add('fresh');
+    pctEl.style.color = 'var(--c-green)';
+    pill.className = 'freshness-pill pill-fresh';
+    pill.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Fresh`;
+    const days = Math.round(pct / 30);
+    status.innerHTML = `Buyers see: <strong style="color:var(--c-green);">Fresh · ~${days} day${days !== 1 ? 's' : ''} remaining</strong>`;
+  } else if (pct >= 25) {
+    bar.classList.add('warning');
+    pctEl.style.color = 'var(--c-orange)';
+    pill.className = 'freshness-pill pill-expiring';
+    pill.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Expiring Soon`;
+    const hrs = Math.round(pct / 10);
+    status.innerHTML = `Buyers see: <strong style="color:var(--c-orange);">Expiring · ~${hrs} hrs remaining</strong>`;
+  } else {
+    bar.classList.add('critical');
+    pctEl.style.color = 'var(--c-red)';
+    pill.className = 'freshness-pill pill-critical';
+    pill.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg> Critical`;
+    status.innerHTML = `Buyers see: <strong style="color:var(--c-red);">Critical — expiring very soon</strong>`;
+  }
+}
+
+/* Shelf life preset chips */
+function selectPreset(el, val) {
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* Toggle switch */
+function toggleSwitch(row) {
+  const rail = row.querySelector('.ts-rail');
+  rail.classList.toggle('on');
+}
+
+/* Submit with mock validation */
+function submitForm() {
+  const name  = document.getElementById('pname').value.trim();
+  const price = parseFloat(document.getElementById('pprice').value);
+  const fresh = parseInt(document.getElementById('freshSlider').value);
+  const errorEl = document.getElementById('formError');
+
+  const errors = [];
+  if (!name) errors.push('Product name is required');
+  if (!price || price <= 0) errors.push('Set a valid price greater than ₱0');
+  if (fresh === 0 && document.getElementById('pstatus').value === 'active') {
+    errors.push('Freshness cannot be 0% for an active listing');
+  }
+
+  if (errors.length) {
+    errorEl.style.display = 'block';
+    errorEl.querySelector('ul').innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+    errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  errorEl.style.display = 'none';
+  // Simulate success — navigate to products list
+  window.location.href = '08-seller-products.html';
+}
+</script>
+</body>
+</html>

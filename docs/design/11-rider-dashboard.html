@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Rider Dashboard</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ============================================================
+   RIDER DASHBOARD
+   Design intent: Motion and urgency are central. The rider is
+   always either on a job or scanning for one. Online/offline
+   toggle dominates the header. Active job card is the hero.
+   ============================================================ */
+
+/* Online toggle strip */
+.rider-status-bar {
+  background: linear-gradient(135deg, #1a5c30 0%, #2EA44F 70%, #3bbd5e 100%);
+  padding: 20px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.rider-status-bar::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent, transparent 18px,
+    rgba(255,255,255,0.03) 18px, rgba(255,255,255,0.03) 19px
+  );
+}
+.rider-status-bar.offline {
+  background: linear-gradient(135deg, #374151 0%, #4B5563 100%);
+}
+.rider-top-row {
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative;
+}
+.rider-greeting {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #fff;
+}
+.rider-sub {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.72);
+  margin-top: 2px;
+}
+
+/* Online/Offline pill toggle */
+.online-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 99px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.online-toggle:active { background: rgba(255,255,255,0.28); }
+.toggle-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 3px rgba(74,222,128,0.3);
+  animation: breathe 2.2s ease infinite;
+}
+.online-toggle.offline .toggle-dot {
+  background: #9CA3AF;
+  box-shadow: none;
+  animation: none;
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(74,222,128,0.3); }
+  50%       { box-shadow: 0 0 0 6px rgba(74,222,128,0.12); }
+}
+.toggle-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Rider earnings strip */
+.rider-earnings-row {
+  display: flex;
+  gap: 0;
+  margin-top: 16px;
+  position: relative;
+}
+.rider-earn-stat {
+  flex: 1;
+  text-align: center;
+  padding: 0 8px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+.rider-earn-stat:last-child { border-right: none; }
+.re-val {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+.re-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.6);
+  margin-top: 4px;
+}
+
+/* Active job hero card */
+.active-job-card {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  margin: -16px 16px 0;
+  position: relative;
+  z-index: 2;
+}
+.ajc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--fresh-border);
+  background: linear-gradient(90deg, rgba(46,164,79,0.06), transparent);
+}
+.ajc-label {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-green);
+}
+.ajc-id { font-size: 0.75rem; color: var(--fresh-text-muted); font-weight: 500; }
+.ajc-earnings {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--c-green);
+}
+.ajc-body { padding: 14px; }
+
+/* Route visual: pickup → dropoff */
+.route-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.route-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+}
+.route-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.route-icon.pickup   { background: var(--c-green-dim); border: 1.5px solid var(--c-green); }
+.route-icon.dropoff  { background: var(--c-red-dim); border: 1.5px solid var(--c-red); }
+.route-icon.pickup svg  { width: 12px; height: 12px; stroke: var(--c-green); stroke-width: 2.5; }
+.route-icon.dropoff svg { width: 12px; height: 12px; stroke: var(--c-red); stroke-width: 2.5; }
+
+/* Connector line between route points */
+.route-connector {
+  width: 1.5px;
+  height: 20px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--fresh-border) 0, var(--fresh-border) 4px,
+    transparent 4px, transparent 8px
+  );
+  margin: 2px 0 2px 13px;
+}
+.route-info { flex: 1; padding-top: 4px; }
+.route-role {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fresh-text-muted);
+  margin-bottom: 2px;
+}
+.route-name {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fresh-text-primary);
+  margin-bottom: 2px;
+}
+.route-addr {
+  font-size: 0.75rem;
+  color: var(--fresh-text-muted);
+  line-height: 1.4;
+}
+.route-dist {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--c-green);
+  white-space: nowrap;
+  padding-top: 4px;
+}
+
+/* ETA chip */
+.eta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--c-orange-dim);
+  color: var(--c-orange);
+  border: 1px solid rgba(244,130,10,0.2);
+  border-radius: 99px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 10px;
+}
+.eta-chip svg { width: 11px; height: 11px; stroke-width: 2.5; }
+
+/* Freshness urgency on active job */
+.job-freshness-warn {
+  background: rgba(244,130,10,0.08);
+  border: 1px solid rgba(244,130,10,0.22);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.job-freshness-warn svg { width: 14px; height: 14px; stroke-width: 2.5; color: var(--c-orange); flex-shrink: 0; }
+.job-freshness-warn .jfw-text {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--fresh-text-primary);
+}
+.job-freshness-warn .jfw-text strong { font-family: var(--font-display); font-weight: 700; color: var(--c-orange); }
+
+/* Action buttons for active job */
+.ajc-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+/* Quick stat row */
+.rider-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 16px;
+}
+.rqs-card {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.rqs-icon { font-size: 1.25rem; margin-bottom: 6px; }
+.rqs-val {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--fresh-text-primary);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.rqs-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fresh-text-muted);
+}
+
+/* Recent jobs list */
+.recent-job-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fresh-border);
+  background: var(--fresh-surface-card);
+}
+.rj-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--fresh-surface-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.rj-body { flex: 1; }
+.rj-title { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; }
+.rj-meta  { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 2px; }
+.rj-earn  { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 800; color: var(--c-green); }
+
+/* Skeleton loading preview */
+.skel { background: var(--fresh-surface-2); border-radius: 6px; animation: skel-pulse 1.4s ease infinite; }
+@keyframes skel-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* Map preview placeholder */
+.map-preview {
+  height: 120px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+  border-top: 1px solid var(--fresh-border);
+  border-bottom: 1px solid var(--fresh-border);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.map-preview::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 32px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 32px);
+}
+.map-rider-pin {
+  position: relative;
+  z-index: 1;
+  background: var(--c-green);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.125rem;
+  box-shadow: 0 0 0 6px rgba(46,164,79,0.25), var(--shadow-md);
+  animation: breathe 2.2s ease infinite;
+}
+.map-label {
+  position: absolute;
+  bottom: 10px; right: 14px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--fresh-text-primary);
+  box-shadow: var(--shadow-sm);
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-back" style="flex:1;">
+      <div class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M32 20c0 6.627-5.373 12-12 12-3.24 0-6.174-1.283-8.343-3.364" stroke="#E63946" stroke-width="5" stroke-linecap="round"/><path d="M28 20c0 4.418-3.582 8-8 8-2.16 0-4.116-.855-5.562-2.243" stroke="#F4820A" stroke-width="5" stroke-linecap="round"/><path d="M36 20c0 8.837-7.163 16-16 16S4 28.837 4 20 11.163 4 20 4c2.9 0 5.617.772 7.962 2.121" stroke="#2EA44F" stroke-width="5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="header-page-title">Rider</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button class="icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="badge-dot"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-content" style="padding-bottom:80px;">
+
+    <!-- Rider status header -->
+    <div class="rider-status-bar" id="statusBar">
+      <div class="rider-top-row">
+        <div>
+          <div class="rider-greeting">Good morning, Kuya Jun 👋</div>
+          <div class="rider-sub">You're online — ready to earn</div>
+        </div>
+        <button class="online-toggle" id="onlineToggle" onclick="toggleOnline()" aria-label="Toggle online status">
+          <div class="toggle-dot" id="toggleDot"></div>
+          <span class="toggle-label" id="toggleLabel">Online</span>
+        </button>
+      </div>
+      <div class="rider-earnings-row">
+        <div class="rider-earn-stat">
+          <div class="re-val">₱824</div>
+          <div class="re-label">Today</div>
+        </div>
+        <div class="rider-earn-stat">
+          <div class="re-val">7</div>
+          <div class="re-label">Deliveries</div>
+        </div>
+        <div class="rider-earn-stat">
+          <div class="re-val">4.9★</div>
+          <div class="re-label">Rating</div>
+        </div>
+        <div class="rider-earn-stat">
+          <div class="re-val">96%</div>
+          <div class="re-label">Accept rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active job hero -->
+    <div style="padding: 16px 0 0; background: var(--fresh-surface);">
+      <div style="padding: 0 16px; margin-bottom: 10px;">
+        <div style="font-family:var(--font-display);font-size:0.6875rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--fresh-text-muted);">Active Delivery</div>
+      </div>
+
+      <div class="active-job-card">
+        <div class="ajc-header">
+          <div>
+            <div class="ajc-label">🛵 In Progress</div>
+            <div class="ajc-id">CHN-0851 · 3 items</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="ajc-earnings">+₱95</div>
+            <div class="eta-chip">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              14 min ETA
+            </div>
+          </div>
+        </div>
+
+        <!-- Map preview -->
+        <div class="map-preview">
+          <div class="map-rider-pin">🛵</div>
+          <div class="map-label">📍 1.2 km to dropoff</div>
+        </div>
+
+        <div class="ajc-body">
+          <!-- Route -->
+          <div class="route-row">
+            <div class="route-point">
+              <div class="route-icon pickup">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="route-info">
+                <div class="route-role">Picked up from</div>
+                <div class="route-name">Aling Rosa's Fresh Market</div>
+                <div class="route-addr">42 Rizal Ave, Kapitolyo, Pasig</div>
+              </div>
+            </div>
+            <div class="route-connector"></div>
+            <div class="route-point">
+              <div class="route-icon dropoff">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="route-info">
+                <div class="route-role">Delivering to</div>
+                <div class="route-name">Maria Santos</div>
+                <div class="route-addr">123 Shaw Blvd, Unit 4B, Mandaluyong</div>
+              </div>
+              <div class="route-dist">1.2 km</div>
+            </div>
+          </div>
+
+          <!-- Freshness urgency -->
+          <div class="job-freshness-warn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div class="jfw-text"><strong>Freshness sensitive:</strong> Bangus Milkfish (87%) — deliver within ETA to keep quality.</div>
+          </div>
+        </div>
+
+        <div class="ajc-actions">
+          <button class="btn btn-secondary" style="gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;stroke-width:2;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.36 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call Buyer
+          </button>
+          <a href="12-rider-jobs.html" class="btn btn-primary" style="justify-content:center;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;stroke-width:2;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Navigate
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="rider-quick-stats">
+      <div class="rqs-card">
+        <div class="rqs-icon">⚡</div>
+        <div class="rqs-val" style="color:var(--c-orange);">3</div>
+        <div class="rqs-label">Jobs nearby</div>
+      </div>
+      <div class="rqs-card">
+        <div class="rqs-icon">🕐</div>
+        <div class="rqs-val">4h 22m</div>
+        <div class="rqs-label">Time active</div>
+      </div>
+      <div class="rqs-card">
+        <div class="rqs-icon">📍</div>
+        <div class="rqs-val">18.4</div>
+        <div class="rqs-label">km covered</div>
+      </div>
+    </div>
+
+    <!-- Weekly earnings bar chart (simplified) -->
+    <div style="padding: 0 16px 16px;">
+      <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;margin-bottom:12px;">This Week</div>
+      <div style="background:var(--fresh-surface-card);border:1px solid var(--fresh-border);border-radius:var(--r-card);padding:16px;">
+        <div style="display:flex;align-items:flex-end;gap:6px;height:60px;margin-bottom:8px;">
+          <!-- Mon–Sun bars -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:55%;background:var(--c-green);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:700;font-family:var(--font-display);color:var(--fresh-text-muted);">M</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:75%;background:var(--c-green);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:700;font-family:var(--font-display);color:var(--fresh-text-muted);">T</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:42%;background:var(--c-green);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:700;font-family:var(--font-display);color:var(--fresh-text-muted);">W</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:88%;background:var(--c-green);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:700;font-family:var(--font-display);color:var(--fresh-text-muted);">Th</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:62%;background:var(--c-orange);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:700;font-family:var(--font-display);color:var(--fresh-text-muted);">F</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:95%;background:var(--c-green);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:700;font-family:var(--font-display);color:var(--fresh-text-muted);">Sa</div>
+          </div>
+          <!-- Today (partial) -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;width:100%;background:var(--c-green-dim);border-radius:4px 4px 0 0;position:relative;min-height:24px;">
+              <div style="position:absolute;bottom:0;left:0;right:0;height:28%;background:var(--c-green);border-radius:4px 4px 0 0;opacity:0.5;"></div>
+            </div>
+            <div style="font-size:0.5625rem;font-weight:800;font-family:var(--font-display);color:var(--c-green);">Su</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-family:var(--font-display);font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--fresh-text-muted);">Week total</div>
+            <div style="font-family:var(--font-display);font-size:1.25rem;font-weight:800;color:var(--fresh-text-primary);">₱5,320</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:var(--font-display);font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--fresh-text-muted);">vs last week</div>
+            <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;color:var(--c-green);">+12% ↑</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent completed jobs -->
+    <div style="padding: 0 16px 8px;">
+      <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;margin-bottom:10px;">Recent Deliveries</div>
+    </div>
+    <div style="background:var(--fresh-surface-card);border-top:1px solid var(--fresh-border);">
+      <div class="recent-job-row">
+        <div class="rj-icon">🐟</div>
+        <div class="rj-body">
+          <div class="rj-title">CHN-0850 · Bangus Milkfish</div>
+          <div class="rj-meta">Mandaluyong · 1.8 km · 22 min</div>
+        </div>
+        <div>
+          <div class="rj-earn">+₱85</div>
+          <div style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);color:var(--c-green);margin-top:2px;">⭐ 5.0</div>
+        </div>
+      </div>
+      <div class="recent-job-row">
+        <div class="rj-icon">🥩</div>
+        <div class="rj-body">
+          <div class="rj-title">CHN-0848 · Pork Kasim + Veggies</div>
+          <div class="rj-meta">Kapitolyo · 2.1 km · 28 min</div>
+        </div>
+        <div>
+          <div class="rj-earn">+₱110</div>
+          <div style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);color:var(--c-green);margin-top:2px;">⭐ 4.8</div>
+        </div>
+      </div>
+      <div class="recent-job-row" style="border-bottom:none;">
+        <div class="rj-icon">🍗</div>
+        <div class="rj-body">
+          <div class="rj-title">CHN-0845 · Lechon Manok x2</div>
+          <div class="rj-meta">Shaw Blvd · 0.9 km · 14 min</div>
+        </div>
+        <div>
+          <div class="rj-earn">+₱65</div>
+          <div style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);color:var(--c-orange);margin-top:2px;">⭐ 4.5</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- Rider Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-tab active" aria-label="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dash</span>
+    </button>
+    <a href="12-rider-jobs.html" class="nav-tab" aria-label="Jobs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Jobs</span>
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-tab" aria-label="Earnings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Earnings</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+
+<script>
+let isOnline = true;
+function toggleOnline() {
+  isOnline = !isOnline;
+  const bar    = document.getElementById('statusBar');
+  const toggle = document.getElementById('onlineToggle');
+  const dot    = document.getElementById('toggleDot');
+  const label  = document.getElementById('toggleLabel');
+
+  if (isOnline) {
+    bar.classList.remove('offline');
+    toggle.classList.remove('offline');
+    label.textContent = 'Online';
+    dot.style.background = '#4ade80';
+  } else {
+    bar.classList.add('offline');
+    toggle.classList.add('offline');
+    label.textContent = 'Offline';
+    dot.style.background = '#9CA3AF';
+  }
+}
+</script>
+</body>
+</html>

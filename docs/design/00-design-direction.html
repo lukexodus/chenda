@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Design Direction & Principles</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  body { max-width: 680px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .doc-hero {
+    border-bottom: 3px solid var(--fresh-primary);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+  .doc-hero .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fresh-primary);
+    margin-bottom: 10px;
+  }
+  .doc-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    color: var(--fresh-text-primary);
+    margin-bottom: 16px;
+  }
+  .doc-hero p {
+    font-size: 1rem;
+    color: var(--fresh-text-muted);
+    max-width: 520px;
+    line-height: 1.65;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: var(--fresh-text-primary);
+    margin: 48px 0 6px;
+    padding-top: 24px;
+    border-top: 1px solid var(--fresh-border);
+  }
+  h2:first-of-type { border-top: none; margin-top: 0; }
+  h2 .section-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--fresh-primary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .intro-para { color: var(--fresh-text-muted); font-size: 0.9375rem; margin-bottom: 24px; line-height: 1.65; }
+
+  /* Personality bullets */
+  .personality-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  @media (max-width: 560px) { .personality-grid { grid-template-columns: 1fr; } }
+
+  .p-bullet {
+    background: var(--fresh-surface);
+    border: 1px solid var(--fresh-border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .p-bullet .p-tag {
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--fresh-primary);
+  }
+  .p-bullet .p-label {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--fresh-text-primary);
+  }
+  .p-bullet .p-desc {
+    font-size: 0.8125rem;
+    color: var(--fresh-text-muted);
+    line-height: 1.5;
+  }
+
+  /* Principles list */
+  .principles-list { counter-reset: principle; display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
+  .principle-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    counter-increment: principle;
+  }
+  .principle-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--fresh-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 800;
+  }
+  .principle-body .principle-title {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--fresh-text-primary);
+    margin-bottom: 3px;
+  }
+  .principle-body .principle-desc {
+    font-size: 0.8125rem;
+    color: var(--fresh-text-muted);
+    line-height: 1.55;
+  }
+
+  /* Tone table */
+  .tone-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.875rem; }
+  .tone-table th {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fresh-text-muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--fresh-border);
+    background: var(--fresh-surface-2);
+  }
+  .tone-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--fresh-border);
+    color: var(--fresh-text-primary);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .tone-table td:first-child {
+    font-family: var(--font-display);
+    font-weight: 700;
+    width: 140px;
+    color: var(--fresh-primary);
+  }
+  .tone-table tr:last-child td { border-bottom: none; }
+
+  /* Motion principles */
+  .motion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .motion-grid { grid-template-columns: 1fr; } }
+  .motion-card {
+    background: var(--fresh-surface-2);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .motion-card .m-title { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; margin-bottom: 4px; }
+  .motion-card .m-spec  { font-family: monospace; font-size: 0.75rem; color: var(--fresh-primary); background: var(--fresh-primary-dim); padding: 2px 6px; border-radius: 4px; margin-bottom: 6px; display: inline-block; }
+  .motion-card .m-desc  { font-size: 0.8125rem; color: var(--fresh-text-muted); line-height: 1.5; }
+
+  /* Do / Don't */
+  .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .do-dont-grid { grid-template-columns: 1fr; } }
+  .do-card, .dont-card { border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .do-card { background: var(--fresh-primary-dim); border: 1px solid var(--fresh-primary)44; }
+  .dont-card { background: var(--fresh-danger-dim); border: 1px solid var(--fresh-danger)44; }
+  .do-card .dd-label   { font-family: var(--font-display); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fresh-primary); }
+  .dont-card .dd-label { font-family: var(--font-display); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fresh-danger); }
+  .dd-item { font-size: 0.8125rem; color: var(--fresh-text-primary); line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+  .dd-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .do-card .dd-item::before   { background: var(--fresh-primary); }
+  .dont-card .dd-item::before { background: var(--fresh-danger); }
+
+  /* Token color swatches */
+  .token-row {
+    display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--fresh-border);
+    font-size: 0.875rem;
+  }
+  .token-row:last-child { border-bottom: none; }
+  .token-name  { font-family: monospace; font-size: 0.8125rem; color: var(--fresh-text-primary); flex: 1; }
+  .token-hex   { font-family: monospace; font-size: 0.8125rem; color: var(--fresh-text-muted); width: 90px; }
+  .token-role  { font-size: 0.8125rem; color: var(--fresh-text-muted); flex: 2; }
+
+  /* Freshness system */
+  .freshness-system { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .fs-row {
+    display: flex; gap: 14px; align-items: center;
+    background: var(--fresh-surface);
+    border: 1px solid var(--fresh-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .fs-pct { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; width: 52px; flex-shrink: 0; }
+  .fs-pct.fresh    { color: var(--fresh-primary); }
+  .fs-pct.warning  { color: var(--fresh-warning); }
+  .fs-pct.critical { color: var(--fresh-danger); }
+  .fs-details { flex: 1; }
+  .fs-name   { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; color: var(--fresh-text-primary); }
+  .fs-range  { font-size: 0.8125rem; color: var(--fresh-text-muted); margin-top: 1px; }
+  .fs-bar-wrap { width: 100px; flex-shrink: 0; }
+
+  /* Reference */
+  .ref-card {
+    background: var(--fresh-surface);
+    border: 1px solid var(--fresh-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+  .ref-card .ref-num { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--fresh-primary); margin-bottom: 6px; }
+  .ref-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 800; margin-bottom: 8px; }
+  .ref-card p  { font-size: 0.875rem; color: var(--fresh-text-muted); line-height: 1.6; }
+
+  /* Page index nav */
+  .file-list {
+    background: var(--fresh-surface-2);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .file-list a {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--fresh-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--fresh-border);
+  }
+  .file-list a:last-child { border-bottom: none; }
+  .file-list a::before {
+    content: '→';
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: var(--fresh-text-muted);
+    font-size: 0.8125rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="doc-hero">
+  <div class="eyebrow">Chenda — Design Direction Package v1.0</div>
+  <h1>Bold Fresh.<br>Unmistakably Chenda.</h1>
+  <p>A complete design direction, personality system, token map, and UI principles for a perishable-goods marketplace where freshness is felt — not just labeled.</p>
+</div>
+
+<!-- File List -->
+<h2><span class="section-num">Deliverables</span>Files in this Package</h2>
+<div class="file-list">
+  <a href="00-design-direction.html">00 · Design Direction & Principles (this document)</a>
+  <a href="01-components.html">01 · Component Showcase</a>
+  <a href="02-buyer-home.html">02 · Buyer Home & Search</a>
+  <a href="03-product-detail.html">03 · Product Detail Page</a>
+  <a href="04-cart.html">04 · Cart</a>
+  <a href="05-checkout.html">05 · Checkout & Payment Modals</a>
+  <a href="06-orders.html">06 · Buyer Orders & Tracking</a>
+  <a href="07-seller-dashboard.html">07 · Seller Dashboard</a>
+  <a href="08-seller-products.html">08 · Seller Products & Edit Form</a>
+  <a href="09-seller-orders.html">09 · Seller Orders Management</a>
+  <a href="10-notifications.html">10 · Notifications</a>
+  <a href="11-rider-dashboard.html">11 · Rider Dashboard & Jobs</a>
+</div>
+
+<!-- A. BRAND PERSONALITY -->
+<h2><span class="section-num">A — Brand Personality</span>Who Chenda Is</h2>
+<p class="intro-para">Chenda is not a neutral grocery app. It's a marketplace that respects perishability — treating freshness as a first-class signal, not an afterthought. The brand feels like a trusted suki at the palengke: fast, honest, and a little urgent.</p>
+
+<div class="personality-grid">
+  <div class="p-bullet">
+    <div class="p-tag">1</div>
+    <div class="p-label">Freshness is Felt</div>
+    <div class="p-desc">Time pressure isn't hidden behind badges. The visual system breathes urgency — progress bars, countdowns, and color shifts communicate shelf-life at a glance.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">2</div>
+    <div class="p-label">Bold, Not Loud</div>
+    <div class="p-desc">Typography does the heavy lifting. Syne's geometric weight creates a confident, distinct voice without resorting to gratuitous animations or cluttered UI.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">3</div>
+    <div class="p-label">Trust-First Commerce</div>
+    <div class="p-desc">Every seller has a face. Every product has provenance. Food safety signals are prominent, never buried. The buyer never has to guess.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">4</div>
+    <div class="p-label">Proximity as Feature</div>
+    <div class="p-desc">Distance is shown alongside price — not in metadata. Near things look near. Far things are filtered out naturally by the freshness-proximity model.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">5</div>
+    <div class="p-label">Mobile-Native Density</div>
+    <div class="p-desc">Information is compressed efficiently. Buyers make fast decisions. Cards carry price, freshness, distance, and seller rating without scrolling.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">6</div>
+    <div class="p-label">Warm, Not Corporate</div>
+    <div class="p-desc">Microcopy sounds like a person, not a system. "Only 2 left — grab it" beats "Low inventory detected." The brand speaks with warmth and honesty.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">7</div>
+    <div class="p-label">Action-Oriented</div>
+    <div class="p-desc">Primary actions are always visible. The user is never more than one tap from adding to cart, contacting a seller, or tracking a delivery.</div>
+  </div>
+  <div class="p-bullet">
+    <div class="p-tag">8</div>
+    <div class="p-label">Local Filipino Roots</div>
+    <div class="p-desc">Currency is ₱ Philippine Peso. Distance is km. Categories reflect local produce culture. The product feels built for the Philippine market, not adapted from it.</div>
+  </div>
+</div>
+
+<!-- B. DESIGN PRINCIPLES -->
+<h2><span class="section-num">A — Design Principles</span>12 Rules We Follow</h2>
+
+<div class="principles-list">
+  <div class="principle-item">
+    <div class="principle-num">1</div>
+    <div class="principle-body">
+      <div class="principle-title">Freshness has hierarchy</div>
+      <div class="principle-desc">The freshness bar and status pill always appear above the price. Shelf-life is more important than cost in perishable commerce — the layout reflects this.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">2</div>
+    <div class="principle-body">
+      <div class="principle-title">Color communicates, not decorates</div>
+      <div class="principle-desc">Green = fresh and safe. Yellow = act soon. Red = expired or danger. These three states are sacred — never repurpose them for branding without semantic meaning.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">3</div>
+    <div class="principle-body">
+      <div class="principle-title">One primary action per screen</div>
+      <div class="principle-desc">Every page has a clear next step. Add to cart. Place order. Accept job. The primary CTA is full-width, green, and unmissable. Secondary actions recede.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">4</div>
+    <div class="principle-body">
+      <div class="principle-title">Typography leads personality</div>
+      <div class="principle-desc">Syne for display and headings — geometric, confident, unmistakably Chenda. DM Sans for body — readable, warm, functional. Never mix up the roles.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">5</div>
+    <div class="principle-body">
+      <div class="principle-title">Distance and time are always visible</div>
+      <div class="principle-desc">Every product card shows km and time-since-listed. Both are proximity signals. They cannot be hidden or pushed to a detail page — they inform purchase urgency.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">6</div>
+    <div class="principle-body">
+      <div class="principle-title">States are never ambiguous</div>
+      <div class="principle-desc">Every interactive element has a visible default, hover, active, focus, disabled, loading, error, and success state. No guessing whether a tap registered.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">7</div>
+    <div class="principle-body">
+      <div class="principle-title">Modals and sheets are purposeful</div>
+      <div class="principle-desc">Bottom sheets for contextual overlays (filters, quick view). Center modals for confirmations and payments. Never use a modal for content that belongs on a page.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">8</div>
+    <div class="principle-body">
+      <div class="principle-title">Empty states earn trust</div>
+      <div class="principle-desc">An empty cart or no results page is still a brand moment. Always include an icon, a human line of copy, and a clear action. Never show a blank screen.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">9</div>
+    <div class="principle-body">
+      <div class="principle-title">Accessibility is not optional</div>
+      <div class="principle-desc">Minimum 4.5:1 contrast ratio for all body text. Visible focus rings using brand green. Semantic HTML roles. Touch targets minimum 44×44px. Screen reader labels on all icons.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">10</div>
+    <div class="principle-body">
+      <div class="principle-title">Dark mode is first-class</div>
+      <div class="principle-desc">Not an afterthought. Every token has a dark-mode counterpart. The freshness color system stays the same — only surfaces and text adapt. Night shopping looks sharp.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">11</div>
+    <div class="principle-body">
+      <div class="principle-title">Microcopy has a voice</div>
+      <div class="principle-desc">Short, direct, a little warm. "Oops, we lost that page" not "Error 404." "Fresh for 2 more days" not "Expires: 2025-04-27." Write for humans in motion.</div>
+    </div>
+  </div>
+  <div class="principle-item">
+    <div class="principle-num">12</div>
+    <div class="principle-body">
+      <div class="principle-title">Roles are distinct, tokens are shared</div>
+      <div class="principle-desc">Buyer, Seller, Rider views share the same design system — tokens, components, type scale — but navigation, data cards, and primary actions are role-tailored.</div>
+    </div>
+  </div>
+</div>
+
+<!-- C. TONE & VOICE -->
+<h2><span class="section-num">A — Visual Voice & Tone</span>How Chenda Sounds and Looks</h2>
+<table class="tone-table">
+  <thead>
+    <tr><th>Context</th><th>Tone</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Product freshness</td><td>Urgent, honest, factual</td><td>"Only fresh for 1 more day. Grab it now."</td></tr>
+    <tr><td>Empty states</td><td>Warm, helpful, never robotic</td><td>"Nothing nearby right now. Try widening your radius."</td></tr>
+    <tr><td>Order success</td><td>Confident, celebratory, brief</td><td>"Order placed. On its way to you."</td></tr>
+    <tr><td>Errors</td><td>Honest, never alarming</td><td>"Something went wrong. Tap to try again."</td></tr>
+    <tr><td>Seller labels</td><td>Professional, clear</td><td>"Verified Seller · Mandaluyong"</td></tr>
+    <tr><td>Rider cues</td><td>Action-oriented, direct</td><td>"Accept job — ₱85 delivery. 1.4 km."</td></tr>
+    <tr><td>Push/toast</td><td>Brief, scannable</td><td>"Your lechon manok is expiring soon."</td></tr>
+    <tr><td>CTA copy</td><td>Active verbs, no filler</td><td>"Add to Cart" / "Order Now" / "Accept Job"</td></tr>
+  </tbody>
+</table>
+
+<!-- D. MOTION PRINCIPLES -->
+<h2><span class="section-num">A — Interaction & Motion</span>Principles</h2>
+<p class="intro-para">Motion should reinforce meaning — especially freshness urgency and state transitions. Never use animation as decoration.</p>
+
+<div class="motion-grid">
+  <div class="motion-card">
+    <div class="m-title">Transitions</div>
+    <div class="m-spec">220ms ease</div>
+    <div class="m-desc">Standard for color, opacity, and shadow changes on interactive elements.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Modals & Sheets</div>
+    <div class="m-spec">360ms cubic-bezier(0.22,1,0.36,1)</div>
+    <div class="m-desc">Springy entrance for overlays. Feels physical — like lifting a card off a surface.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Freshness Bar Fill</div>
+    <div class="m-spec">600ms cubic-bezier(0.22,1,0.36,1)</div>
+    <div class="m-desc">Animate width on mount. The bar "fills" with the freshness value — it's the first data the eye reads.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Expiring Pulse</div>
+    <div class="m-spec">1.8s ease-in-out infinite</div>
+    <div class="m-desc">The "Expiring Soon" pill gently pulses. Not frantic — a soft urgency signal that doesn't distract.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Card Hover Lift</div>
+    <div class="m-spec">translateY(-2px) + shadow-md</div>
+    <div class="m-desc">Product cards lift slightly on hover, reinforcing that they're tappable objects.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Button Press</div>
+    <div class="m-spec">scale(0.97)</div>
+    <div class="m-desc">Active/press state scales down slightly. Confirms the tap registered without visual noise.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Toast Entry</div>
+    <div class="m-spec">translateY(-12px) + scale(0.96)</div>
+    <div class="m-desc">Toast slides down from under the header. Exits with fade. 4s auto-dismiss.</div>
+  </div>
+  <div class="motion-card">
+    <div class="m-title">Skeleton Shimmer</div>
+    <div class="m-spec">1.6s linear infinite</div>
+    <div class="m-desc">Loading skeletons shimmer left-to-right. The direction implies content is "loading in."</div>
+  </div>
+</div>
+
+<!-- E. DO AND DON'T -->
+<h2><span class="section-num">A — Do & Don't</span>Examples</h2>
+
+<div class="do-dont-grid">
+  <div class="do-card">
+    <div class="dd-label">✓ Do</div>
+    <div class="dd-item">Use freshness color (green/yellow/red) consistently and only for shelf-life status</div>
+    <div class="dd-item">Show distance in km on every product card</div>
+    <div class="dd-item">Use Syne font for all headings, product names, and prices</div>
+    <div class="dd-item">Animate freshness bars on mount</div>
+    <div class="dd-item">Use bottom sheets for filters and contextual menus on mobile</div>
+    <div class="dd-item">Write CTA copy with active verbs: "Order Now", "Accept Job"</div>
+    <div class="dd-item">Keep the primary action always visible above the fold</div>
+    <div class="dd-item">Show seller name and verification status on every product</div>
+  </div>
+  <div class="dont-card">
+    <div class="dd-label">✗ Don't</div>
+    <div class="dd-item">Use green for non-freshness UI elements (e.g. decorative borders, random highlights)</div>
+    <div class="dd-item">Hide expiry or distance in a secondary tab or modal</div>
+    <div class="dd-item">Use Inter, Roboto, or system fonts — they erase brand identity</div>
+    <div class="dd-item">Add animations to skeleton states (they already shimmer — that's enough)</div>
+    <div class="dd-item">Use center modals for content that needs scrolling</div>
+    <div class="dd-item">Write passive CTA copy: "Submit", "Proceed", "Continue"</div>
+    <div class="dd-item">Stack multiple primary (green) buttons on the same screen</div>
+    <div class="dd-item">Show a blank screen for empty states — always provide an action</div>
+  </div>
+</div>
+
+<!-- TOKEN SYSTEM -->
+<h2><span class="section-num">B — Token System</span>Color Tokens with Semantic Roles</h2>
+<p class="intro-para">All colors must be referenced via CSS custom property tokens. Never hardcode hex values in components.</p>
+
+<div style="margin: 16px 0;">
+  <div class="token-row">
+    <div class="color-swatch" style="background:#2EA44F;"></div>
+    <div class="token-name">--fresh-primary</div>
+    <div class="token-hex">#2EA44F</div>
+    <div class="token-role">Brand green. Fresh status. Primary actions. Success signals.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#258F44;"></div>
+    <div class="token-name">--fresh-primary-hover</div>
+    <div class="token-hex">#258F44</div>
+    <div class="token-role">Hover and active state for primary green elements.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#FFD166;"></div>
+    <div class="token-name">--fresh-accent</div>
+    <div class="token-hex">#FFD166</div>
+    <div class="token-role">Featured/highlighted products. Warmth. Accent chips.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#FFB300;"></div>
+    <div class="token-name">--fresh-warning</div>
+    <div class="token-hex">#FFB300</div>
+    <div class="token-role">Expiring soon. Low stock. Caution. ≤30% freshness.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#E63946;"></div>
+    <div class="token-name">--fresh-danger</div>
+    <div class="token-hex">#E63946</div>
+    <div class="token-role">Expired. Critical. Error. Destructive actions.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#F7F9FA; border: 1px solid #E5E7EB;"></div>
+    <div class="token-name">--fresh-surface</div>
+    <div class="token-hex">#F7F9FA</div>
+    <div class="token-role">Page background. Card base. Nav background (light mode).</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#0F1419;"></div>
+    <div class="token-name">--fresh-surface (dark)</div>
+    <div class="token-hex">#0F1419</div>
+    <div class="token-role">Page background in dark mode.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#111827;"></div>
+    <div class="token-name">--fresh-text-primary</div>
+    <div class="token-hex">#111827</div>
+    <div class="token-role">All headings, body text, card content in light mode.</div>
+  </div>
+  <div class="token-row">
+    <div class="color-swatch" style="background:#6B7280;"></div>
+    <div class="token-name">--fresh-text-muted</div>
+    <div class="token-hex">#6B7280</div>
+    <div class="token-role">Captions, metadata, placeholder text, inactive nav tabs.</div>
+  </div>
+</div>
+
+<!-- Freshness Status System -->
+<h2><span class="section-num">B — Freshness Status</span>Three-State System</h2>
+<p class="intro-para">Every product in Chenda exists in one of three freshness states. The visual system communicates these states through color, copy, animation, and layout hierarchy — not just a label.</p>
+
+<div class="freshness-system">
+  <div class="fs-row">
+    <div class="fs-pct fresh">87%</div>
+    <div class="fs-details">
+      <div class="fs-name">🟢 Fresh</div>
+      <div class="fs-range">51%–100% freshness · Color: --fresh-primary (#2EA44F)</div>
+      <div class="fs-range" style="margin-top:4px;">Copy: "Fresh · X days remaining" · No pulse animation · Full opacity</div>
+    </div>
+    <div class="fs-bar-wrap">
+      <div class="freshness-bar"><div class="fill fresh" style="width:87%"></div></div>
+    </div>
+  </div>
+  <div class="fs-row">
+    <div class="fs-pct warning">28%</div>
+    <div class="fs-details">
+      <div class="fs-name">🟡 Expiring Soon</div>
+      <div class="fs-range">11%–50% freshness · Color: --fresh-warning (#FFB300)</div>
+      <div class="fs-range" style="margin-top:4px;">Copy: "Expiring Soon · X hrs left" · Pulse animation on badge · Discounted pricing hint</div>
+    </div>
+    <div class="fs-bar-wrap">
+      <div class="freshness-bar"><div class="fill warning" style="width:28%"></div></div>
+    </div>
+  </div>
+  <div class="fs-row">
+    <div class="fs-pct critical">4%</div>
+    <div class="fs-details">
+      <div class="fs-name">🔴 Critical / Expired</div>
+      <div class="fs-range">0%–10% freshness · Color: --fresh-danger (#E63946)</div>
+      <div class="fs-range" style="margin-top:4px;">Copy: "Expired" · Add to cart disabled · Product shown with reduced opacity</div>
+    </div>
+    <div class="fs-bar-wrap">
+      <div class="freshness-bar"><div class="fill critical" style="width:4%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Typography Scale -->
+<h2><span class="section-num">B — Typography</span>Scale & Usage Rules</h2>
+<table class="tone-table">
+  <thead>
+    <tr><th>Role</th><th>Font / Size / Weight</th><th>Usage</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Hero / Banner</td><td>Syne · clamp(2–3.5rem) · 800</td><td>Section hero banners, promotional panels</td></tr>
+    <tr><td>Page Heading (h1)</td><td>Syne · clamp(1.5–2rem) · 700</td><td>Page titles, modal titles</td></tr>
+    <tr><td>Section Header (h2)</td><td>Syne · 1.375rem · 700</td><td>Section labels, card group headers</td></tr>
+    <tr><td>Card Title (h3)</td><td>Syne · 1.125rem · 600</td><td>Product names, list item titles</td></tr>
+    <tr><td>Body</td><td>DM Sans · 1rem · 400</td><td>Descriptions, paragraph text</td></tr>
+    <tr><td>Body Small</td><td>DM Sans · 0.875rem · 400</td><td>Supporting text, metadata</td></tr>
+    <tr><td>Label</td><td>DM Sans · 0.8125rem · 600</td><td>Form labels, section tags</td></tr>
+    <tr><td>Caption</td><td>DM Sans · 0.75rem · 400</td><td>Timestamps, distances, small meta</td></tr>
+    <tr><td>Micro / Badge</td><td>Syne · 0.6875rem · 700 · uppercase</td><td>Status pills, freshness labels, nav tab text</td></tr>
+  </tbody>
+</table>
+
+<!-- F. REFERENCE -->
+<h2><span class="section-num">F — Reference</span>Design Rationale</h2>
+
+<div class="ref-card">
+  <div class="ref-num">Reference 1</div>
+  <h3>Why this style matches perishable-goods ecommerce</h3>
+  <p>Perishable goods require decision speed. Unlike fashion or electronics where browsing is leisurely, a buyer deciding on bangus or kamatis needs freshness, price, and proximity in under 3 seconds. The dense-but-ordered card system, strong typographic hierarchy via Syne, and the three-state freshness color model are all designed for fast scanning — not exploration. The bold personality signals to buyers that this is a place that takes freshness seriously, building the trust layer that wet market vendors earn through familiarity.</p>
+</div>
+
+<div class="ref-card">
+  <div class="ref-num">Reference 2</div>
+  <h3>How proximity and freshness are visually prioritized</h3>
+  <p>Proximity (km) and freshness (%) are displayed in the product card body above the price line — breaking the conventional ecommerce hierarchy where price is primary. The freshness bar uses animated fill on mount, making it the first dynamic element the eye sees. Distance is shown with a map-pin icon alongside the seller name, so location feels like a persistent truth about the product, not an optional detail. On the buyer home screen, the nearest products appear first, and the search radius slider is the only filter shown by default.</p>
+</div>
+
+<div class="ref-card">
+  <div class="ref-num">Reference 3</div>
+  <h3>How the design scales across buyer, seller, and rider workflows</h3>
+  <p>The shared token system (fonts, colors, radius, shadows) ensures visual coherence across all three roles. Role differentiation happens at the navigation and data layer: buyers see search, freshness, and cart; sellers see analytics dashboards, inventory bars, and order management tables; riders see map-first job cards, distance, and earnings. Bottom nav tabs are role-adaptive — the same component reads from a role prop and renders the correct tabs. This means design QA, dark mode, and accessibility work is written once and applied to all roles.</p>
+</div>
+
+<div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--fresh-border); color: var(--fresh-text-muted); font-size: 0.8125rem; font-family: var(--font-display);">
+  Chenda Design System · v1.0 · Concept Package · Not for production use
+</div>
+
+</body>
+</html>

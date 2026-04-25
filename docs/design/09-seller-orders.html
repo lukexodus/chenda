@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Seller Orders</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.seller-order-card {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+}
+.soc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--fresh-border);
+  background: var(--fresh-surface);
+}
+.soc-buyer { display: flex; align-items: center; gap: 8px; }
+.soc-av { width: 30px; height: 30px; border-radius: 50%; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; border: 1px solid var(--fresh-border); }
+.soc-name { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; }
+.soc-time { font-size: 0.6875rem; color: var(--fresh-text-muted); margin-top: 1px; }
+.soc-items { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.soc-item { display: flex; align-items: center; gap: 10px; }
+.soc-item-img { width: 36px; height: 36px; border-radius: 8px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.soc-item-name { flex: 1; font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; }
+.soc-item-qty  { font-size: 0.75rem; color: var(--fresh-text-muted); }
+.soc-item-price { font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; color: var(--c-green); }
+.soc-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--fresh-border);
+}
+.soc-total { font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--fresh-text-primary); }
+.soc-total-label { font-size: 0.6875rem; color: var(--fresh-text-muted); margin-bottom: 1px; }
+.soc-actions { display: flex; gap: 6px; }
+
+/* Urgency timer */
+.order-timer {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700;
+  color: var(--c-orange); background: var(--c-orange-dim); border-radius: 99px;
+  padding: 2px 8px; border: 1px solid rgba(244,130,10,0.3);
+}
+.order-timer svg { width: 10px; height: 10px; stroke-width: 2.5; }
+
+/* Stats strip */
+.stats-strip {
+  display: flex; gap: 0;
+  background: var(--fresh-surface-card);
+  border-bottom: 1px solid var(--fresh-border);
+}
+.strip-stat { flex: 1; padding: 12px 8px; text-align: center; border-right: 1px solid var(--fresh-border); }
+.strip-stat:last-child { border-right: none; }
+.strip-val { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; color: var(--fresh-text-primary); line-height: 1; }
+.strip-val.pending { color: var(--c-orange); }
+.strip-val.green { color: var(--c-green); }
+.strip-label { font-size: 0.625rem; font-weight: 700; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.05em; color: var(--fresh-text-muted); margin-top: 3px; }
+
+/* Delivery address in order */
+.delivery-addr {
+  background: var(--fresh-surface);
+  border-top: 1px solid var(--fresh-border);
+  padding: 10px 14px;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.delivery-addr svg { width: 14px; height: 14px; stroke-width: 2.5; color: var(--c-red); flex-shrink: 0; margin-top: 1px; }
+.delivery-addr .da-text { font-size: 0.8125rem; color: var(--fresh-text-muted); line-height: 1.5; }
+.delivery-addr .da-text strong { color: var(--fresh-text-primary); font-family: var(--font-display); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="top-header">
+    <div class="header-back">
+      <a href="07-seller-dashboard.html" class="header-back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">Orders</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span class="status-badge pending" style="font-size:0.75rem;">4 New</span>
+    </div>
+  </div>
+
+  <div class="page-content" style="padding-bottom: 80px;">
+
+    <!-- Stats strip -->
+    <div class="stats-strip">
+      <div class="strip-stat">
+        <div class="strip-val pending">4</div>
+        <div class="strip-label">Pending</div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-val" style="color: #3B82F6;">2</div>
+        <div class="strip-label">In Transit</div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-val green">8</div>
+        <div class="strip-label">Delivered</div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-val">₱3.2k</div>
+        <div class="strip-label">Today</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div style="background: var(--fresh-surface-card); border-bottom: 1px solid var(--fresh-border);">
+      <div class="tab-list" style="padding: 0 16px;">
+        <button class="tab-trigger active" onclick="switchTab('pending',this)">Pending (4)</button>
+        <button class="tab-trigger" onclick="switchTab('active',this)">Active (2)</button>
+        <button class="tab-trigger" onclick="switchTab('done',this)">Completed</button>
+      </div>
+    </div>
+
+    <!-- Pending orders -->
+    <div id="tab-pending" style="padding: 12px 16px 0;">
+
+      <!-- Order 1 — needs confirm -->
+      <div class="seller-order-card">
+        <div class="soc-header">
+          <div class="soc-buyer">
+            <div class="soc-av">👩</div>
+            <div>
+              <div class="soc-name">Maria Santos</div>
+              <div class="soc-time">CHN-0851 · 5 min ago</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="order-timer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Confirm in 8:42
+            </div>
+            <span class="status-badge pending">Pending</span>
+          </div>
+        </div>
+        <div class="soc-items">
+          <div class="soc-item">
+            <div class="soc-item-img">🐟</div>
+            <div class="soc-item-name">Bangus Milkfish</div>
+            <div class="soc-item-qty">1.5 kg</div>
+            <div class="soc-item-price">₱277.50</div>
+          </div>
+          <div class="soc-item">
+            <div class="soc-item-img">🍅</div>
+            <div class="soc-item-name">Kamatis (Tomato)</div>
+            <div class="soc-item-qty">500g</div>
+            <div class="soc-item-price">₱42.50</div>
+          </div>
+        </div>
+        <div class="delivery-addr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div class="da-text"><strong>1.2 km away</strong> · 123 Rizal Ave, Kapitolyo, Pasig</div>
+        </div>
+        <div class="soc-footer">
+          <div>
+            <div class="soc-total-label">Order total</div>
+            <div class="soc-total">₱320.00</div>
+          </div>
+          <div class="soc-actions">
+            <button class="btn btn-danger btn-sm">Decline</button>
+            <button class="btn btn-primary btn-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order 2 -->
+      <div class="seller-order-card">
+        <div class="soc-header">
+          <div class="soc-buyer">
+            <div class="soc-av">👨</div>
+            <div>
+              <div class="soc-name">Jose Reyes</div>
+              <div class="soc-time">CHN-0849 · 8 min ago</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="order-timer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              5:22 left
+            </div>
+            <span class="status-badge pending">Pending</span>
+          </div>
+        </div>
+        <div class="soc-items">
+          <div class="soc-item">
+            <div class="soc-item-img">🐠</div>
+            <div class="soc-item-name">Tilapia Fresh</div>
+            <div class="soc-item-qty">2.0 kg</div>
+            <div class="soc-item-price">₱190.00</div>
+          </div>
+        </div>
+        <div class="delivery-addr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div class="da-text"><strong>0.6 km away</strong> · 45 Shaw Blvd, Mandaluyong</div>
+        </div>
+        <div class="soc-footer">
+          <div>
+            <div class="soc-total-label">Order total</div>
+            <div class="soc-total">₱190.00</div>
+          </div>
+          <div class="soc-actions">
+            <button class="btn btn-danger btn-sm">Decline</button>
+            <button class="btn btn-primary btn-sm">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-pending -->
+
+    <div id="tab-active" style="padding: 12px 16px 0; display: none;">
+
+      <!-- Order in transit -->
+      <div class="seller-order-card">
+        <div class="soc-header">
+          <div class="soc-buyer">
+            <div class="soc-av">👩</div>
+            <div>
+              <div class="soc-name">Ana Cruz</div>
+              <div class="soc-time">CHN-0847 · Rider picked up</div>
+            </div>
+          </div>
+          <span class="status-badge transit">In Transit</span>
+        </div>
+        <div class="soc-items">
+          <div class="soc-item">
+            <div class="soc-item-img">🥩</div>
+            <div class="soc-item-name">Pork Kasim</div>
+            <div class="soc-item-qty">1.0 kg</div>
+            <div class="soc-item-price">₱340.00</div>
+          </div>
+          <div class="soc-item">
+            <div class="soc-item-img">🥬</div>
+            <div class="soc-item-name">Ampalaya</div>
+            <div class="soc-item-qty">300g</div>
+            <div class="soc-item-price">₱105.00</div>
+          </div>
+        </div>
+        <div style="padding: 10px 14px; background: rgba(59,130,246,0.06); border-top: 1px solid var(--fresh-border); display: flex; align-items: center; gap: 8px;">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0;">🛵</div>
+          <div style="flex: 1; font-size: 0.8125rem;"><strong style="font-family: var(--font-display);">Juan dela Cruz</strong> · <span style="color: var(--fresh-text-muted);">Est. delivery in 18 min</span></div>
+          <button class="btn btn-secondary btn-xs">Track</button>
+        </div>
+        <div class="soc-footer">
+          <div>
+            <div class="soc-total-label">Order total</div>
+            <div class="soc-total">₱445.00</div>
+          </div>
+          <button class="btn btn-secondary btn-sm">View Details</button>
+        </div>
+      </div>
+
+    </div><!-- /tab-active -->
+
+    <div id="tab-done" style="padding: 12px 16px 0; display: none;">
+      <div class="seller-order-card" style="opacity: 0.75;">
+        <div class="soc-header">
+          <div class="soc-buyer">
+            <div class="soc-av">👨</div>
+            <div>
+              <div class="soc-name">Carlo Lim</div>
+              <div class="soc-time">CHN-0843 · Delivered 10:22 AM</div>
+            </div>
+          </div>
+          <span class="status-badge delivered">Delivered</span>
+        </div>
+        <div class="soc-items">
+          <div class="soc-item">
+            <div class="soc-item-img">🍗</div>
+            <div class="soc-item-name">Lechon Manok</div>
+            <div class="soc-item-qty">1 whole</div>
+            <div class="soc-item-price">₱120.00</div>
+          </div>
+        </div>
+        <div class="soc-footer">
+          <div>
+            <div class="soc-total-label">Order total</div>
+            <div class="soc-total">₱120.00</div>
+          </div>
+          <div style="font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; color: var(--c-green);">⭐ Rated 5/5</div>
+        </div>
+      </div>
+    </div><!-- /tab-done -->
+
+    <div style="height: 16px;"></div>
+  </div>
+
+  <!-- Seller Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="07-seller-dashboard.html" class="nav-tab" aria-label="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dash</span>
+    </a>
+    <a href="08-seller-products.html" class="nav-tab" aria-label="Products">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Products</span>
+    </a>
+    <button class="nav-tab active" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      <span>Orders</span>
+    </button>
+    <button class="nav-tab" aria-label="Payouts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Payouts</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['pending','active','done'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === tab ? 'block' : 'none';
+  });
+}
+</script>
+</body>
+</html>

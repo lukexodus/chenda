@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Seller Products</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* Product list item */
+.product-row {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--fresh-border);
+  background: var(--fresh-surface-card);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.product-row:hover { background: var(--fresh-surface); }
+.product-row:last-child { border-bottom: none; }
+.pr-img { width: 60px; height: 60px; border-radius: 10px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; border: 1px solid var(--fresh-border); }
+.pr-info { flex: 1; }
+.pr-name { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; margin-bottom: 4px; }
+.pr-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+.pr-price { font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; color: var(--c-green); }
+.pr-stock { font-size: 0.75rem; color: var(--fresh-text-muted); }
+.pr-actions { display: flex; gap: 6px; align-items: center; }
+.toggle { width: 36px; height: 20px; border-radius: 99px; border: none; cursor: pointer; position: relative; transition: background var(--t-mid); flex-shrink: 0; }
+.toggle.on { background: var(--c-green); }
+.toggle.off { background: var(--fresh-border-strong); }
+.toggle::after { content: ''; position: absolute; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: left var(--t-mid); }
+.toggle.on::after { left: 18px; }
+.toggle.off::after { left: 2px; }
+
+/* Edit sheet */
+.edit-sheet { display: none; }
+.edit-sheet.show { display: block; }
+
+/* Form sections */
+.form-section { margin-bottom: 20px; }
+.form-section-title { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--fresh-text-muted); margin-bottom: 12px; }
+
+/* Image upload area */
+.img-upload {
+  border: 2px dashed var(--fresh-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; transition: all var(--t-fast);
+  background: var(--fresh-surface);
+}
+.img-upload:hover { border-color: var(--c-green); background: var(--c-green-dim); }
+.img-upload svg { width: 32px; height: 32px; color: var(--fresh-text-muted); stroke-width: 1.5; }
+.img-upload .iu-label { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; color: var(--fresh-text-muted); }
+.img-upload .iu-sub { font-size: 0.75rem; color: var(--fresh-text-muted); }
+
+/* Freshness date picker */
+.date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* Stock warning badge */
+.stock-warn { display: inline-flex; align-items: center; gap: 4px; background: var(--c-orange-dim); color: var(--c-orange); font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* FAB */
+.fab {
+  position: fixed; bottom: 80px; right: 16px;
+  left: 50%; margin-left: 167px;
+  max-width: 430px;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--c-green);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px var(--c-green-glow);
+  color: #fff;
+  transition: all var(--t-fast);
+  z-index: 35;
+}
+.fab:hover { background: var(--c-green-hover); transform: scale(1.05); }
+.fab svg { width: 24px; height: 24px; stroke-width: 2.5; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="top-header">
+    <div class="header-back">
+      <a href="07-seller-dashboard.html" class="header-back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">My Products</span>
+    </div>
+    <button class="icon-btn" aria-label="Filter" onclick="openEdit('new')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+
+  <div class="page-content" style="padding-bottom: 100px;">
+    <!-- Filter chips -->
+    <div style="padding: 12px 16px; border-bottom: 1px solid var(--fresh-border); background: var(--fresh-surface-card);">
+      <div class="chip-row">
+        <button class="chip active">All (12)</button>
+        <button class="chip" style="border-color:rgba(46,164,79,0.4);color:var(--c-green);">🟢 Fresh (9)</button>
+        <button class="chip" style="border-color:rgba(244,130,10,0.4);color:var(--c-orange);">🟡 Expiring (3)</button>
+        <button class="chip">Inactive (2)</button>
+      </div>
+    </div>
+
+    <!-- Expiring alert banner -->
+    <div style="padding: 12px 16px 0;">
+      <div style="background: rgba(244,130,10,0.08); border: 1px solid rgba(244,130,10,0.25); border-radius: 10px; padding: 10px 14px; display: flex; gap: 8px; align-items: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span style="font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; color: var(--c-orange);">3 products expiring within 12 hours</span>
+      </div>
+    </div>
+
+    <!-- Product list -->
+    <div style="margin-top: 12px; background: var(--fresh-surface-card); border: 1px solid var(--fresh-border); border-radius: var(--r-card); overflow: hidden; margin: 12px 16px 0; box-shadow: var(--shadow-sm);">
+
+      <!-- Expiring products first -->
+      <div style="padding: 8px 16px; background: var(--fresh-surface-2); border-bottom: 1px solid var(--fresh-border);">
+        <span style="font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--c-orange);">⏱ Expiring Soon</span>
+      </div>
+
+      <div class="product-row" onclick="openEdit('edit')">
+        <div class="pr-img">🍗</div>
+        <div class="pr-info">
+          <div class="pr-name">Lechon Manok</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-warning animate">6 hrs left · 28%</span>
+            <span class="pr-price">₱120</span>
+            <span class="pr-stock">/ whole · 4 left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill warning" style="width: 28%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-orange btn-xs" onclick="event.stopPropagation()">Mark Deal</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+
+      <div class="product-row" onclick="openEdit('edit')">
+        <div class="pr-img">🐠</div>
+        <div class="pr-info">
+          <div class="pr-name">Tilapia Fresh</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-warning animate">5 hrs left · 22%</span>
+            <span class="pr-price">₱95</span>
+            <span class="pr-stock">/ kg · 3.5 kg left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill warning" style="width: 22%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-orange btn-xs" onclick="event.stopPropagation()">Mark Deal</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+
+      <div class="product-row" onclick="openEdit('edit')">
+        <div class="pr-img">🥩</div>
+        <div class="pr-info">
+          <div class="pr-name">Pork Liempo</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-warning animate">3 hrs left · 12%</span>
+            <span class="pr-price">₱210</span>
+            <span class="pr-stock">/ kg · 2 kg left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill warning" style="width: 12%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-danger btn-xs" onclick="event.stopPropagation()">Remove</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+
+      <!-- Fresh products -->
+      <div style="padding: 8px 16px; background: var(--fresh-surface-2); border-bottom: 1px solid var(--fresh-border); border-top: 1px solid var(--fresh-border);">
+        <span style="font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--c-green);">🟢 Fresh</span>
+      </div>
+
+      <div class="product-row" onclick="openEdit('edit')">
+        <div class="pr-img">🐟</div>
+        <div class="pr-info">
+          <div class="pr-name">Bangus Milkfish</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-fresh">87% · 3 days</span>
+            <span class="pr-price">₱185</span>
+            <span class="pr-stock">/ kg · 8 kg left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill fresh" style="width: 87%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-secondary btn-xs" onclick="event.stopPropagation()">Edit</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+
+      <div class="product-row" onclick="openEdit('edit')">
+        <div class="pr-img">🥬</div>
+        <div class="pr-info">
+          <div class="pr-name">Pechay Tops</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-fresh">79% · 2 days</span>
+            <span class="pr-price">₱38</span>
+            <span class="pr-stock">/ bundle · 15 left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill fresh" style="width: 79%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-secondary btn-xs" onclick="event.stopPropagation()">Edit</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div class="pr-img">🐔</div>
+        <div class="pr-info">
+          <div class="pr-name">Whole Chicken</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-fresh">91% · 4 days</span>
+            <span class="pr-price">₱220</span>
+            <span class="pr-stock">/ pc · 6 left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill fresh" style="width: 91%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-secondary btn-xs" onclick="event.stopPropagation()">Edit</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+
+      <div class="product-row">
+        <div class="pr-img">🥚</div>
+        <div class="pr-info">
+          <div class="pr-name">Native Eggs</div>
+          <div class="pr-meta">
+            <span class="freshness-pill pill-fresh">95% · 5 days</span>
+            <span class="pr-price">₱12</span>
+            <span class="pr-stock">/ pc · 48 left</span>
+          </div>
+          <div class="freshness-bar" style="height: 4px; margin-bottom: 0;">
+            <div class="fill fresh" style="width: 95%;"></div>
+          </div>
+        </div>
+        <div class="pr-actions">
+          <button class="btn btn-secondary btn-xs" onclick="event.stopPropagation()">Edit</button>
+          <button class="toggle on" onclick="event.stopPropagation(); this.classList.toggle('on'); this.classList.toggle('off');" aria-label="Toggle active"></button>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 20px;"></div>
+  </div>
+
+  <!-- FAB: Add product -->
+  <button class="fab" aria-label="Add product" onclick="openEdit('new')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="07-seller-dashboard.html" class="nav-tab" aria-label="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dash</span>
+    </a>
+    <button class="nav-tab active" aria-label="Products">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Products</span>
+    </button>
+    <a href="09-seller-orders.html" class="nav-tab" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      <span>Orders</span>
+    </a>
+    <button class="nav-tab" aria-label="Payouts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Payouts</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+
+<!-- EDIT PRODUCT SHEET -->
+<div id="edit-overlay" class="sheet-overlay" style="display:none;" onclick="if(event.target===this)closeEdit()">
+  <div class="sheet" style="max-height: 92vh;">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title" id="sheet-title">Add Product</div>
+      <button class="btn btn-ghost btn-sm" onclick="closeEdit()">Cancel</button>
+    </div>
+    <div class="sheet-body">
+
+      <!-- Image upload -->
+      <div class="form-section">
+        <div class="form-section-title">Product Photo</div>
+        <div class="img-upload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div class="iu-label">Tap to add photo</div>
+          <div class="iu-sub">JPG or PNG · max 5MB</div>
+        </div>
+      </div>
+
+      <!-- Basic info -->
+      <div class="form-section">
+        <div class="form-section-title">Product Info</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="input-wrap">
+            <label class="input-label">Product Name *</label>
+            <input class="input" type="text" placeholder="e.g. Bangus Milkfish" id="edit-name">
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Category *</label>
+            <select class="select">
+              <option>Select category…</option>
+              <option>Fish &amp; Seafood</option>
+              <option>Poultry &amp; Meat</option>
+              <option>Fruits</option>
+              <option>Vegetables</option>
+              <option>Dairy &amp; Eggs</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Description</label>
+            <textarea class="textarea" placeholder="Storage tips, origin, preparation notes…" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="form-section">
+        <div class="form-section-title">Pricing &amp; Stock</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="input-wrap">
+            <label class="input-label">Price (₱) *</label>
+            <input class="input" type="number" placeholder="0.00">
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Unit *</label>
+            <select class="select">
+              <option>per kg</option>
+              <option>per piece</option>
+              <option>per bundle</option>
+              <option>per whole</option>
+              <option>per dozen</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Stock Qty *</label>
+            <input class="input" type="number" placeholder="0">
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Min. Order</label>
+            <input class="input" type="number" placeholder="0.5">
+          </div>
+        </div>
+      </div>
+
+      <!-- Freshness / expiry -->
+      <div class="form-section">
+        <div class="form-section-title">Freshness Info</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="date-grid">
+            <div class="input-wrap">
+              <label class="input-label">Harvest / Pack Date *</label>
+              <input class="input" type="date">
+            </div>
+            <div class="input-wrap">
+              <label class="input-label">Best Before *</label>
+              <input class="input" type="date">
+            </div>
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Storage Condition</label>
+            <select class="select">
+              <option>Refrigerate (0–4°C)</option>
+              <option>Freeze (below -18°C)</option>
+              <option>Room temperature</option>
+              <option>Cool &amp; dry</option>
+            </select>
+          </div>
+          <div class="input-wrap">
+            <label class="input-label">Origin / Source</label>
+            <input class="input" type="text" placeholder="e.g. Bulacan Fish Farm">
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="display: flex; gap: 10px; margin-top: 4px; margin-bottom: 16px;">
+        <button class="btn btn-secondary btn-md" style="flex:1;" onclick="closeEdit()">Discard</button>
+        <button class="btn btn-primary btn-md" style="flex:2;" onclick="closeEdit()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Save Product
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openEdit(mode) {
+  document.getElementById('sheet-title').textContent = mode === 'new' ? 'Add Product' : 'Edit Product';
+  if (mode === 'edit') document.getElementById('edit-name').value = 'Bangus Milkfish';
+  document.getElementById('edit-overlay').style.display = 'flex';
+}
+function closeEdit() {
+  document.getElementById('edit-overlay').style.display = 'none';
+}
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', () => {
+    c.closest('.chip-row').querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

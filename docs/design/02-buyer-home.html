@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Home</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ---- Hero location bar ---- */
+.location-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: var(--fresh-surface-card);
+  border-bottom: 1px solid var(--fresh-border);
+}
+.location-bar .loc-icon { color: var(--c-red); flex-shrink: 0; }
+.location-bar .loc-icon svg { width: 16px; height: 16px; stroke-width: 2.5; }
+.location-bar .loc-text { flex: 1; }
+.location-bar .loc-main { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; color: var(--fresh-text-primary); }
+.location-bar .loc-sub  { font-size: 0.75rem; color: var(--fresh-text-muted); }
+.location-bar .loc-change { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; color: var(--c-green); }
+
+/* ---- Hero banner ---- */
+.hero-banner {
+  margin: 16px 16px 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1a5c30 0%, #2EA44F 60%, #3bbd5e 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.hero-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M50 50c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S50 55.5 50 50zm0-30c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S50 25.5 50 20zM20 50c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S20 55.5 20 50zm0-30c0-5.5 4.5-10 10-10s10 4.5 10 10-4.5 10-10 10S20 25.5 20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-banner .hero-emoji { font-size: 3.5rem; position: absolute; right: 16px; top: 12px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+.hero-banner .hero-tag  { font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+.hero-banner .hero-title { font-family: var(--font-display); font-size: 1.375rem; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 10px; }
+.hero-banner .hero-cta { display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--c-green); font-family: var(--font-display); font-size: 0.8125rem; font-weight: 800; padding: 7px 14px; border-radius: 8px; width: fit-content; }
+
+/* ---- Category quick-access ---- */
+.category-row { display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 4px; scrollbar-width: none; }
+.category-row::-webkit-scrollbar { display: none; }
+.cat-item {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  flex-shrink: 0; cursor: pointer; min-width: 60px;
+}
+.cat-icon {
+  width: 54px; height: 54px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.75rem;
+  background: var(--fresh-surface-card);
+  border: 1.5px solid var(--fresh-border);
+  transition: all var(--t-fast);
+  box-shadow: var(--shadow-xs);
+}
+.cat-item:hover .cat-icon { border-color: var(--c-green); background: var(--c-green-dim); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.cat-item.active .cat-icon { background: var(--c-green); border-color: var(--c-green); }
+.cat-label { font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700; color: var(--fresh-text-muted); text-align: center; }
+.cat-item.active .cat-label { color: var(--c-green); }
+
+/* ---- Freshness urgency ticker (orange bar) ---- */
+.urgency-ticker {
+  background: linear-gradient(90deg, var(--c-orange) 0%, #F9950A 100%);
+  padding: 9px 16px;
+  display: flex; align-items: center; gap: 10px;
+  margin: 0 16px;
+  border-radius: 10px;
+}
+.urgency-ticker svg { width: 16px; height: 16px; stroke-width: 2.5; color: #fff; flex-shrink: 0; }
+.urgency-ticker .tick-text { font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; color: #fff; flex: 1; }
+.urgency-ticker .tick-count { font-family: var(--font-display); font-size: 0.8125rem; font-weight: 800; color: #fff; background: rgba(255,255,255,0.25); padding: 2px 8px; border-radius: 99px; }
+
+/* ---- Seller avatar strip ---- */
+.seller-strip { display: flex; gap: 12px; }
+.seller-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  flex-shrink: 0; cursor: pointer; min-width: 56px;
+}
+.seller-av {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--fresh-surface-2);
+  border: 2.5px solid var(--fresh-border);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem;
+  transition: border-color var(--t-fast);
+}
+.seller-chip:hover .seller-av { border-color: var(--c-green); }
+.seller-chip .seller-name { font-family: var(--font-display); font-size: 0.625rem; font-weight: 700; color: var(--fresh-text-muted); text-align: center; max-width: 56px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.seller-chip .online-dot { width: 9px; height: 9px; background: var(--c-green); border-radius: 50%; border: 2px solid var(--fresh-surface-card); position: absolute; bottom: 1px; right: 1px; }
+
+/* ---- Pagination dots ---- */
+.pag-dots { display: flex; gap: 5px; align-items: center; justify-content: center; padding: 8px; }
+.pag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--fresh-border-strong); }
+.pag-dot.active { width: 18px; border-radius: 99px; background: var(--c-green); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="logo-mark">
+      <!-- Three-color Chenda C logo inline SVG -->
+      <svg width="22" height="22" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M85 25C75 10 55 5 38 14C22 23 15 42 20 60C25 75 38 83 53 80" stroke="#2EA44F" stroke-width="18" stroke-linecap="round" fill="none"/>
+        <path d="M80 20C70 7 52 3 35 12" stroke="#F4820A" stroke-width="16" stroke-linecap="round" fill="none" opacity="0.85"/>
+        <path d="M55 80C70 78 80 67 82 53" stroke="#E63946" stroke-width="16" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="wordmark">
+      <span class="w-c">C</span><span>henda</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="badge-dot"></div>
+      </button>
+      <a href="04-cart.html" class="icon-btn" aria-label="Cart" style="text-decoration:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <div class="cart-badge">3</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Location bar -->
+    <div class="location-bar">
+      <div class="loc-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="loc-text">
+        <div class="loc-main">Pasig City, Metro Manila</div>
+        <div class="loc-sub">Showing results within 3.0 km</div>
+      </div>
+      <button class="loc-change">Change</button>
+    </div>
+
+    <!-- Search bar -->
+    <div class="section" style="padding-top:14px;">
+      <div class="search-bar">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <input type="text" placeholder="Search fresh produce near you…" aria-label="Search">
+      </div>
+      <!-- Filter chips -->
+      <div class="chip-row" style="margin-top:10px;">
+        <button class="chip active">All</button>
+        <button class="chip">🐟 Fish</button>
+        <button class="chip">🐔 Poultry</button>
+        <button class="chip">🥦 Veggies</button>
+        <button class="chip">🥭 Fruits</button>
+        <button class="chip">🥛 Dairy</button>
+        <button class="chip">Near Me</button>
+      </div>
+    </div>
+
+    <!-- Hero banner -->
+    <div class="section" style="padding-top:14px;">
+      <div class="hero-banner">
+        <div class="hero-emoji">🥩</div>
+        <div class="hero-tag">Flash Deal · Today Only</div>
+        <div class="hero-title">Freshest cuts,<br>nearest sellers.</div>
+        <a href="02-buyer-home.html" class="hero-cta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Browse Now
+        </a>
+      </div>
+      <!-- Pagination dots -->
+      <div class="pag-dots">
+        <div class="pag-dot active"></div>
+        <div class="pag-dot"></div>
+        <div class="pag-dot"></div>
+      </div>
+    </div>
+
+    <!-- Urgency ticker -->
+    <div class="section" style="padding-top:2px;">
+      <div class="urgency-ticker">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="tick-text">6 products expiring near you — grab them before they're gone</span>
+        <span class="tick-count">6</span>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Browse by Type</div>
+      </div>
+      <div class="category-row">
+        <div class="cat-item active">
+          <div class="cat-icon">🐟</div>
+          <div class="cat-label">Fish</div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">🐔</div>
+          <div class="cat-label">Poultry</div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">🥩</div>
+          <div class="cat-label">Meat</div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">🥦</div>
+          <div class="cat-label">Veggies</div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">🥭</div>
+          <div class="cat-label">Fruits</div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">🥛</div>
+          <div class="cat-label">Dairy</div>
+        </div>
+        <div class="cat-item">
+          <div class="cat-icon">🍳</div>
+          <div class="cat-label">Eggs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nearby Sellers -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Nearby Sellers</div>
+        <span class="section-link">See all</span>
+      </div>
+      <div class="h-scroll">
+        <div class="seller-chip">
+          <div style="position:relative;">
+            <div class="seller-av">🧑‍🍳</div>
+            <div class="online-dot"></div>
+          </div>
+          <div class="seller-name">Aling Rosa</div>
+        </div>
+        <div class="seller-chip">
+          <div style="position:relative;">
+            <div class="seller-av">🏪</div>
+            <div class="online-dot"></div>
+          </div>
+          <div class="seller-name">FarmDirect</div>
+        </div>
+        <div class="seller-chip">
+          <div style="position:relative;">
+            <div class="seller-av">🍗</div>
+            <div class="online-dot"></div>
+          </div>
+          <div class="seller-name">Mang Totoy</div>
+        </div>
+        <div class="seller-chip">
+          <div style="position:relative;">
+            <div class="seller-av">🌾</div>
+          </div>
+          <div class="seller-name">Laguna Farms</div>
+        </div>
+        <div class="seller-chip">
+          <div style="position:relative;">
+            <div class="seller-av">🥬</div>
+            <div class="online-dot"></div>
+          </div>
+          <div class="seller-name">Verdana Co.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fresh Picks — product grid -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Fresh Picks Near You</div>
+        <span class="section-link">See all</span>
+      </div>
+      <div class="grid-2">
+
+        <!-- Product 1 — Fresh -->
+        <a href="03-product-detail.html" class="product-card" style="text-decoration:none;">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;">🐟</div>
+            <span class="freshness-pill pill-fresh">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Fresh
+            </span>
+            <button class="fav-btn" aria-label="Favorite" onclick="event.preventDefault();this.classList.toggle('active')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__name">Bangus Milkfish</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>0.8 km · Aling Rosa's</span>
+            </div>
+            <div class="freshness-bar-wrap">
+              <div class="bar-row">
+                <span class="bar-label" style="color:var(--c-green);">Fresh</span>
+                <span class="bar-pct" style="color:var(--c-green);">87%</span>
+              </div>
+              <div class="freshness-bar"><div class="fill fresh" style="width:87%"></div></div>
+            </div>
+            <div class="product-card__price">₱185 <span class="per-unit">/kg</span></div>
+          </div>
+        </a>
+
+        <!-- Product 2 — Expiring (orange) -->
+        <a href="03-product-detail.html" class="product-card" style="text-decoration:none; border-color: rgba(244,130,10,0.3);">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;">🍗</div>
+            <span class="freshness-pill pill-warning animate">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              6 hrs left
+            </span>
+            <button class="fav-btn active" aria-label="Favorite" onclick="event.preventDefault();this.classList.toggle('active')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__name">Lechon Manok</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>1.4 km · Mang Totoy</span>
+            </div>
+            <div class="freshness-bar-wrap">
+              <div class="bar-row">
+                <span class="bar-label" style="color:var(--c-orange);">Expiring</span>
+                <span class="bar-pct" style="color:var(--c-orange);">28%</span>
+              </div>
+              <div class="freshness-bar"><div class="fill warning" style="width:28%"></div></div>
+            </div>
+            <div class="product-card__price expiring">₱120 <span class="per-unit" style="color:var(--fresh-text-muted);">/whole</span></div>
+          </div>
+        </a>
+
+        <!-- Product 3 — Fresh -->
+        <a href="03-product-detail.html" class="product-card" style="text-decoration:none;">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#fff8e1,#fff3c4);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;">🥭</div>
+            <span class="freshness-pill pill-fresh">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Fresh
+            </span>
+            <div style="position:absolute;top:8px;left:8px;background:var(--c-orange);color:#fff;font-family:var(--font-display);font-size:0.625rem;font-weight:800;padding:3px 7px;border-radius:99px;letter-spacing:0.04em;text-transform:uppercase;">⭐ Featured</div>
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__name">Carabao Mango</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>0.3 km · Laguna Farms</span>
+            </div>
+            <div class="freshness-bar-wrap">
+              <div class="bar-row">
+                <span class="bar-label" style="color:var(--c-green);">Fresh</span>
+                <span class="bar-pct" style="color:var(--c-green);">95%</span>
+              </div>
+              <div class="freshness-bar"><div class="fill fresh" style="width:95%"></div></div>
+            </div>
+            <div class="product-card__price">₱65 <span class="per-unit">/pc</span></div>
+          </div>
+        </a>
+
+        <!-- Product 4 — Fresh -->
+        <a href="03-product-detail.html" class="product-card" style="text-decoration:none;">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#e8f5e9,#b2dfdb);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.8rem;">🥬</div>
+            <span class="freshness-pill pill-fresh">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Fresh
+            </span>
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__name">Pechay Tops</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>1.1 km · Verdana Co.</span>
+            </div>
+            <div class="freshness-bar-wrap">
+              <div class="bar-row">
+                <span class="bar-label" style="color:var(--c-green);">Fresh</span>
+                <span class="bar-pct" style="color:var(--c-green);">79%</span>
+              </div>
+              <div class="freshness-bar"><div class="fill fresh" style="width:79%"></div></div>
+            </div>
+            <div class="product-card__price">₱38 <span class="per-unit">/bundle</span></div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Expiring Deals section (orange-accented) -->
+    <div class="section" style="margin-top:8px;">
+      <div class="section-header">
+        <div class="section-title" style="display:flex;align-items:center;gap:7px;">
+          <span style="color:var(--c-orange);">⏱</span> Expiring Deals
+        </div>
+        <span class="section-link">See all</span>
+      </div>
+      <div class="h-scroll">
+
+        <!-- Deal card 1 -->
+        <div class="product-card" style="min-width:160px;max-width:160px; border-color:rgba(244,130,10,0.3);">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.2rem;">🥩</div>
+            <span class="freshness-pill pill-warning animate" style="bottom:6px;left:6px;font-size:0.5625rem;padding:2px 6px;">3 hrs</span>
+          </div>
+          <div class="product-card__body" style="gap:4px;">
+            <div class="product-card__name" style="font-size:0.8125rem;">Pork Liempo</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>2.0 km</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="product-card__price expiring" style="font-size:0.9375rem;">₱210</div>
+              <div style="font-size:0.75rem;text-decoration:line-through;color:var(--fresh-text-muted);">₱280</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deal card 2 -->
+        <div class="product-card" style="min-width:160px;max-width:160px; border-color:rgba(244,130,10,0.3);">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.2rem;">🐠</div>
+            <span class="freshness-pill pill-warning animate" style="bottom:6px;left:6px;font-size:0.5625rem;padding:2px 6px;">5 hrs</span>
+          </div>
+          <div class="product-card__body" style="gap:4px;">
+            <div class="product-card__name" style="font-size:0.8125rem;">Tilapia Fresh</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>0.9 km</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="product-card__price expiring" style="font-size:0.9375rem;">₱95</div>
+              <div style="font-size:0.75rem;text-decoration:line-through;color:var(--fresh-text-muted);">₱130</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deal card 3 -->
+        <div class="product-card" style="min-width:160px;max-width:160px; border-color:rgba(244,130,10,0.3);">
+          <div class="product-card__img" style="background:linear-gradient(135deg,#fff8e1,#fff3c4);">
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.2rem;">🍌</div>
+            <span class="freshness-pill pill-warning animate" style="bottom:6px;left:6px;font-size:0.5625rem;padding:2px 6px;">8 hrs</span>
+          </div>
+          <div class="product-card__body" style="gap:4px;">
+            <div class="product-card__name" style="font-size:0.8125rem;">Lakatan Banana</div>
+            <div class="product-card__meta">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>1.6 km</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <div class="product-card__price expiring" style="font-size:0.9375rem;">₱45</div>
+              <div style="font-size:0.75rem;text-decoration:line-through;color:var(--fresh-text-muted);">₱60</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="height:16px;"></div>
+  </div><!-- /page-content -->
+
+  <!-- Bottom Nav — Buyer -->
+  <div class="bottom-nav">
+    <button class="nav-tab active" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Explore</span>
+    </button>
+    <a href="06-orders.html" class="nav-tab" style="text-decoration:none;" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Orders</span>
+    </a>
+    <a href="04-cart.html" class="nav-tab" style="text-decoration:none; position:relative;" aria-label="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Cart</span>
+      <div style="position:absolute;top:8px;right:14px;width:14px;height:14px;background:var(--c-green);border-radius:50%;border:2px solid var(--fresh-surface);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:8px;font-weight:800;color:#fff;">3</div>
+    </a>
+    <a href="10-notifications.html" class="nav-tab" style="text-decoration:none;" aria-label="Alerts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Alerts</span>
+    </a>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+
+</div><!-- /app-shell -->
+
+<script>
+// Category active toggle
+document.querySelectorAll('.cat-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+// Chip toggle
+document.querySelectorAll('.chip-row .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    chip.closest('.chip-row').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

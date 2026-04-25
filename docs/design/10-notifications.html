@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Notifications</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ============================================================
+   NOTIFICATIONS PAGE
+   Design intent: Time is always felt. Freshness alerts carry
+   visual urgency through color-coded left borders + icons.
+   Unread = full weight. Read = muted. Critical = pulsing dot.
+   ============================================================ */
+
+.notif-date-group {
+  padding: 20px 16px 8px;
+}
+.notif-date-label {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fresh-text-muted);
+}
+
+/* Notification card */
+.notif-card {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--fresh-surface-card);
+  border-bottom: 1px solid var(--fresh-border);
+  transition: background var(--t-fast);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.notif-card:active { background: var(--fresh-surface-2); }
+
+/* Left accent border — communicates urgency type */
+.notif-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: transparent;
+}
+.notif-card.unread { background: rgba(46,164,79,0.04); }
+.notif-card.unread::before { background: var(--c-green); }
+.notif-card.urgent { background: rgba(244,130,10,0.05); }
+.notif-card.urgent::before { background: var(--c-orange); }
+.notif-card.critical { background: rgba(230,57,70,0.05); }
+.notif-card.critical::before { background: var(--c-red); }
+.notif-card.system { background: var(--fresh-surface-card); }
+.notif-card.system::before { background: var(--fresh-border-strong); }
+
+/* Icon bubble */
+.notif-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+  position: relative;
+}
+.notif-icon.green  { background: var(--c-green-dim); }
+.notif-icon.orange { background: var(--c-orange-dim); }
+.notif-icon.red    { background: var(--c-red-dim); }
+.notif-icon.blue   { background: rgba(59,130,246,0.12); }
+.notif-icon.gray   { background: var(--fresh-surface-2); }
+
+/* Pulsing dot for critical */
+.notif-icon .pulse-ring {
+  position: absolute;
+  top: -2px; right: -2px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--c-red);
+  border: 2px solid var(--fresh-surface-card);
+}
+.notif-icon .pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--c-red);
+  animation: pulse-ring 1.8s ease infinite;
+}
+@keyframes pulse-ring {
+  0%   { opacity: 1; transform: scale(1); }
+  70%  { opacity: 0; transform: scale(2); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+/* Unread dot (green, no pulse) */
+.notif-icon .unread-dot {
+  position: absolute;
+  top: -2px; right: -2px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--c-green);
+  border: 2px solid var(--fresh-surface-card);
+}
+
+.notif-body { flex: 1; min-width: 0; }
+.notif-title {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fresh-text-primary);
+  line-height: 1.35;
+  margin-bottom: 3px;
+}
+.notif-card.read .notif-title { font-weight: 500; color: var(--fresh-text-muted); }
+.notif-desc {
+  font-size: 0.8125rem;
+  color: var(--fresh-text-muted);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.notif-card.unread .notif-desc,
+.notif-card.urgent .notif-desc,
+.notif-card.critical .notif-desc { color: var(--fresh-text-primary); }
+
+.notif-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.notif-time {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--fresh-text-muted);
+}
+.notif-cta {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--c-green);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.notif-cta.orange { color: var(--c-orange); }
+.notif-cta.red    { color: var(--c-red); }
+
+/* Freshness countdown chip */
+.fresh-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: var(--c-orange);
+  background: var(--c-orange-dim);
+  border: 1px solid rgba(244,130,10,0.2);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+.fresh-countdown.critical {
+  color: var(--c-red);
+  background: var(--c-red-dim);
+  border-color: rgba(230,57,70,0.2);
+}
+.fresh-countdown svg { width: 9px; height: 9px; stroke-width: 2.5; }
+
+/* Swipe-to-dismiss hint (decorative) */
+.notif-dismiss {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.notif-dismiss svg {
+  width: 14px; height: 14px;
+  color: var(--fresh-border-strong);
+  stroke-width: 2;
+}
+
+/* Filter tabs */
+.filter-tabs-wrap {
+  background: var(--fresh-surface-card);
+  border-bottom: 1px solid var(--fresh-border);
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  display: flex;
+  gap: 0;
+}
+.filter-tabs-wrap::-webkit-scrollbar { display: none; }
+.ftab {
+  padding: 11px 14px;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--fresh-text-muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  background: none;
+  border-top: none; border-left: none; border-right: none;
+  transition: color var(--t-fast), border-color var(--t-fast);
+  display: flex; align-items: center; gap: 6px;
+}
+.ftab .ftab-count {
+  font-size: 0.625rem;
+  font-weight: 800;
+  background: var(--fresh-surface-2);
+  color: var(--fresh-text-muted);
+  border-radius: 99px;
+  padding: 1px 6px;
+  min-width: 18px;
+  text-align: center;
+}
+.ftab.active {
+  color: var(--fresh-text-primary);
+  border-bottom-color: var(--c-green);
+}
+.ftab.active .ftab-count {
+  background: var(--c-green-dim);
+  color: var(--c-green);
+}
+
+/* Inline freshness bar in notif */
+.notif-fresh-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+}
+.notif-fresh-bar .bar-wrap {
+  flex: 1;
+  height: 3px;
+  background: var(--track-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.notif-fresh-bar .bar-fill {
+  height: 100%;
+  border-radius: 99px;
+}
+.bar-fill.orange { background: var(--c-orange); }
+.bar-fill.red    { background: var(--c-red); }
+.bar-fill.green  { background: var(--c-green); }
+
+/* Mark all read banner */
+.mark-all-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--fresh-surface-2);
+  border-bottom: 1px solid var(--fresh-border);
+}
+.mark-all-bar .ma-text {
+  font-size: 0.8125rem;
+  color: var(--fresh-text-muted);
+}
+.mark-all-bar .ma-text strong {
+  font-family: var(--font-display);
+  color: var(--fresh-text-primary);
+  font-weight: 700;
+}
+.mark-all-btn {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--c-green);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-back" style="flex:1;">
+      <div class="logo-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M32 20c0 6.627-5.373 12-12 12-3.24 0-6.174-1.283-8.343-3.364" stroke="#E63946" stroke-width="5" stroke-linecap="round"/><path d="M28 20c0 4.418-3.582 8-8 8-2.16 0-4.116-.855-5.562-2.243" stroke="#F4820A" stroke-width="5" stroke-linecap="round"/><path d="M36 20c0 8.837-7.163 16-16 16S4 28.837 4 20 11.163 4 20 4c2.9 0 5.617.772 7.962 2.121" stroke="#2EA44F" stroke-width="5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="header-page-title">Notifications</span>
+    </div>
+    <button class="icon-btn" aria-label="Notification settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>
+    </button>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs-wrap">
+      <button class="ftab active" onclick="switchNotifTab('all',this)">
+        All
+        <span class="ftab-count">6</span>
+      </button>
+      <button class="ftab" onclick="switchNotifTab('freshness',this)">
+        Freshness
+        <span class="ftab-count">3</span>
+      </button>
+      <button class="ftab" onclick="switchNotifTab('orders',this)">
+        Orders
+        <span class="ftab-count">2</span>
+      </button>
+      <button class="ftab" onclick="switchNotifTab('promos',this)">
+        Promos
+        <span class="ftab-count">1</span>
+      </button>
+      <button class="ftab" onclick="switchNotifTab('system',this)">
+        System
+      </button>
+    </div>
+
+    <!-- Mark all read bar -->
+    <div class="mark-all-bar">
+      <div class="ma-text"><strong>6 unread</strong> notifications</div>
+      <button class="mark-all-btn">Mark all read</button>
+    </div>
+
+    <!-- === TODAY === -->
+    <div class="notif-date-group">
+      <div class="notif-date-label">Today</div>
+    </div>
+
+    <!-- CRITICAL: Product expiring in cart -->
+    <div class="notif-card critical" data-tab="freshness">
+      <div class="notif-icon red">
+        ⏰
+        <div class="pulse-ring"></div>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Cart item expiring in 2 hours!</div>
+        <div class="notif-desc">Lechon Manok from Mang Totoy BBQ is about to expire. Order now or remove it from your cart.</div>
+        <div class="notif-fresh-bar">
+          <div class="bar-wrap"><div class="bar-fill red" style="width:12%;"></div></div>
+          <span style="font-family:var(--font-display);font-size:0.6875rem;font-weight:800;color:var(--c-red);">12%</span>
+        </div>
+        <div class="notif-meta" style="margin-top:6px;">
+          <span class="notif-time">2 min ago</span>
+          <span class="notif-cta red">Go to cart →</span>
+        </div>
+      </div>
+      <div class="notif-dismiss">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- URGENT: Nearby seller, price drop -->
+    <div class="notif-card urgent" data-tab="promos">
+      <div class="notif-icon orange">
+        🏷️
+        <div class="unread-dot" style="background:var(--c-orange);"></div>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Flash deal — 20% off Pork Kasim</div>
+        <div class="notif-desc">Aling Rosa's Fresh Market dropped prices to move inventory fast. Only 1.5 kg left.</div>
+        <div class="notif-meta">
+          <span class="notif-time">15 min ago</span>
+          <span class="fresh-countdown">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Ends in 1h 45m
+          </span>
+          <span class="notif-cta orange">Shop now →</span>
+        </div>
+      </div>
+      <div class="notif-dismiss">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- UNREAD: Order confirmed -->
+    <div class="notif-card unread" data-tab="orders">
+      <div class="notif-icon green">
+        ✅
+        <div class="unread-dot"></div>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Order CHN-0851 confirmed!</div>
+        <div class="notif-desc">Aling Rosa's accepted your order. Rider assigned — expected pickup in 12 minutes.</div>
+        <div class="notif-meta">
+          <span class="notif-time">28 min ago</span>
+          <span class="notif-cta">Track order →</span>
+        </div>
+      </div>
+      <div class="notif-dismiss">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- FRESHNESS: Watched product updated -->
+    <div class="notif-card urgent" data-tab="freshness">
+      <div class="notif-icon orange">
+        🐟
+        <div class="unread-dot" style="background:var(--c-orange);"></div>
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Bangus freshness dropping</div>
+        <div class="notif-desc">Bangus Milkfish from Laguna Farms is now at 38% freshness. Last chance to order at this price.</div>
+        <div class="notif-fresh-bar">
+          <div class="bar-wrap"><div class="bar-fill orange" style="width:38%;"></div></div>
+          <span style="font-family:var(--font-display);font-size:0.6875rem;font-weight:800;color:var(--c-orange);">38%</span>
+        </div>
+        <div class="notif-meta" style="margin-top:6px;">
+          <span class="notif-time">1 hr ago</span>
+          <span class="fresh-countdown">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ~8 hrs left
+          </span>
+          <span class="notif-cta orange">View product →</span>
+        </div>
+      </div>
+      <div class="notif-dismiss">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- === YESTERDAY === -->
+    <div class="notif-date-group">
+      <div class="notif-date-label">Yesterday</div>
+    </div>
+
+    <!-- READ: Order delivered -->
+    <div class="notif-card read" data-tab="orders">
+      <div class="notif-icon blue">
+        🛵
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Order CHN-0847 delivered</div>
+        <div class="notif-desc">Your order was delivered. Leave a review for Aling Rosa's Fresh Market.</div>
+        <div class="notif-meta">
+          <span class="notif-time">Yesterday, 11:04 AM</span>
+          <span class="notif-cta">Rate now →</span>
+        </div>
+      </div>
+      <div class="notif-dismiss">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- READ: Freshness alert past -->
+    <div class="notif-card read" data-tab="freshness">
+      <div class="notif-icon gray">
+        🕐
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Ampalaya expired — removed from wishlist</div>
+        <div class="notif-desc">Ampalaya from Mang Totoy reached 0% freshness and was automatically removed from your saved items.</div>
+        <div class="notif-meta">
+          <span class="notif-time">Yesterday, 6:30 PM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- READ: System -->
+    <div class="notif-card system read" data-tab="system">
+      <div class="notif-icon gray">
+        🔔
+      </div>
+      <div class="notif-body">
+        <div class="notif-title">Delivery zone expanded</div>
+        <div class="notif-desc">Chenda now covers Marikina and San Juan. More sellers near you are now available.</div>
+        <div class="notif-meta">
+          <span class="notif-time">Yesterday, 9:00 AM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state (hidden by default, shown for empty tabs) -->
+    <div id="empty-notif" style="display:none;padding:48px 32px;text-align:center;">
+      <div style="font-size:3rem;margin-bottom:16px;">🔔</div>
+      <div style="font-family:var(--font-display);font-size:1.125rem;font-weight:700;margin-bottom:8px;">All caught up</div>
+      <div style="font-size:0.875rem;color:var(--fresh-text-muted);line-height:1.6;">No notifications in this category. Freshness alerts and order updates will appear here.</div>
+    </div>
+
+    <div style="height: 24px;"></div>
+  </div>
+
+  <!-- Bottom Nav — Buyer -->
+  <div class="bottom-nav">
+    <a href="02-buyer-home.html" class="nav-tab" aria-label="Explore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Explore</span>
+    </a>
+    <a href="06-orders.html" class="nav-tab" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Orders</span>
+    </a>
+    <a href="04-cart.html" class="nav-tab" aria-label="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Cart</span>
+    </a>
+    <button class="nav-tab active" aria-label="Alerts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Alerts</span>
+      <span class="nav-badge">6</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+
+<script>
+function switchNotifTab(tab, btn) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.notif-card');
+  const groups = document.querySelectorAll('.notif-date-group');
+
+  if (tab === 'all') {
+    cards.forEach(c => c.style.display = '');
+    groups.forEach(g => g.style.display = '');
+    document.getElementById('empty-notif').style.display = 'none';
+  } else {
+    cards.forEach(c => {
+      c.style.display = (c.dataset.tab === tab) ? '' : 'none';
+    });
+    groups.forEach(g => g.style.display = '');
+
+    const visible = [...cards].filter(c => c.dataset.tab === tab);
+    document.getElementById('empty-notif').style.display = visible.length === 0 ? 'block' : 'none';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Cart</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.cart-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--fresh-surface-card);
+  border-bottom: 1px solid var(--fresh-border);
+}
+.cart-item__img {
+  width: 64px; height: 64px; border-radius: 10px;
+  background: var(--fresh-surface-2);
+  overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 1.75rem;
+}
+.cart-item__body { flex: 1; }
+.cart-item__name { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; margin-bottom: 3px; }
+.cart-item__seller { font-size: 0.75rem; color: var(--fresh-text-muted); margin-bottom: 6px; }
+.cart-item__freshness { margin-bottom: 8px; }
+.cart-item__footer { display: flex; align-items: center; justify-content: space-between; }
+.cart-item__price { font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--c-green); }
+.cart-item__price.expiring { color: var(--c-orange); }
+
+.qty-mini { display: flex; align-items: center; gap: 0; border: 1.5px solid var(--fresh-border); border-radius: 8px; overflow: hidden; }
+.qty-mini .qb { width: 28px; height: 28px; border: none; background: var(--fresh-surface-2); cursor: pointer; font-size: 1rem; font-weight: 700; font-family: var(--font-display); color: var(--fresh-text-primary); display: flex; align-items: center; justify-content: center; transition: background var(--t-fast); }
+.qty-mini .qb:hover { background: var(--fresh-border); }
+.qty-mini .qv { width: 32px; text-align: center; font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; background: var(--fresh-surface-card); border: none; outline: none; color: var(--fresh-text-primary); height: 28px; }
+
+.remove-btn { border: none; background: none; cursor: pointer; color: var(--fresh-text-muted); padding: 4px; border-radius: 6px; transition: color var(--t-fast); }
+.remove-btn:hover { color: var(--c-red); }
+.remove-btn svg { width: 16px; height: 16px; stroke-width: 2; }
+
+/* Seller group header */
+.seller-group-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px 6px;
+  background: var(--fresh-surface-2);
+  border-bottom: 1px solid var(--fresh-border);
+}
+.seller-group-header .sg-av { width: 28px; height: 28px; border-radius: 8px; background: var(--fresh-surface-card); border: 1px solid var(--fresh-border); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0; }
+.seller-group-header .sg-name { font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; flex: 1; }
+.seller-group-header .sg-dist { font-size: 0.75rem; color: var(--fresh-text-muted); }
+
+/* Expiry warning banner */
+.expiry-banner {
+  background: rgba(244,130,10,0.08);
+  border: 1px solid rgba(244,130,10,0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex; align-items: flex-start; gap: 8px;
+  margin: 12px 16px 0;
+}
+.expiry-banner svg { width: 16px; height: 16px; stroke-width: 2.5; color: var(--c-orange); flex-shrink: 0; margin-top: 1px; }
+.expiry-banner .eb-text { font-size: 0.8125rem; color: var(--fresh-text-primary); line-height: 1.5; }
+.expiry-banner .eb-text strong { color: var(--c-orange); }
+
+/* Order summary */
+.order-summary {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  margin: 16px 16px 0;
+}
+.sum-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--fresh-border); font-size: 0.875rem; }
+.sum-row:last-child { border-bottom: none; }
+.sum-row .sr-label { color: var(--fresh-text-muted); }
+.sum-row .sr-val   { font-family: var(--font-display); font-weight: 700; }
+.sum-row.total { background: var(--fresh-surface-2); }
+.sum-row.total .sr-label { font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; color: var(--fresh-text-primary); }
+.sum-row.total .sr-val   { font-size: 1.125rem; color: var(--c-green); }
+
+/* Sticky checkout bar */
+.checkout-bar {
+  position: sticky; bottom: 64px;
+  background: var(--nav-bg); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--fresh-border);
+  padding: 12px 16px;
+  display: flex; gap: 12px; align-items: center;
+}
+.checkout-bar .total-mini { flex-shrink: 0; }
+.checkout-bar .tm-label { font-size: 0.75rem; color: var(--fresh-text-muted); }
+.checkout-bar .tm-val   { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--fresh-text-primary); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-back">
+      <a href="02-buyer-home.html" class="header-back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">My Cart</span>
+    </div>
+    <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:600;color:var(--fresh-text-muted);">3 items</div>
+  </div>
+
+  <div class="page-content" style="padding-bottom:140px;">
+
+    <!-- Expiry warning -->
+    <div class="expiry-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div class="eb-text"><strong>Lechon Manok</strong> in your cart expires in 6 hours. Order soon!</div>
+    </div>
+
+    <!-- Seller Group 1: Aling Rosa's -->
+    <div style="margin-top:16px;">
+      <div class="seller-group-header">
+        <div class="sg-av">🧑‍🍳</div>
+        <div class="sg-name">Aling Rosa's Fresh Market</div>
+        <div class="sg-dist">0.8 km</div>
+      </div>
+
+      <!-- Item 1 -->
+      <div class="cart-item">
+        <div class="cart-item__img">🐟</div>
+        <div class="cart-item__body">
+          <div class="cart-item__name">Bangus Milkfish</div>
+          <div class="cart-item__seller">Aling Rosa's · ₱185/kg</div>
+          <div class="cart-item__freshness">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);text-transform:uppercase;color:var(--c-green);">Fresh</span>
+              <span style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);color:var(--c-green);">87%</span>
+            </div>
+            <div class="freshness-bar"><div class="fill fresh" style="width:87%"></div></div>
+          </div>
+          <div class="cart-item__footer">
+            <div class="cart-item__price">₱370.00</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="qty-mini">
+                <button class="qb">−</button>
+                <div class="qv">2.0</div>
+                <button class="qb">+</button>
+              </div>
+              <button class="remove-btn" aria-label="Remove item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seller Group 2: Mang Totoy -->
+    <div style="margin-top:8px;">
+      <div class="seller-group-header">
+        <div class="sg-av">🍗</div>
+        <div class="sg-name">Mang Totoy BBQ</div>
+        <div class="sg-dist">1.4 km</div>
+      </div>
+
+      <!-- Item 2 — Expiring -->
+      <div class="cart-item">
+        <div class="cart-item__img">🍗</div>
+        <div class="cart-item__body">
+          <div class="cart-item__name">Lechon Manok</div>
+          <div class="cart-item__seller">Mang Totoy BBQ · ₱120/whole</div>
+          <div class="cart-item__freshness">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);text-transform:uppercase;color:var(--c-orange);">6 hrs left</span>
+              <span style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);color:var(--c-orange);">28%</span>
+            </div>
+            <div class="freshness-bar"><div class="fill warning" style="width:28%"></div></div>
+          </div>
+          <div class="cart-item__footer">
+            <div class="cart-item__price expiring">₱120.00</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="qty-mini">
+                <button class="qb">−</button>
+                <div class="qv">1</div>
+                <button class="qb">+</button>
+              </div>
+              <button class="remove-btn" aria-label="Remove item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seller Group 3: Laguna Farms -->
+    <div style="margin-top:8px;">
+      <div class="seller-group-header">
+        <div class="sg-av">🌾</div>
+        <div class="sg-name">Laguna Farms</div>
+        <div class="sg-dist">0.3 km</div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="cart-item">
+        <div class="cart-item__img">🥭</div>
+        <div class="cart-item__body">
+          <div class="cart-item__name">Carabao Mango</div>
+          <div class="cart-item__seller">Laguna Farms · ₱65/pc</div>
+          <div class="cart-item__freshness">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);text-transform:uppercase;color:var(--c-green);">Fresh</span>
+              <span style="font-size:0.6875rem;font-weight:700;font-family:var(--font-display);color:var(--c-green);">95%</span>
+            </div>
+            <div class="freshness-bar"><div class="fill fresh" style="width:95%"></div></div>
+          </div>
+          <div class="cart-item__footer">
+            <div class="cart-item__price">₱195.00</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="qty-mini">
+                <button class="qb">−</button>
+                <div class="qv">3</div>
+                <button class="qb">+</button>
+              </div>
+              <button class="remove-btn" aria-label="Remove item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <div class="sum-row"><span class="sr-label">Subtotal</span><span class="sr-val">₱685.00</span></div>
+      <div class="sum-row"><span class="sr-label">Delivery (est.)</span><span class="sr-val">₱55.00</span></div>
+      <div class="sum-row"><span class="sr-label" style="color:var(--c-green);">Freshness discount</span><span class="sr-val" style="color:var(--c-green);">−₱30.00</span></div>
+      <div class="sum-row total"><span class="sr-label">Total</span><span class="sr-val">₱710.00</span></div>
+    </div>
+
+    <!-- Delivery note -->
+    <div style="margin:12px 16px 0;padding:12px 14px;background:var(--fresh-surface-card);border:1px solid var(--fresh-border);border-radius:10px;font-size:0.8125rem;color:var(--fresh-text-muted);display:flex;gap:8px;align-items:flex-start;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--c-green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      <span>Estimated delivery: <strong style="color:var(--fresh-text-primary);">35–50 minutes</strong> from order confirmation</span>
+    </div>
+
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- Sticky Checkout bar -->
+  <div class="checkout-bar">
+    <div class="total-mini">
+      <div class="tm-label">Total</div>
+      <div class="tm-val">₱710.00</div>
+    </div>
+    <a href="05-checkout.html" class="btn btn-primary btn-lg" style="flex:1;">
+      Checkout
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="02-buyer-home.html" class="nav-tab" style="text-decoration:none;" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Explore</span>
+    </a>
+    <a href="06-orders.html" class="nav-tab" style="text-decoration:none;" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Orders</span>
+    </a>
+    <button class="nav-tab active" aria-label="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Cart</span>
+    </button>
+    <a href="10-notifications.html" class="nav-tab" style="text-decoration:none;" aria-label="Alerts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Alerts</span>
+    </a>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+
+</div>
+</body>
+</html>

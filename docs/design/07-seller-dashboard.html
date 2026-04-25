@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Seller Dashboard</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.dash-header-band {
+  background: linear-gradient(135deg, #1a5c30 0%, #2EA44F 70%, #3bbd5e 100%);
+  padding: 20px 16px 24px;
+  position: relative; overflow: hidden;
+}
+.dash-header-band::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 21px);
+}
+.seller-greeting { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 4px; position: relative; }
+.seller-sub { font-size: 0.8125rem; color: rgba(255,255,255,0.75); position: relative; }
+.store-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 99px; padding: 5px 12px; margin-top: 10px; font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; color: #fff; position: relative; }
+
+/* Stat card grid */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px; margin-top: -16px; }
+.stat-card-dash {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  padding: 14px;
+  box-shadow: var(--shadow-md);
+}
+.sc-label { font-size: 0.6875rem; font-weight: 700; font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.06em; color: var(--fresh-text-muted); margin-bottom: 6px; }
+.sc-val { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--fresh-text-primary); line-height: 1; margin-bottom: 4px; }
+.sc-delta { font-size: 0.6875rem; font-weight: 700; font-family: var(--font-display); display: flex; align-items: center; gap: 3px; }
+.sc-delta.up { color: var(--c-green); }
+.sc-delta.warn { color: var(--c-orange); }
+.sc-delta.down { color: var(--c-red); }
+
+/* Bar chart */
+.dash-chart {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.chart-title { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 800; }
+.chart-period { font-size: 0.75rem; color: var(--fresh-text-muted); }
+.bar-chart { display: flex; align-items: flex-end; gap: 5px; height: 80px; }
+.bar-chart .bc-bar { flex: 1; border-radius: 4px 4px 0 0; cursor: pointer; transition: opacity var(--t-fast); position: relative; }
+.bar-chart .bc-bar:hover { opacity: 0.8; }
+.bar-chart .bc-bar.green { background: var(--c-green); }
+.bar-chart .bc-bar.orange { background: var(--c-orange); }
+.bar-chart .bc-bar.today { background: var(--c-green); box-shadow: 0 0 0 2px var(--c-green-glow); }
+.chart-labels { display: flex; gap: 5px; margin-top: 6px; }
+.chart-labels span { flex: 1; text-align: center; font-size: 9px; font-weight: 700; font-family: var(--font-display); color: var(--fresh-text-muted); text-transform: uppercase; }
+.chart-labels .today { color: var(--c-green); }
+
+/* Inventory alert */
+.inventory-alert {
+  background: rgba(244,130,10,0.08);
+  border: 1px solid rgba(244,130,10,0.25);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.ia-icon { width: 36px; height: 36px; border-radius: 9px; background: var(--c-orange-dim); display: flex; align-items: center; justify-content: center; color: var(--c-orange); flex-shrink: 0; }
+.ia-icon svg { width: 18px; height: 18px; stroke-width: 2; }
+.ia-title { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; margin-bottom: 3px; }
+.ia-desc { font-size: 0.8125rem; color: var(--fresh-text-muted); line-height: 1.5; }
+
+/* Recent orders mini list */
+.order-mini {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--fresh-border);
+}
+.order-mini:last-child { border-bottom: none; }
+.order-mini__num { font-family: var(--font-display); font-size: 0.8125rem; font-weight: 800; color: var(--fresh-text-muted); width: 20px; flex-shrink: 0; }
+.order-mini__info { flex: 1; }
+.order-mini__buyer { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; }
+.order-mini__items { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 1px; }
+.order-mini__price { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 800; color: var(--c-green); }
+
+/* Quick action buttons */
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qa-btn {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  padding: 16px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  cursor: pointer; text-decoration: none;
+  transition: all var(--t-fast); box-shadow: var(--shadow-sm);
+}
+.qa-btn:hover { border-color: var(--c-green); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.qa-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+.qa-icon svg { width: 18px; height: 18px; stroke-width: 2; }
+.qa-label { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; color: var(--fresh-text-primary); }
+.qa-sub { font-size: 0.75rem; color: var(--fresh-text-muted); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Header band replaces top header -->
+  <div style="padding-top: 56px;">
+    <div class="top-header">
+      <div class="wordmark" style="flex:1;">Dashboard</div>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="badge-dot"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content" style="padding-top: 0; padding-bottom: 80px;">
+    <!-- Seller greeting band -->
+    <div class="dash-header-band">
+      <div class="seller-greeting">Good morning, Aling Rosa 👋</div>
+      <div class="seller-sub">Thursday, April 25 · Your store is open</div>
+      <div class="store-badge">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Aling Rosa's Fresh Market · Verified
+      </div>
+    </div>
+
+    <!-- Stat grid (overlaps band) -->
+    <div class="stat-grid" style="margin-top: -16px; position: relative; z-index: 2;">
+      <div class="stat-card-dash">
+        <div class="sc-label">Revenue Today</div>
+        <div class="sc-val">₱3,240</div>
+        <div class="sc-delta up">↑ +18% vs yesterday</div>
+      </div>
+      <div class="stat-card-dash">
+        <div class="sc-label">Orders Today</div>
+        <div class="sc-val">14</div>
+        <div class="sc-delta up">↑ +3 from yesterday</div>
+      </div>
+      <div class="stat-card-dash">
+        <div class="sc-label">Avg Freshness</div>
+        <div class="sc-val" style="color: var(--c-green);">73%</div>
+        <div class="sc-delta down">↓ -5% this week</div>
+      </div>
+      <div class="stat-card-dash">
+        <div class="sc-label">Expiring Soon</div>
+        <div class="sc-val" style="color: var(--c-orange);">3</div>
+        <div class="sc-delta warn">⏱ Need attention</div>
+      </div>
+    </div>
+
+    <!-- Weekly revenue chart -->
+    <div class="section">
+      <div class="dash-chart">
+        <div class="chart-header">
+          <div class="chart-title">Weekly Revenue</div>
+          <div class="chart-period">Apr 19–25</div>
+        </div>
+        <div class="bar-chart">
+          <div class="bc-bar green" style="height:55%;"></div>
+          <div class="bc-bar green" style="height:72%;"></div>
+          <div class="bc-bar green" style="height:48%;"></div>
+          <div class="bc-bar green" style="height:85%;"></div>
+          <div class="bc-bar orange" style="height:38%;"></div>
+          <div class="bc-bar green" style="height:91%;"></div>
+          <div class="bc-bar today" style="height:100%;"></div>
+        </div>
+        <div class="chart-labels">
+          <span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span class="today">Today</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--fresh-border);">
+          <div>
+            <div style="font-size:0.75rem;color:var(--fresh-text-muted);">Weekly total</div>
+            <div style="font-family:var(--font-display);font-size:1.125rem;font-weight:800;color:var(--c-green);">₱18,450</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem;color:var(--fresh-text-muted);">vs last week</div>
+            <div style="font-family:var(--font-display);font-size:0.9375rem;font-weight:800;color:var(--c-green);">+12% ↑</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory alert -->
+    <div class="section">
+      <div class="inventory-alert">
+        <div class="ia-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div class="ia-title">3 products expiring soon</div>
+          <div class="ia-desc">Lechon Manok, Tilapia, Pork Liempo need action before tonight. Mark as deal or remove from listing.</div>
+          <a href="08-seller-products.html" style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-family:var(--font-display);font-size:0.8125rem;font-weight:700;color:var(--c-orange);">
+            Manage Inventory
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Quick Actions</div>
+      </div>
+      <div class="quick-actions">
+        <a href="08-seller-products.html" class="qa-btn">
+          <div class="qa-icon" style="background:var(--c-green-dim);color:var(--c-green);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="qa-label">Add Product</div>
+          <div class="qa-sub">List new inventory</div>
+        </a>
+        <a href="09-seller-orders.html" class="qa-btn">
+          <div class="qa-icon" style="background:#EFF6FF;color:#3B82F6;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+          </div>
+          <div class="qa-label">Orders</div>
+          <div class="qa-sub">4 pending</div>
+        </a>
+        <a href="08-seller-products.html" class="qa-btn">
+          <div class="qa-icon" style="background:var(--c-orange-dim);color:var(--c-orange);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="qa-label">Inventory</div>
+          <div class="qa-sub">12 active listings</div>
+        </a>
+        <button class="qa-btn">
+          <div class="qa-icon" style="background:var(--c-red-dim);color:var(--c-red);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="qa-label">Payouts</div>
+          <div class="qa-sub">₱4,200 pending</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recent orders -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Recent Orders</div>
+        <a href="09-seller-orders.html" class="section-link">View all</a>
+      </div>
+      <div class="card" style="padding: 0 16px;">
+        <div class="order-mini">
+          <div class="order-mini__num">#1</div>
+          <div class="order-mini__info">
+            <div class="order-mini__buyer">Maria Santos</div>
+            <div class="order-mini__items">Bangus 1.5kg, Kamatis</div>
+          </div>
+          <span class="status-badge pending">Pending</span>
+          <div class="order-mini__price">₱320</div>
+        </div>
+        <div class="order-mini">
+          <div class="order-mini__num">#2</div>
+          <div class="order-mini__info">
+            <div class="order-mini__buyer">Jose Reyes</div>
+            <div class="order-mini__items">Tilapia 2kg</div>
+          </div>
+          <span class="status-badge confirmed">Confirmed</span>
+          <div class="order-mini__price">₱190</div>
+        </div>
+        <div class="order-mini">
+          <div class="order-mini__num">#3</div>
+          <div class="order-mini__info">
+            <div class="order-mini__buyer">Ana Cruz</div>
+            <div class="order-mini__items">Pork Kasim 1kg, Ampalaya</div>
+          </div>
+          <span class="status-badge transit">In Transit</span>
+          <div class="order-mini__price">₱445</div>
+        </div>
+        <div class="order-mini">
+          <div class="order-mini__num">#4</div>
+          <div class="order-mini__info">
+            <div class="order-mini__buyer">Carlo Lim</div>
+            <div class="order-mini__items">Lechon Manok x1</div>
+          </div>
+          <span class="status-badge delivered">Delivered</span>
+          <div class="order-mini__price">₱120</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 16px;"></div>
+  </div>
+
+  <!-- Seller Bottom Nav -->
+  <div class="bottom-nav">
+    <button class="nav-tab active" aria-label="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dash</span>
+    </button>
+    <a href="08-seller-products.html" class="nav-tab" aria-label="Products">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      <span>Products</span>
+    </a>
+    <a href="09-seller-orders.html" class="nav-tab" style="position:relative;" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      <span>Orders</span>
+      <div style="position:absolute;top:8px;right:12px;width:14px;height:14px;background:var(--c-orange);border-radius:50%;border:2px solid var(--fresh-surface);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:8px;font-weight:800;color:#fff;">4</div>
+    </a>
+    <button class="nav-tab" aria-label="Payments">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Payouts</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+</body>
+</html>

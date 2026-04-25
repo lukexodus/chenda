@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — My Orders</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.order-card {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow var(--t-mid);
+}
+.order-card:hover { box-shadow: var(--shadow-md); }
+.order-card__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--fresh-border);
+}
+.order-id { font-family: var(--font-display); font-size: 0.8125rem; font-weight: 800; color: var(--fresh-text-primary); }
+.order-date { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 1px; }
+.order-card__items { padding: 12px 16px; display: flex; gap: 8px; align-items: center; }
+.order-item-thumb { width: 40px; height: 40px; border-radius: 9px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; border: 1px solid var(--fresh-border); }
+.order-item-more { width: 40px; height: 40px; border-radius: 9px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.75rem; font-weight: 800; color: var(--fresh-text-muted); flex-shrink: 0; border: 1px solid var(--fresh-border); }
+.order-card__footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--fresh-border);
+  background: var(--fresh-surface);
+}
+.order-total { font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--c-green); }
+.order-total-label { font-size: 0.75rem; color: var(--fresh-text-muted); }
+
+/* Tracking detail panel */
+.tracking-panel {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-top: 0;
+}
+.tracking-header {
+  background: linear-gradient(135deg, #1a5c30 0%, #2EA44F 100%);
+  padding: 20px 16px;
+  color: #fff;
+}
+.tracking-header .th-label { font-family: var(--font-display); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; margin-bottom: 6px; }
+.tracking-header .th-id { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; margin-bottom: 12px; }
+.tracking-header .th-eta { display: flex; align-items: center; gap: 8px; }
+.tracking-header .eta-box { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 8px 14px; }
+.tracking-header .eta-val { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; line-height: 1; }
+.tracking-header .eta-sub { font-size: 0.75rem; opacity: 0.8; margin-top: 2px; }
+
+/* Progress steps */
+.progress-steps { padding: 20px 16px; }
+.step {
+  display: flex; gap: 14px; align-items: flex-start; position: relative;
+  padding-bottom: 24px;
+}
+.step:last-child { padding-bottom: 0; }
+.step::after {
+  content: '';
+  position: absolute;
+  left: 15px; top: 32px;
+  width: 2px; height: calc(100% - 24px);
+  background: var(--fresh-border);
+}
+.step:last-child::after { display: none; }
+.step.done::after { background: var(--c-green); }
+.step-dot {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--fresh-border);
+  background: var(--fresh-surface-card);
+  position: relative; z-index: 1;
+}
+.step-dot svg { width: 14px; height: 14px; stroke-width: 2.5; color: var(--fresh-text-muted); }
+.step.done .step-dot { background: var(--c-green); border-color: var(--c-green); }
+.step.done .step-dot svg { color: #fff; }
+.step.active .step-dot { background: var(--c-green-dim); border-color: var(--c-green); }
+.step.active .step-dot svg { color: var(--c-green); }
+.step-info .s-title { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; color: var(--fresh-text-primary); margin-bottom: 2px; }
+.step-info .s-desc  { font-size: 0.8125rem; color: var(--fresh-text-muted); line-height: 1.5; }
+.step-info .s-time  { font-size: 0.75rem; color: var(--c-green); font-weight: 600; font-family: var(--font-display); margin-top: 3px; }
+.step.pending .step-info .s-title { color: var(--fresh-text-muted); }
+
+/* Map in tracking */
+.track-map {
+  margin: 0 16px 16px;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Rider info strip */
+.rider-strip {
+  margin: 0 16px 16px;
+  background: var(--fresh-surface-2);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.rider-av { width: 44px; height: 44px; border-radius: 50%; background: var(--fresh-surface-card); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 2px solid var(--fresh-border); flex-shrink: 0; }
+.rider-strip .r-info { flex: 1; }
+.rider-strip .r-name { font-family: var(--font-display); font-size: 0.9375rem; font-weight: 700; }
+.rider-strip .r-meta { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 2px; }
+.rider-strip .r-actions { display: flex; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <div class="top-header">
+    <div class="header-back">
+      <a href="02-buyer-home.html" class="header-back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">My Orders</span>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <!-- Tabs -->
+    <div style="padding: 12px 0 0; background: var(--fresh-surface-card); border-bottom: 1px solid var(--fresh-border);">
+      <div class="tab-list" style="padding: 0 16px;">
+        <button class="tab-trigger active" onclick="switchTab('active', this)">Active</button>
+        <button class="tab-trigger" onclick="switchTab('completed', this)">Completed</button>
+        <button class="tab-trigger" onclick="switchTab('cancelled', this)">Cancelled</button>
+      </div>
+    </div>
+
+    <!-- Active Orders Tab -->
+    <div id="tab-active" style="padding: 16px 16px 0; display: flex; flex-direction: column; gap: 12px;">
+
+      <!-- Order in transit — expanded tracking view -->
+      <div class="tracking-panel">
+        <div class="tracking-header">
+          <div class="th-label">In Transit</div>
+          <div class="th-id">CHN-20250425-0847</div>
+          <div class="th-eta">
+            <div class="eta-box">
+              <div class="eta-val">~18 min</div>
+              <div class="eta-sub">Est. arrival</div>
+            </div>
+            <div style="font-size: 0.8125rem; opacity: 0.85;">Rider is 1.2 km away</div>
+          </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="track-map map-placeholder">
+          <div class="map-pin"></div>
+          <div style="position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,0.9);backdrop-filter:blur(4px);border-radius:8px;padding:6px 10px;font-family:var(--font-display);font-size:0.75rem;font-weight:700;color:var(--fresh-text-primary);">📍 Your location</div>
+          <div style="position:absolute;top:14px;left:14px;background:var(--c-orange);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.875rem;box-shadow:var(--shadow-md);">🛵</div>
+        </div>
+
+        <!-- Rider info -->
+        <div class="rider-strip">
+          <div class="rider-av">🛵</div>
+          <div class="r-info">
+            <div class="r-name">Juan dela Cruz</div>
+            <div class="r-meta">⭐ 4.9 · 234 deliveries · Honda Click</div>
+          </div>
+          <div class="r-actions">
+            <button class="btn btn-secondary btn-sm" style="padding: 0 10px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.14 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/></svg>
+            </button>
+            <button class="btn btn-secondary btn-sm" style="padding: 0 10px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress steps -->
+        <div class="progress-steps">
+          <div class="step done">
+            <div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="step-info">
+              <div class="s-title">Order Placed</div>
+              <div class="s-desc">Payment confirmed via GCash</div>
+              <div class="s-time">10:40 AM</div>
+            </div>
+          </div>
+          <div class="step done">
+            <div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="step-info">
+              <div class="s-title">Seller Confirmed</div>
+              <div class="s-desc">Aling Rosa's is preparing your order</div>
+              <div class="s-time">10:43 AM</div>
+            </div>
+          </div>
+          <div class="step active">
+            <div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="step-info">
+              <div class="s-title">Rider Picked Up</div>
+              <div class="s-desc">Juan is on his way · 1.2 km away</div>
+              <div class="s-time">10:58 AM · Now</div>
+            </div>
+          </div>
+          <div class="step pending">
+            <div class="step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+            <div class="step-info">
+              <div class="s-title">Delivered</div>
+              <div class="s-desc">Est. 11:16 AM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order items summary -->
+        <div style="padding: 0 16px 16px; border-top: 1px solid var(--fresh-border); margin-top: 4px; padding-top: 14px;">
+          <div style="font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; margin-bottom: 10px; color: var(--fresh-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Items (3)</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">🐟</div>
+              <div style="flex: 1; font-family: var(--font-display); font-size: 0.875rem; font-weight: 700;">Bangus Milkfish</div>
+              <div style="font-size: 0.75rem; color: var(--fresh-text-muted);">2.0 kg</div>
+              <div style="font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; color: var(--c-green);">₱370</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">🍗</div>
+              <div style="flex: 1; font-family: var(--font-display); font-size: 0.875rem; font-weight: 700;">Lechon Manok</div>
+              <div style="font-size: 0.75rem; color: var(--fresh-text-muted);">1 whole</div>
+              <div style="font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; color: var(--c-orange);">₱120</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--fresh-surface-2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">🥭</div>
+              <div style="flex: 1; font-family: var(--font-display); font-size: 0.875rem; font-weight: 700;">Carabao Mango</div>
+              <div style="font-size: 0.75rem; color: var(--fresh-text-muted);">3 pcs</div>
+              <div style="font-family: var(--font-display); font-size: 0.875rem; font-weight: 800; color: var(--c-green);">₱195</div>
+            </div>
+          </div>
+          <div style="border-top: 1px solid var(--fresh-border); margin-top: 12px; padding-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; color: var(--fresh-text-muted);">Total Paid</span>
+            <span style="font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; color: var(--c-green);">₱710.00</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-active -->
+
+    <!-- Completed Orders Tab -->
+    <div id="tab-completed" style="padding: 16px 16px 0; display: none; flex-direction: column; gap: 12px;">
+
+      <div class="order-card">
+        <div class="order-card__header">
+          <div>
+            <div class="order-id">CHN-20250424-0512</div>
+            <div class="order-date">Apr 24, 2025 · 2:15 PM</div>
+          </div>
+          <span class="status-badge delivered">Delivered</span>
+        </div>
+        <div class="order-card__items">
+          <div class="order-item-thumb">🥩</div>
+          <div class="order-item-thumb">🥦</div>
+          <div class="order-item-more">+2</div>
+          <div style="flex: 1; font-size: 0.8125rem; color: var(--fresh-text-muted); padding-left: 4px;">Pork Kasim, Pechay Tops…</div>
+        </div>
+        <div class="order-card__footer">
+          <div>
+            <div class="order-total-label">Total paid</div>
+            <div class="order-total">₱445.00</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary btn-sm">Rate</button>
+            <button class="btn btn-outline btn-sm">Reorder</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-card">
+        <div class="order-card__header">
+          <div>
+            <div class="order-id">CHN-20250422-1103</div>
+            <div class="order-date">Apr 22, 2025 · 9:03 AM</div>
+          </div>
+          <span class="status-badge delivered">Delivered</span>
+        </div>
+        <div class="order-card__items">
+          <div class="order-item-thumb">🥭</div>
+          <div class="order-item-thumb">🍌</div>
+          <div style="flex: 1; font-size: 0.8125rem; color: var(--fresh-text-muted); padding-left: 4px;">Carabao Mango, Lakatan Banana</div>
+        </div>
+        <div class="order-card__footer">
+          <div>
+            <div class="order-total-label">Total paid</div>
+            <div class="order-total">₱195.00</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary btn-sm">Rate</button>
+            <button class="btn btn-outline btn-sm">Reorder</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-completed -->
+
+    <!-- Cancelled Tab -->
+    <div id="tab-cancelled" style="padding: 16px; display: none;">
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          </div>
+          <div class="empty-title">No cancelled orders</div>
+          <div class="empty-desc">You haven't cancelled any orders. Great track record!</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 16px;"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="02-buyer-home.html" class="nav-tab" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Explore</span>
+    </a>
+    <button class="nav-tab active" aria-label="Orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Orders</span>
+    </button>
+    <a href="04-cart.html" class="nav-tab" aria-label="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Cart</span>
+    </a>
+    <a href="10-notifications.html" class="nav-tab" aria-label="Alerts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>Alerts</span>
+    </a>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['active','completed','cancelled'].forEach(t => {
+    const el = document.getElementById('tab-'+t);
+    el.style.display = t === tab ? 'flex' : 'none';
+    el.style.flexDirection = 'column';
+  });
+}
+</script>
+</body>
+</html>

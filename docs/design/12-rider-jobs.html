@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chenda — Rider Jobs</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ============================================================
+   RIDER JOBS — Available, Active, History
+   Design intent: Available jobs feel like live opportunities
+   with urgency. Freshness of cargo is visible upfront —
+   riders need to know if time pressure is on the goods, not
+   just the distance.
+   ============================================================ */
+
+/* Job card */
+.job-card {
+  background: var(--fresh-surface-card);
+  border: 1px solid var(--fresh-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 10px;
+  position: relative;
+}
+/* Left urgency border */
+.job-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.job-card.available::before { background: var(--c-green); }
+.job-card.urgent::before    { background: var(--c-orange); }
+.job-card.active::before    { background: #3B82F6; }
+.job-card.done::before      { background: var(--fresh-border-strong); }
+
+.job-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px 8px;
+}
+.job-card-id { font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; }
+.job-card-meta { font-size: 0.6875rem; color: var(--fresh-text-muted); margin-top: 1px; }
+
+/* Earnings pill */
+.earn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--c-green);
+  background: var(--c-green-dim);
+  border: 1px solid rgba(46,164,79,0.2);
+  border-radius: 10px;
+  padding: 4px 12px;
+}
+
+/* Route summary in card */
+.job-route-summary {
+  padding: 0 14px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.jrs-points {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.jrs-point {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+.jrs-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.jrs-dot.pick { background: var(--c-green); }
+.jrs-dot.drop { background: var(--c-red); }
+.jrs-connector {
+  width: 1px; height: 12px;
+  background: var(--fresh-border-strong);
+  margin-left: 3.5px;
+  margin-bottom: 2px;
+  margin-top: -2px;
+}
+.jrs-addr { color: var(--fresh-text-muted); font-size: 0.75rem; }
+.jrs-name { font-weight: 600; color: var(--fresh-text-primary); }
+
+/* Job stats row */
+.job-stats-row {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--fresh-border);
+}
+.job-stat {
+  flex: 1;
+  padding: 9px 8px;
+  text-align: center;
+  border-right: 1px solid var(--fresh-border);
+}
+.job-stat:last-child { border-right: none; }
+.js-val {
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--fresh-text-primary);
+  line-height: 1;
+}
+.js-label {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fresh-text-muted);
+  margin-top: 3px;
+}
+
+/* Freshness cargo warning in job card */
+.cargo-fresh-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(244,130,10,0.06);
+  border-top: 1px solid rgba(244,130,10,0.14);
+}
+.cargo-fresh-row svg { width: 12px; height: 12px; stroke-width: 2.5; color: var(--c-orange); flex-shrink: 0; }
+.cargo-fresh-row .cf-text { font-size: 0.75rem; color: var(--fresh-text-primary); }
+.cargo-fresh-row .cf-text strong { font-family: var(--font-display); font-weight: 700; color: var(--c-orange); }
+
+/* Cargo fresh — critical -->
+.cargo-fresh-row.critical {
+  background: rgba(230,57,70,0.06);
+  border-top-color: rgba(230,57,70,0.14);
+}
+.cargo-fresh-row.critical svg { color: var(--c-red); }
+.cargo-fresh-row.critical .cf-text strong { color: var(--c-red); }
+
+/* Job CTA bar */
+.job-cta-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--fresh-border);
+}
+
+/* Job detail view (modal-style panel) */
+.job-detail-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+.job-detail-panel {
+  background: var(--fresh-surface-card);
+  border-radius: var(--r-sheet);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding-bottom: 24px;
+}
+.jdp-handle {
+  width: 40px; height: 4px;
+  background: var(--fresh-border);
+  border-radius: 99px;
+  margin: 12px auto 16px;
+}
+.jdp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--fresh-border);
+}
+.jdp-title { font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; }
+
+/* Map area in detail */
+.jdp-map {
+  height: 180px;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9, #a5d6a7);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.jdp-map::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 28px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0, rgba(255,255,255,0.15) 1px, transparent 1px, transparent 28px);
+}
+.jdp-map-pins {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+.jdp-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.jdp-pin-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  box-shadow: var(--shadow-md);
+}
+.jdp-pin-label {
+  background: rgba(255,255,255,0.92);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: var(--font-display);
+  font-size: 0.625rem;
+  font-weight: 800;
+  color: var(--fresh-text-primary);
+  white-space: nowrap;
+}
+/* Dashed route line between pins */
+.jdp-route-line {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px; height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--c-green) 0, var(--c-green) 6px,
+    transparent 6px, transparent 12px
+  );
+  z-index: 0;
+}
+
+/* Items in job detail */
+.jd-item-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--fresh-border);
+}
+.jdi-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--fresh-surface-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.jdi-name { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; flex: 1; }
+.jdi-qty  { font-size: 0.75rem; color: var(--fresh-text-muted); }
+
+/* Freshness mini-bar */
+.jdi-fresh {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.jdi-fresh-val { font-family: var(--font-display); font-size: 0.75rem; font-weight: 800; }
+.jdi-fresh-bar {
+  width: 48px; height: 3px;
+  background: var(--track-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.jdi-fresh-fill { height: 100%; border-radius: 99px; }
+
+/* Steps progress (delivery status) */
+.delivery-steps {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.d-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.d-step-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.d-step-icon.done { background: var(--c-green); color: #fff; font-size: 0.625rem; }
+.d-step-icon.active { background: #3B82F6; color: #fff; }
+.d-step-icon.pending { background: var(--fresh-surface-2); border: 1.5px solid var(--fresh-border); color: var(--fresh-text-muted); }
+.d-step-line {
+  width: 2px; height: 24px;
+  background: var(--fresh-border);
+  margin-left: 13px; margin-bottom: 2px; margin-top: 2px;
+}
+.d-step-line.done { background: var(--c-green); }
+.d-step-body { padding-top: 4px; flex: 1; }
+.d-step-title { font-family: var(--font-display); font-size: 0.875rem; font-weight: 700; }
+.d-step-time  { font-size: 0.75rem; color: var(--fresh-text-muted); margin-top: 1px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-back">
+      <a href="11-rider-dashboard.html" class="header-back-btn" aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </a>
+      <span class="header-page-title">Jobs</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div style="display:flex;align-items:center;gap:5px;background:var(--c-green-dim);border:1px solid rgba(46,164,79,0.2);border-radius:99px;padding:4px 10px;">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--c-green);animation:breathe 2.2s ease infinite;"></div>
+        <span style="font-family:var(--font-display);font-size:0.6875rem;font-weight:800;color:var(--c-green);">Online</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-content" style="padding-bottom:80px;">
+
+    <!-- Tabs -->
+    <div style="background:var(--fresh-surface-card);border-bottom:1px solid var(--fresh-border);">
+      <div class="tab-list" style="padding:0 16px;">
+        <button class="tab-trigger active" onclick="switchTab('available',this)">Available (3)</button>
+        <button class="tab-trigger" onclick="switchTab('active',this)">Active (1)</button>
+        <button class="tab-trigger" onclick="switchTab('history',this)">History</button>
+      </div>
+    </div>
+
+    <!-- Available Jobs -->
+    <div id="tab-available" style="padding:12px 16px 0;">
+
+      <!-- Job 1 — Urgent freshness -->
+      <div class="job-card urgent">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-id">CHN-0852</div>
+            <div class="job-card-meta">New · 2 min ago</div>
+          </div>
+          <div class="earn-pill">+₱110</div>
+        </div>
+        <div class="job-route-summary">
+          <div class="jrs-points">
+            <div class="jrs-point">
+              <div class="jrs-dot pick"></div>
+              <div>
+                <div class="jrs-name">Mang Totoy BBQ</div>
+                <div class="jrs-addr">Shaw Blvd, Mandaluyong</div>
+              </div>
+            </div>
+            <div style="display:flex;"><div class="jrs-connector"></div></div>
+            <div class="jrs-point">
+              <div class="jrs-dot drop"></div>
+              <div>
+                <div class="jrs-name">Jose Reyes</div>
+                <div class="jrs-addr">45 Rizal Ave, Makati</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cargo-fresh-row urgent">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div class="cf-text"><strong>Freshness-sensitive:</strong> Lechon Manok at 28% — deliver within 45 min</div>
+        </div>
+        <div class="job-stats-row">
+          <div class="job-stat"><div class="js-val">3.2 km</div><div class="js-label">Distance</div></div>
+          <div class="job-stat"><div class="js-val">~22 min</div><div class="js-label">Est. time</div></div>
+          <div class="job-stat"><div class="js-val">₱110</div><div class="js-label">Earnings</div></div>
+          <div class="job-stat"><div class="js-val">2 items</div><div class="js-label">Cargo</div></div>
+        </div>
+        <div class="job-cta-bar">
+          <button class="btn btn-secondary" style="flex:1;" onclick="showDetail()">View Details</button>
+          <button class="btn btn-primary" style="flex:2;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+            Accept Job
+          </button>
+        </div>
+      </div>
+
+      <!-- Job 2 — standard -->
+      <div class="job-card available">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-id">CHN-0853</div>
+            <div class="job-card-meta">New · 4 min ago</div>
+          </div>
+          <div class="earn-pill">+₱85</div>
+        </div>
+        <div class="job-route-summary">
+          <div class="jrs-points">
+            <div class="jrs-point">
+              <div class="jrs-dot pick"></div>
+              <div>
+                <div class="jrs-name">Aling Rosa's Fresh Market</div>
+                <div class="jrs-addr">Kapitolyo, Pasig</div>
+              </div>
+            </div>
+            <div style="display:flex;"><div class="jrs-connector"></div></div>
+            <div class="jrs-point">
+              <div class="jrs-dot drop"></div>
+              <div>
+                <div class="jrs-name">Ana Cruz</div>
+                <div class="jrs-addr">88 Pioneer St, Mandaluyong</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="job-stats-row">
+          <div class="job-stat"><div class="js-val">1.8 km</div><div class="js-label">Distance</div></div>
+          <div class="job-stat"><div class="js-val">~16 min</div><div class="js-label">Est. time</div></div>
+          <div class="job-stat"><div class="js-val">₱85</div><div class="js-label">Earnings</div></div>
+          <div class="job-stat"><div class="js-val">3 items</div><div class="js-label">Cargo</div></div>
+        </div>
+        <div class="job-cta-bar">
+          <button class="btn btn-secondary" style="flex:1;" onclick="showDetail()">View Details</button>
+          <button class="btn btn-primary" style="flex:2;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+            Accept Job
+          </button>
+        </div>
+      </div>
+
+      <!-- Job 3 — critical freshness -->
+      <div class="job-card urgent">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-id">CHN-0854</div>
+            <div class="job-card-meta">New · 1 min ago</div>
+          </div>
+          <div class="earn-pill" style="color:var(--c-orange);background:var(--c-orange-dim);border-color:rgba(244,130,10,0.2);">+₱140</div>
+        </div>
+        <div class="job-route-summary">
+          <div class="jrs-points">
+            <div class="jrs-point">
+              <div class="jrs-dot pick"></div>
+              <div>
+                <div class="jrs-name">Laguna Farms Outlet</div>
+                <div class="jrs-addr">Ortigas Ave, Pasig</div>
+              </div>
+            </div>
+            <div style="display:flex;"><div class="jrs-connector"></div></div>
+            <div class="jrs-point">
+              <div class="jrs-dot drop"></div>
+              <div>
+                <div class="jrs-name">Carlo Lim</div>
+                <div class="jrs-addr">Unit 12, Emerald Ave, Ortigas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cargo-fresh-row critical">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div class="cf-text"><strong>Critical:</strong> Mixed seafood at 14% — must deliver within 30 min. Higher payout applies.</div>
+        </div>
+        <div class="job-stats-row">
+          <div class="job-stat"><div class="js-val">0.9 km</div><div class="js-label">Distance</div></div>
+          <div class="job-stat"><div class="js-val">~11 min</div><div class="js-label">Est. time</div></div>
+          <div class="job-stat"><div class="js-val" style="color:var(--c-orange);">₱140</div><div class="js-label">Earnings</div></div>
+          <div class="job-stat"><div class="js-val">1 item</div><div class="js-label">Cargo</div></div>
+        </div>
+        <div class="job-cta-bar">
+          <button class="btn btn-secondary" style="flex:1;" onclick="showDetail()">View Details</button>
+          <button class="btn btn-primary" style="flex:2;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+            Accept Job
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /available -->
+
+    <!-- Active job tab -->
+    <div id="tab-active" style="padding:12px 16px 0;display:none;">
+      <div class="job-card active">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-id">CHN-0851 · In Transit</div>
+            <div class="job-card-meta">Picked up 14 min ago</div>
+          </div>
+          <span class="status-badge transit">In Transit</span>
+        </div>
+        <div class="job-route-summary">
+          <div class="jrs-points">
+            <div class="jrs-point">
+              <div class="jrs-dot pick" style="background:var(--c-green-dim);border:1.5px solid var(--c-green);width:10px;height:10px;"></div>
+              <div>
+                <div class="jrs-name" style="text-decoration:line-through;color:var(--fresh-text-muted);">Aling Rosa's · Picked up ✓</div>
+              </div>
+            </div>
+            <div style="display:flex;"><div class="jrs-connector"></div></div>
+            <div class="jrs-point">
+              <div class="jrs-dot drop"></div>
+              <div>
+                <div class="jrs-name">Maria Santos · 123 Shaw Blvd</div>
+                <div class="jrs-addr">Unit 4B, Mandaluyong — 1.2 km away</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="job-stats-row">
+          <div class="job-stat"><div class="js-val" style="color:#3B82F6;">1.2 km</div><div class="js-label">Remaining</div></div>
+          <div class="job-stat"><div class="js-val" style="color:var(--c-orange);">~14 min</div><div class="js-label">ETA</div></div>
+          <div class="job-stat"><div class="js-val">₱95</div><div class="js-label">Earnings</div></div>
+        </div>
+        <div class="job-cta-bar">
+          <button class="btn btn-secondary" style="flex:1;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke-width:2;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.36 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call Buyer
+          </button>
+          <button class="btn btn-primary" style="flex:2;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke-width:2;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Navigate
+          </button>
+        </div>
+        <div style="padding:0 14px 12px;">
+          <button class="btn btn-danger" style="width:100%;">
+            Mark as Delivered
+          </button>
+        </div>
+      </div>
+    </div><!-- /active -->
+
+    <!-- History tab -->
+    <div id="tab-history" style="padding:12px 16px 0;display:none;">
+      <div class="job-card done" style="opacity:0.8;">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-id">CHN-0850 · Delivered</div>
+            <div class="job-card-meta">Today, 11:14 AM</div>
+          </div>
+          <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:800;color:var(--c-green);">+₱85</div>
+        </div>
+        <div class="job-route-summary">
+          <div class="jrs-points">
+            <div class="jrs-point">
+              <div class="jrs-dot pick"></div>
+              <div><div class="jrs-name">Aling Rosa's Fresh Market</div></div>
+            </div>
+            <div style="display:flex;"><div class="jrs-connector"></div></div>
+            <div class="jrs-point">
+              <div class="jrs-dot drop"></div>
+              <div><div class="jrs-name">Maria Santos · Mandaluyong</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="job-stats-row" style="border-top:1px solid var(--fresh-border);">
+          <div class="job-stat"><div class="js-val">1.8 km</div><div class="js-label">Distance</div></div>
+          <div class="job-stat"><div class="js-val">22 min</div><div class="js-label">Time</div></div>
+          <div class="job-stat"><div class="js-val" style="color:var(--c-green);">⭐ 5.0</div><div class="js-label">Rating</div></div>
+        </div>
+      </div>
+      <div class="job-card done" style="opacity:0.8;">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-id">CHN-0848 · Delivered</div>
+            <div class="job-card-meta">Today, 9:42 AM</div>
+          </div>
+          <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:800;color:var(--c-green);">+₱110</div>
+        </div>
+        <div class="job-route-summary">
+          <div class="jrs-points">
+            <div class="jrs-point">
+              <div class="jrs-dot pick"></div>
+              <div><div class="jrs-name">Mang Totoy BBQ</div></div>
+            </div>
+            <div style="display:flex;"><div class="jrs-connector"></div></div>
+            <div class="jrs-point">
+              <div class="jrs-dot drop"></div>
+              <div><div class="jrs-name">Jose Reyes · Makati</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="job-stats-row" style="border-top:1px solid var(--fresh-border);">
+          <div class="job-stat"><div class="js-val">3.1 km</div><div class="js-label">Distance</div></div>
+          <div class="job-stat"><div class="js-val">28 min</div><div class="js-label">Time</div></div>
+          <div class="job-stat"><div class="js-val" style="color:var(--c-orange);">⭐ 4.8</div><div class="js-label">Rating</div></div>
+        </div>
+      </div>
+    </div><!-- /history -->
+
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- Job Detail Sheet (modal) -->
+  <div class="job-detail-sheet" id="jobDetailSheet" style="display:none;" role="dialog" aria-modal="true" aria-label="Job details">
+    <div class="job-detail-panel">
+      <div class="jdp-handle" role="presentation"></div>
+      <div class="jdp-header">
+        <div>
+          <div class="jdp-title">CHN-0852</div>
+          <div style="font-size:0.75rem;color:var(--fresh-text-muted);margin-top:2px;">2 items · Mang Totoy BBQ → Makati</div>
+        </div>
+        <button onclick="closeDetail()" style="background:var(--fresh-surface-2);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Map -->
+      <div class="jdp-map">
+        <div class="jdp-route-line"></div>
+        <div class="jdp-map-pins">
+          <div class="jdp-pin">
+            <div class="jdp-pin-icon" style="background:var(--c-green);">🏪</div>
+            <div class="jdp-pin-label">Seller</div>
+          </div>
+          <div class="jdp-pin">
+            <div class="jdp-pin-icon" style="background:var(--c-red);">📍</div>
+            <div class="jdp-pin-label">Buyer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Route detail -->
+      <div style="padding:16px 20px;border-bottom:1px solid var(--fresh-border);">
+        <div style="font-family:var(--font-display);font-size:0.6875rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--fresh-text-muted);margin-bottom:10px;">Route</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--c-green);flex-shrink:0;margin-top:4px;"></div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;">Mang Totoy BBQ</div>
+              <div style="font-size:0.75rem;color:var(--fresh-text-muted);">Shaw Blvd, Mandaluyong City</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:10px;height:10px;border-radius:50%;background:var(--c-red);flex-shrink:0;margin-top:4px;"></div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:0.875rem;font-weight:700;">Jose Reyes</div>
+              <div style="font-size:0.75rem;color:var(--fresh-text-muted);">45 Rizal Ave, Makati · Unit 8A · Ring bell</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:14px;">
+          <div style="flex:1;background:var(--fresh-surface-2);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;">3.2 km</div>
+            <div style="font-size:0.625rem;font-weight:700;font-family:var(--font-display);text-transform:uppercase;color:var(--fresh-text-muted);margin-top:2px;">Distance</div>
+          </div>
+          <div style="flex:1;background:var(--fresh-surface-2);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;">~22 min</div>
+            <div style="font-size:0.625rem;font-weight:700;font-family:var(--font-display);text-transform:uppercase;color:var(--fresh-text-muted);margin-top:2px;">Est. time</div>
+          </div>
+          <div style="flex:1;background:var(--c-green-dim);border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(46,164,79,0.18);">
+            <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--c-green);">₱110</div>
+            <div style="font-size:0.625rem;font-weight:700;font-family:var(--font-display);text-transform:uppercase;color:var(--c-green);opacity:0.7;margin-top:2px;">Earnings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items / Cargo -->
+      <div style="padding:14px 20px 8px;">
+        <div style="font-family:var(--font-display);font-size:0.6875rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--fresh-text-muted);margin-bottom:8px;">Cargo</div>
+      </div>
+      <div class="jd-item-row">
+        <div class="jdi-icon">🍗</div>
+        <div style="flex:1;">
+          <div class="jdi-name">Lechon Manok</div>
+          <div class="jdi-qty">1 whole · Mang Totoy BBQ</div>
+        </div>
+        <div class="jdi-fresh">
+          <div class="jdi-fresh-val" style="color:var(--c-orange);">28%</div>
+          <div class="jdi-fresh-bar"><div class="jdi-fresh-fill" style="width:28%;background:var(--c-orange);"></div></div>
+        </div>
+      </div>
+      <div class="jd-item-row" style="border-bottom:none;">
+        <div class="jdi-icon">🥬</div>
+        <div style="flex:1;">
+          <div class="jdi-name">Ampalaya Sitaw Mix</div>
+          <div class="jdi-qty">500g · Mang Totoy BBQ</div>
+        </div>
+        <div class="jdi-fresh">
+          <div class="jdi-fresh-val" style="color:var(--c-green);">72%</div>
+          <div class="jdi-fresh-bar"><div class="jdi-fresh-fill" style="width:72%;background:var(--c-green);"></div></div>
+        </div>
+      </div>
+
+      <!-- Accept CTA -->
+      <div style="padding:16px 20px 0;display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-primary btn-lg" onclick="closeDetail()" style="width:100%;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;stroke-width:2.5;"><polyline points="20 6 9 17 4 12"/></svg>
+          Accept This Job — ₱110
+        </button>
+        <button class="btn btn-secondary" onclick="closeDetail()" style="width:100%;">Skip</button>
+      </div>
+
+    </div>
+  </div><!-- /job detail sheet -->
+
+  <!-- Rider Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="11-rider-dashboard.html" class="nav-tab" aria-label="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Dash</span>
+    </a>
+    <button class="nav-tab active" aria-label="Jobs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Jobs</span>
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-tab" aria-label="Earnings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span>Earnings</span>
+    </button>
+    <button class="nav-tab" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Me</span>
+    </button>
+  </div>
+</div>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-trigger').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['available','active','history'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+}
+function showDetail() {
+  document.getElementById('jobDetailSheet').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function closeDetail() {
+  document.getElementById('jobDetailSheet').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+/* Animate breathe for online dot */
+const style = document.createElement('style');
+style.textContent = `@keyframes breathe { 0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,0.3)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0.12)} }`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
