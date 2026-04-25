@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import api from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
 import type { UserProfile, ProfileFormData } from "@/lib/types/profile";
-import { Loader2, LogOut } from "lucide-react";
+import { Loader2, LogOut, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AlgorithmPreferences } from "./AlgorithmPreferences";
 import { PasswordChangeForm } from "./PasswordChangeForm";
@@ -35,6 +35,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [formData, setFormData] = useState<ProfileFormData>({
     name: "",
@@ -45,6 +46,27 @@ export function ProfileForm({ children }: ProfileFormProps) {
   useEffect(() => {
     fetchProfile();
   }, []);
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone and all data will be lost.")) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await api.delete("/users/account");
+      await logout();
+      toast.success("Account deleted");
+      router.push("/");
+    } catch (error: any) {
+      console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account", {
+        description: error.response?.data?.message || "Please try again later",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -77,10 +99,10 @@ export function ProfileForm({ children }: ProfileFormProps) {
     try {
       setIsSaving(true);
       await updateProfile(formData as unknown as Record<string, unknown>);
-      
+
       // Re-fetch profile to update UI with latest data
       await fetchProfile();
-      
+
       toast.success("Profile updated", {
         description: "Your changes have been saved successfully",
       });
@@ -94,7 +116,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
     }
   };
 
-    // Generate initials from name
+  // Generate initials from name
   const getInitials = (name: string) => {
     if (!name) return "U";
     const parts = name.trim().split(" ");
@@ -169,42 +191,6 @@ export function ProfileForm({ children }: ProfileFormProps) {
               </p>
             </div>
 
-            {/* User Type Radio Buttons */}
-            <div className="space-y-3">
-              <Label>Account Type</Label>
-              {profile?.type === "rider" ? (
-                <div className="p-3 bg-muted rounded-md text-sm text-muted-foreground border">
-                  You are registered as a delivery rider. Role changing is disabled for rider accounts.
-                </div>
-              ) : (
-                <RadioGroup
-                  value={formData.type}
-                  onValueChange={(value) => 
-                    setFormData({ ...formData, type: value as "buyer" | "seller" | "both" })
-                  }
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="buyer" id="buyer" />
-                    <Label htmlFor="buyer" className="font-normal">
-                      Buyer - I want to buy fresh products
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="seller" id="seller" />
-                    <Label htmlFor="seller" className="font-normal">
-                      Seller - I want to sell fresh products
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="both" id="both" />
-                    <Label htmlFor="both" className="font-normal">
-                      Both - I want to buy and sell
-                    </Label>
-                  </div>
-                </RadioGroup>
-              )}
-            </div>
-
             {/* Save Button */}
             <div className="flex justify-end">
               <Button onClick={handleSaveProfile} disabled={isSaving}>
@@ -247,8 +233,27 @@ export function ProfileForm({ children }: ProfileFormProps) {
       </TabsContent>
 
       {/* Security Tab */}
-      <TabsContent value="security">
+      <TabsContent value="security" className="space-y-6">
         <PasswordChangeForm />
+
+        <Card className="border-red-200 bg-red-50/30">
+          <CardHeader>
+            <CardTitle className="text-red-600">Danger Zone</CardTitle>
+            <CardDescription>
+              Once you delete your account, there is no going back. Please be certain.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteAccount}
+              disabled={isDeleting}
+            >
+              {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+              Delete Account
+            </Button>
+          </CardContent>
+        </Card>
       </TabsContent>
     </Tabs>
   );

@@ -70,7 +70,7 @@ class User {
       storage_conditions: ['refrigerated_unopened', 'refrigerated_opened', 'frozen', 'pantry']
     };
 
-    const locationSQL = location 
+    const locationSQL = location
       ? 'ST_SetSRID(ST_MakePoint($7, $8), 4326)'
       : 'NULL';
 

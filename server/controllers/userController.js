@@ -367,3 +367,31 @@ exports.reverseGeocode = asyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
+
+/**
+ * @route   DELETE /api/users/account
+ * @desc    Delete user account and all associated data
+ * @access  Private
+ */
+exports.deleteAccount = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  
+  // Verify user exists
+  const user = await User.findById(userId);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Delete user (hard delete with CASCADE on foreign keys)
+  const deleted = await User.delete(userId);
+  if (!deleted) {
+    res.status(500);
+    throw new Error('Failed to delete account');
+  }
+
+  res.json({
+    success: true,
+    message: 'Account deleted successfully'
+  });
+});

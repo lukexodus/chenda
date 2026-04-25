@@ -50,4 +50,11 @@ router.post('/geocode', isAuthenticated, userController.geocode);
  */
 router.post('/reverse-geocode', isAuthenticated, userController.reverseGeocode);
 
+/**
+ * @route   DELETE /api/users/account
+ * @desc    Delete user account and all associated data
+ * @access  Private
+ */
+router.delete('/account', isAuthenticated, userController.deleteAccount);
+
 module.exports = router;
