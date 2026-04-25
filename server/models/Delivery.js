@@ -77,7 +77,9 @@ class Delivery {
          o.total_amount,
          o.payment_status,
          o.order_status,
+         o.payment_method,
          o.product_id,
+         o.delivery_notes,
          u_buyer.name AS buyer_name,
          u_seller.name AS seller_name,
          u_rider.name AS rider_name,
@@ -576,11 +578,14 @@ class Delivery {
 
     const result = await query(
       `SELECT
-         d.id AS delivery_id,
+         d.id,
          d.order_id,
+         d.status,
          d.delivered_at,
+         d.failed_at,
+         d.failure_reason,
          o.total_amount,
-         ROUND(($2 + (o.total_amount * $3))::numeric, 2) AS earning_amount,
+         ROUND(($2 + (o.total_amount * $3))::numeric, 2) AS rider_fee_amount,
          pt.name AS product_name,
          u_buyer.name AS buyer_name
        FROM deliveries d
@@ -589,14 +594,14 @@ class Delivery {
        INNER JOIN products p ON o.product_id = p.id
        INNER JOIN product_types pt ON p.product_type_id = pt.id
        WHERE d.assigned_rider_id = $1
-         AND d.status = 'delivered'
+         AND d.status IN ('delivered', 'failed', 'cancelled')
          AND d.fulfillment_type = 'in_house'
-       ORDER BY d.delivered_at DESC
+       ORDER BY COALESCE(d.delivered_at, d.failed_at, d.updated_at) DESC
        LIMIT $4`,
       [riderId, Number(profile.base_fee), Number(profile.percentage_rate), safeLimit]
     );
 
-    const total = result.rows.reduce((sum, row) => sum + Number(row.earning_amount || 0), 0);
+    const total = result.rows.reduce((sum, row) => sum + Number(row.rider_fee_amount || 0), 0);
 
     return {
       profile,

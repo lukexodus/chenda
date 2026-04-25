@@ -44,3 +44,33 @@ psql -h localhost -U postgres -d chenda -c "SELECT id, name, email, type FROM us
 4. Click **Test Connection** — it will auto-download the JDBC driver if needed → **Finish**
 
 Once connected, navigate: `chenda` → `Schemas` → `public` → `Tables` to browse all tables visually.
+
+---
+
+**Destructive Operations (Development Only)**
+
+Use these carefully to reset data during development.
+
+**Delete all orders**
+This will also remove all associated deliveries, tracking history, and events due to `ON DELETE CASCADE` constraints.
+
+```bash
+# Using a one-liner (Local/Non-Docker)
+psql -h localhost -U postgres -d chenda -c "TRUNCATE TABLE orders RESTART IDENTITY CASCADE;"
+
+# Using Docker Compose (from host)
+docker compose exec db psql -U postgres -d chenda -c "TRUNCATE TABLE orders RESTART IDENTITY CASCADE;"
+```
+
+**Delete all users & products**
+If you want a completely fresh start (warning: destructive!):
+
+```bash
+# Using Docker Compose (from host)
+docker compose exec db psql -U postgres -d chenda -c "TRUNCATE TABLE users RESTART IDENTITY CASCADE;"
+```
+
+**Inside psql (either Docker or Local)**
+```sql
+TRUNCATE TABLE users RESTART IDENTITY CASCADE;
+```

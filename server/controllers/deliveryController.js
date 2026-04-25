@@ -566,6 +566,7 @@ exports.updateRiderLocation = async (req, res) => {
 exports.uploadProofPhoto = async (req, res) => {
   const deliveryId = parseId(req.params.id);
   const riderId = req.user.id;
+  const cashCollected = req.body.cash_collected === 'true';
 
   if (!deliveryId) {
     return res.status(400).json({ success: false, message: 'delivery id is required' });
@@ -590,6 +591,11 @@ exports.uploadProofPhoto = async (req, res) => {
       success: false,
       message: 'Unable to upload proof photo for this delivery',
     });
+  }
+
+  const deliveryDetails = await Delivery.getById(deliveryId);
+  if (deliveryDetails && deliveryDetails.payment_method === 'cash' && deliveryDetails.payment_status !== 'paid' && cashCollected) {
+    await Order.updatePaymentStatus(updated.order_id, 'paid', `COD-${deliveryId}`);
   }
 
   await notifyDeliveryUsers({

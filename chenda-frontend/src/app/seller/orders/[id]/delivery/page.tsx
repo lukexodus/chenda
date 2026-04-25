@@ -54,6 +54,12 @@ export default function SellerOrderDeliveryTrackingPage({ params: paramsPromise 
   const [issueMessage, setIssueMessage] = useState("");
   const [submittingIssue, setSubmittingIssue] = useState(false);
 
+  // Re-assignment state
+  const [riders, setRiders] = useState<Array<{ id: number; name: string; active_deliveries: number }>>([]);
+  const [ridersLoading, setRidersLoading] = useState(false);
+  const [selectedRiderId, setSelectedRiderId] = useState("");
+  const [isDispatching, setIsDispatching] = useState(false);
+
   const loadTracking = async () => {
     setLoading(true);
     try {
@@ -73,6 +79,43 @@ export default function SellerOrderDeliveryTrackingPage({ params: paramsPromise 
     if (!orderId) return;
     loadTracking();
   }, [orderId]);
+
+  useEffect(() => {
+    if (tracking?.delivery.status === 'declined' || tracking?.delivery.status === 'failed') {
+      fetchAvailableRiders();
+    }
+  }, [tracking?.delivery.status]);
+
+  const fetchAvailableRiders = async () => {
+    setRidersLoading(true);
+    try {
+      const response = await api.get('/deliveries/dispatch/riders/available', { params: { limit: 100 } });
+      if (response.data?.success) setRiders(response.data.riders || []);
+    } catch (error) {
+      console.error("Failed to load riders", error);
+    } finally {
+      setRidersLoading(false);
+    }
+  };
+
+  const handleReassign = async () => {
+    if (!selectedRiderId) {
+      toast({ variant: 'destructive', title: 'Rider required', description: 'Please select a rider to reassign.' });
+      return;
+    }
+    setIsDispatching(true);
+    try {
+      const res = await api.post(`/deliveries/orders/${orderId}/assign-in-house`, { rider_id: Number(selectedRiderId) });
+      if (!res.data?.success) throw new Error(res.data?.message || 'Failed to reassign');
+      toast({ title: 'Rider reassigned', description: 'The delivery has been reassigned to the new rider.' });
+      setSelectedRiderId('');
+      await loadTracking();
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Reassignment failed', description: error.response?.data?.message || error.message || 'Please try again.' });
+    } finally {
+      setIsDispatching(false);
+    }
+  };
 
   const submitIssue = async (event: FormEvent) => {
     event.preventDefault();
@@ -99,7 +142,6 @@ export default function SellerOrderDeliveryTrackingPage({ params: paramsPromise 
 
   return (
     <div className="flex min-h-screen flex-col bg-fresh-surface">
-      <TopHeader />
       <main className="flex-1 overflow-y-auto pb-20 px-4 pt-4">
         <div className="container max-w-4xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
@@ -162,6 +204,44 @@ export default function SellerOrderDeliveryTrackingPage({ params: paramsPromise 
                 </CardContent>
               </Card>
 
+              {['declined', 'failed'].includes(tracking.delivery.status) && (
+                <Card className="border-red-200 bg-red-50">
+                  <CardHeader>
+                    <CardTitle className="text-red-800">Reassign Rider</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-sm text-red-700">
+                      {tracking.delivery.status === 'declined'
+                        ? 'The assigned rider has declined this delivery. Please select a different rider to handle this order.'
+                        : 'This delivery has failed. You can reassign it to try again.'}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                      <select
+                        value={selectedRiderId}
+                        onChange={(e) => setSelectedRiderId(e.target.value)}
+                        disabled={ridersLoading || isDispatching}
+                        className="flex-1 rounded-md border border-red-300 bg-white px-3 py-2 text-sm text-gray-800"
+                      >
+                        <option value="">Select available rider...</option>
+                        {riders.map((rider) => (
+                          <option key={rider.id} value={String(rider.id)}>
+                            {rider.name} ({rider.active_deliveries} active)
+                          </option>
+                        ))}
+                      </select>
+                      <Button
+                        onClick={handleReassign}
+                        disabled={!selectedRiderId || isDispatching || ridersLoading}
+                        className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white"
+                      >
+                        {isDispatching ? 'Reassigning...' : 'Reassign Now'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               <Card>
                 <CardHeader>
                   <CardTitle>Timeline</CardTitle>
@@ -204,7 +284,6 @@ export default function SellerOrderDeliveryTrackingPage({ params: paramsPromise 
           )}
         </div>
       </main>
-      <BottomNav />
     </div>
   );
 }

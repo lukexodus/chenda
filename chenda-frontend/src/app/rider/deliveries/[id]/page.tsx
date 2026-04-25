@@ -25,6 +25,10 @@ interface TrackingPayload {
     failure_reason?: string;
     buyer_address_snapshot?: string;
     seller_address_snapshot?: string;
+    payment_method?: string;
+    payment_status?: string;
+    delivery_notes?: string;
+    total_amount?: string | number;
   };
   timeline: Array<{ event_type: string; event_note?: string; metadata: Record<string, unknown> | null; created_at: string }>;
 }
@@ -40,6 +44,7 @@ export default function RiderDeliveryDetailPage() {
   const [reportingLocation, setReportingLocation] = useState(false);
   const [data, setData] = useState<TrackingPayload | null>(null);
   const [failureReason, setFailureReason] = useState("");
+  const [cashCollected, setCashCollected] = useState(false);
 
   const load = async () => {
     if (!deliveryId) return;
@@ -173,6 +178,9 @@ export default function RiderDeliveryDetailPage() {
 
     const body = new FormData();
     body.append("proof_photo", file);
+    if (cashCollected) {
+      body.append("cash_collected", "true");
+    }
 
     setUploadingProof(true);
     try {
@@ -222,6 +230,12 @@ export default function RiderDeliveryDetailPage() {
         <CardContent className="space-y-2 text-sm">
           <p><span className="font-medium">Pickup:</span> {data.delivery.seller_address_snapshot || "N/A"}</p>
           <p><span className="font-medium">Dropoff:</span> {data.delivery.buyer_address_snapshot || "N/A"}</p>
+          {data.delivery.delivery_notes && (
+            <div className="mt-3 p-3 bg-yellow-50 text-yellow-800 rounded-md border border-yellow-200">
+              <span className="font-semibold block mb-1">Buyer Notes & Instructions:</span>
+              <p>{data.delivery.delivery_notes}</p>
+            </div>
+          )}
           {data.delivery.proof_photo_url && (
             <p>
               <span className="font-medium">Proof:</span>{" "}
@@ -270,6 +284,12 @@ export default function RiderDeliveryDetailPage() {
             </div>
           )}
 
+          {data.delivery.status === "in_transit" && (
+            <div className="p-3 bg-blue-50 text-blue-700 text-sm rounded-md border border-blue-200">
+              <span className="font-medium">Almost done!</span> To mark this delivery as finished, please scroll down and upload the Proof of Delivery photo.
+            </div>
+          )}
+
           <div>
             <Button variant="outline" onClick={reportLocation} disabled={reportingLocation}>
               <Navigation className="h-4 w-4 mr-2" />
@@ -279,21 +299,50 @@ export default function RiderDeliveryDetailPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Proof of Delivery</CardTitle>
-          <CardDescription>Upload the required POD photo after dropoff.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-3" onSubmit={uploadProof}>
-            <Input type="file" name="proof" accept="image/*" required />
-            <Button type="submit" disabled={uploadingProof}>
-              <Camera className="h-4 w-4 mr-2" />
-              {uploadingProof ? "Uploading..." : "Upload POD Photo"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+      {data.delivery.status === "in_transit" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Proof of Delivery</CardTitle>
+            <CardDescription>Upload the required POD photo after dropoff.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-4" onSubmit={uploadProof}>
+              {data.delivery.payment_method === "cash" && data.delivery.payment_status !== "paid" && (
+                <div className="p-3 border rounded-md bg-orange-50 border-orange-200">
+                  <p className="font-semibold text-orange-800 mb-2">Cash on Delivery</p>
+                  <p className="text-sm text-orange-700 mb-3">
+                    Please collect PHP {Number(data.delivery.total_amount || 0).toFixed(2)} from the buyer.
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="cashCollected"
+                      className="h-4 w-4 rounded border-orange-300 text-orange-600 focus:ring-orange-500"
+                      checked={cashCollected}
+                      onChange={(e) => setCashCollected(e.target.checked)}
+                    />
+                    <Label htmlFor="cashCollected" className="font-medium text-orange-900 cursor-pointer">
+                      I confirm I have collected the cash
+                    </Label>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <Input id="proofPhoto" type="file" name="proof" accept="image/*" required />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={uploadingProof || (data.delivery.payment_method === "cash" && data.delivery.payment_status !== "paid" && !cashCollected)}
+              >
+                <Camera className="h-4 w-4 mr-2" />
+                {uploadingProof ? "Uploading..." : "Complete Delivery"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

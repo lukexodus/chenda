@@ -18,20 +18,21 @@ class Order {
       quantity,
       unit_price,
       total_amount,
-      payment_method = 'cash'
+      payment_method = 'cash',
+      delivery_notes = null
     } = orderData;
 
     const result = await query(`
       INSERT INTO orders (
         buyer_id, seller_id, product_id, quantity, unit_price, total_amount,
-        payment_method, payment_status, order_status
+        payment_method, payment_status, order_status, delivery_notes
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, 'pending', 'pending'
+        $1, $2, $3, $4, $5, $6, $7, 'pending', 'pending', $8
       ) RETURNING 
         id, buyer_id, seller_id, product_id, quantity, unit_price, total_amount,
-        payment_method, payment_status, order_status, transaction_id,
+        payment_method, payment_status, order_status, transaction_id, delivery_notes,
         created_at, updated_at, completed_at
-    `, [buyer_id, seller_id, product_id, quantity, unit_price, total_amount, payment_method]);
+    `, [buyer_id, seller_id, product_id, quantity, unit_price, total_amount, payment_method, delivery_notes]);
 
     return result.rows[0];
   }
@@ -59,6 +60,7 @@ class Order {
           ELSE 'pending'
         END AS status,
         o.transaction_id,
+        o.delivery_notes,
         o.created_at,
         o.updated_at,
         o.completed_at,

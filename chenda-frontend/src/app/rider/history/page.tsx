@@ -26,7 +26,7 @@ export default function RiderHistoryPage() {
     try {
       const res = await api.get("/deliveries/rider/history");
       if (!res.data?.success) throw new Error(res.data?.message || "Failed to load history");
-      setHistory(res.data.history || []);
+      setHistory(res.data.history?.items || []);
     } catch (error: unknown) {
       const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to load history";
       toast({ variant: "destructive", title: "Load failed", description: message });

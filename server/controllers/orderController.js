@@ -83,7 +83,8 @@ const createOrder = async (req, res) => {
     quantity: parseFloat(quantity),
     unit_price,
     total_amount,
-    payment_method
+    payment_method,
+    delivery_notes: req.body.delivery_notes || null
   };
 
   const order = await Order.create(orderData);
@@ -564,7 +565,7 @@ const getSellerPayoutOverview = async (req, res) => {
  * Body: { items: [{ product_id, quantity }], payment_method }
  */
 const createBatchOrders = async (req, res) => {
-  const { items, payment_method = 'cash' } = req.body;
+  const { items, payment_method = 'cash', delivery_notes = null } = req.body;
   const buyer_id = req.user.id;
 
   if (!Array.isArray(items) || items.length === 0) {
@@ -632,7 +633,8 @@ const createBatchOrders = async (req, res) => {
       quantity: parseFloat(quantity),
       unit_price,
       total_amount,
-      payment_method
+      payment_method,
+      delivery_notes
     });
 
     const orderDetails = await Order.getById(order.id);
