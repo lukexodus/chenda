@@ -22,6 +22,7 @@ const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
 const productRoutes = require('./routes/products');
 const productTypesRoutes = require('./routes/productTypes');
+const shelfLifeOverridesRoutes = require('./routes/shelfLifeOverrides');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
 const deliveryRoutes = require('./routes/deliveries');
@@ -198,6 +199,9 @@ app.use('/api/products', productRoutes);
 
 // Product types routes (USDA data)
 app.use('/api/product-types', productTypesRoutes);
+
+// Shelf life overrides routes (USDA + regional product types support)
+app.use('/api/shelf-life', shelfLifeOverridesRoutes);
 
 // User management routes (profile, preferences, location)
 app.use('/api/users', preferenceAnalyticsMiddleware, userRoutes);

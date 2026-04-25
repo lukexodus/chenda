@@ -24,7 +24,11 @@ router.get('/', asyncHandler(async (req, res) => {
       category_id,
       keywords,
       default_shelf_life_days,
-      default_storage_condition
+      default_storage_condition,
+      source,
+      community_avg_shelf_life_days,
+      community_override_count,
+      image_url
     FROM product_types
     WHERE 1=1
   `;

@@ -97,20 +97,27 @@ Stores buyer, seller, and dual-role accounts. Location is stored as a PostGIS po
 
 ### `product_types`
 
-Reference table seeded from USDA FoodKeeper data. Defines shelf life norms per food category. Not user-editable.
+Reference table seeded from USDA FoodKeeper data and custom Philippine regional product types. Defines shelf life norms per food category.
 
 | Column | Type | Constraints | Description |
 |---|---|---|---|
-| `id` | `INTEGER` | PK | USDA FoodKeeper item ID |
-| `name` | `VARCHAR(255)` | NOT NULL | Product type name (e.g., "Chicken, Fresh") |
+| `id` | `INTEGER` | PK | Product type ID (USDA items use original IDs, regional start at 300+) |
+| `name` | `VARCHAR(255)` | NOT NULL | Product type name (e.g., "Chicken, Fresh" or "Ilocos Garlic") |
 | `name_subtitle` | `TEXT` | nullable | Subtype or variant |
-| `category_id` | `INTEGER` | nullable | USDA category grouping |
+| `category_id` | `INTEGER` | nullable | Category grouping |
 | `keywords` | `TEXT` | nullable | Full-text search keywords |
 | `default_shelf_life_days` | `INTEGER` | NOT NULL | Total shelf life in days |
 | `default_storage_condition` | `VARCHAR(50)` | NOT NULL, CHECK | Storage condition key (see enum below) |
-| `shelf_life_source` | `JSONB` | nullable | Raw USDA source data |
+| `shelf_life_source` | `JSONB` | nullable | Source data (USDA values or notes) |
+| `source` | `VARCHAR(20)` | DEFAULT `'usda'`, CHECK | Product type source: `'usda'` or `'regional'` |
+| `region` | `VARCHAR(100)` | nullable | Region for regional products (e.g., "Ilocos Norte", "Visayas") |
+| `is_available_in_philippines` | `BOOLEAN` | DEFAULT false | Flag indicating product availability in PH market |
 | `created_at` | `TIMESTAMP` | DEFAULT NOW() | |
 | `updated_at` | `TIMESTAMP` | DEFAULT NOW(), auto-updated | |
+
+**Product type sources:**
+- `'usda'` — USDA FoodKeeper standard types (universal items like eggs, chicken, common vegetables)
+- `'regional'` — Philippine/regional specialties (Ilocos garlic, calamansi, local meats, tropical fruits)
 
 **Storage condition enum** (shared by `product_types` and `products`):
 
@@ -125,9 +132,31 @@ Reference table seeded from USDA FoodKeeper data. Defines shelf life norms per f
 
 ---
 
+### `product_shelf_life_overrides`
+
+**New in Migration 009** — Allows sellers to customize shelf life for their specific products based on local storage conditions, climate, or specialized handling.
+
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | `SERIAL` | PK | Override record ID |
+| `seller_id` | `INTEGER` | FK → `users.id` ON DELETE CASCADE, NOT NULL | Seller applying the override |
+| `product_type_id` | `INTEGER` | FK → `product_types.id` ON DELETE CASCADE, NOT NULL | Product type being overridden |
+| `override_shelf_life_days` | `INTEGER` | NOT NULL, CHECK > 0 | Custom shelf life in days |
+| `override_storage_condition` | `VARCHAR(50)` | nullable, CHECK | Custom storage condition (optional) |
+| `reason` | `VARCHAR(255)` | nullable | Why the override was created (e.g., "Tropical storage conditions in Ilocos") |
+| `created_at` | `TIMESTAMP` | DEFAULT NOW() | |
+| `updated_at` | `TIMESTAMP` | DEFAULT NOW(), auto-updated | |
+| **Constraint** | UNIQUE(seller_id, product_type_id) | | One override per seller per product type |
+
+**Purpose:** When a seller creates a product using product_type_id, the freshness calculations check for an override. If found, the custom shelf life is used; otherwise, the default is used.
+
+**Example:** A seller in Ilocos can override the shelf life for USDA eggs (id 21) from 28 days to 21 days due to tropical storage conditions.
+
+---
+
 ### `products`
 
-Listings created by sellers. Each product references a `product_type` for shelf life data and stores its own GPS location.
+Listings created by sellers. Each product references a `product_type` for shelf life data and stores its own GPS location. Freshness calculations automatically use `product_shelf_life_overrides` if available.
 
 | Column | Type | Constraints | Description |
 |---|---|---|---|

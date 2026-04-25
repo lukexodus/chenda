@@ -391,6 +391,151 @@ function runTests() {
 // EXPORT
 // ============================================================================
 
+/**
+ * Resolve shelf life value with override support
+ * Checks for seller-specific or location-specific overrides
+ * Falls back to default product type shelf life if no override exists
+ * 
+ * @param {Object} options - Configuration object
+ * @param {number} options.productTypeDefaultDays - Default shelf life from ProductType
+ * @param {number} options.overrideDays - Custom override shelf life (nullable)
+ * @param {string} options.productSource - Product source ('usda' or 'regional')
+ * @param {string} options.productRegion - Product region for regional types (nullable)
+ * @returns {Object} Resolved shelf life configuration
+ * 
+ * @example
+ * // Using override for tropical storage
+ * const resolved = resolveShelfLifeWithOverride({
+ *   productTypeDefaultDays: 28,
+ *   overrideDays: 21,
+ *   productSource: 'regional',
+ *   productRegion: 'Ilocos Norte'
+ * });
+ * // Returns: { effectiveShelfLifeDays: 21, usedOverride: true, reason: 'seller_custom' }
+ * 
+ * // Using default (no override)
+ * const resolved = resolveShelfLifeWithOverride({
+ *   productTypeDefaultDays: 28,
+ *   overrideDays: null,
+ *   productSource: 'usda'
+ * });
+ * // Returns: { effectiveShelfLifeDays: 28, usedOverride: false, reason: 'usda_default' }
+ */
+function resolveShelfLifeWithOverride({
+  productTypeDefaultDays,
+  overrideDays = null,
+  productSource = 'usda',
+  productRegion = null
+} = {}) {
+  // Validate inputs
+  if (typeof productTypeDefaultDays !== 'number' || productTypeDefaultDays <= 0) {
+    throw new Error('productTypeDefaultDays must be a positive number');
+  }
+  
+  // Use override if available and valid
+  if (overrideDays !== null && typeof overrideDays === 'number' && overrideDays > 0) {
+    return {
+      effectiveShelfLifeDays: overrideDays,
+      usedOverride: true,
+      reason: 'seller_custom_override',
+      originalDefault: productTypeDefaultDays,
+      source: productSource,
+      region: productRegion
+    };
+  }
+  
+  // Apply regional adjustments if needed and no override
+  let adjustedDays = productTypeDefaultDays;
+  let reason = `${productSource}_default`;
+  
+  // For regional tropical products, adjust if needed
+  if (productSource === 'regional' && productRegion) {
+    // Regional products may need adjustments for tropical storage
+    // This is documented but default is used; override allows customization
+    reason = `${productSource}_default_${productRegion}`;
+  }
+  
+  return {
+    effectiveShelfLifeDays: adjustedDays,
+    usedOverride: false,
+    reason: reason,
+    source: productSource,
+    region: productRegion
+  };
+}
+
+/**
+ * Calculate shelf life metrics with override support
+ * Enhanced version that respects custom overrides for seller products
+ * 
+ * @param {Object} product - Product object
+ * @param {number} product.total_shelf_life_days - Default from ProductType
+ * @param {number} product.override_shelf_life_days - Custom override (nullable)
+ * @param {number} product.days_already_used - Days consumed before listing
+ * @param {string} product.listed_date - Listing date (ISO 8601)
+ * @param {string} product.source - Product source ('usda' or 'regional')
+ * @param {string} product.region - Product region (nullable)
+ * @param {string|Date} currentDate - Current date (default: now)
+ * @returns {Object} All shelf life metrics including override info
+ * 
+ * @example
+ * const metrics = calculateShelfLifeMetricsWithOverride({
+ *   total_shelf_life_days: 28,
+ *   override_shelf_life_days: 21,
+ *   days_already_used: 5,
+ *   listed_date: '2026-04-24T06:00:00Z',
+ *   source: 'regional',
+ *   region: 'Ilocos Norte'
+ * });
+ */
+function calculateShelfLifeMetricsWithOverride(product, currentDate = new Date()) {
+  if (!product || typeof product !== 'object') {
+    throw new Error('product must be an object');
+  }
+  
+  const requiredFields = ['total_shelf_life_days', 'days_already_used', 'listed_date'];
+  for (const field of requiredFields) {
+    if (!(field in product)) {
+      throw new Error(`product.${field} is required`);
+    }
+  }
+  
+  // Resolve which shelf life to use (override or default)
+  const shelfLifeConfig = resolveShelfLifeWithOverride({
+    productTypeDefaultDays: product.total_shelf_life_days,
+    overrideDays: product.override_shelf_life_days || null,
+    productSource: product.source || 'usda',
+    productRegion: product.region || null
+  });
+  
+  // Calculate metrics using effective shelf life
+  const remainingDays = calculateRemainingShelfLife(
+    shelfLifeConfig.effectiveShelfLifeDays,
+    product.days_already_used
+  );
+  
+  const freshnessPercent = calculateFreshnessPercent(
+    shelfLifeConfig.effectiveShelfLifeDays,
+    product.days_already_used
+  );
+  
+  const expirationDate = calculateExpirationDate(
+    product.listed_date,
+    remainingDays
+  );
+  
+  const expired = isExpired(expirationDate, currentDate);
+  
+  return {
+    remaining_shelf_life_days: remainingDays,
+    freshness_percent: freshnessPercent,
+    expiration_date: expirationDate,
+    expiration_date_iso: expirationDate.toISOString(),
+    is_expired: expired,
+    shelf_life_config: shelfLifeConfig  // Include override information
+  };
+}
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     calculateRemainingShelfLife,
@@ -400,7 +545,9 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateShelfLifeMetrics,
     calculateShelfLifeMetricsBatch,
     filterExpiredProducts,
-    filterByFreshness
+    filterByFreshness,
+    resolveShelfLifeWithOverride,
+    calculateShelfLifeMetricsWithOverride
   };
 }
 

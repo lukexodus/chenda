@@ -9,10 +9,19 @@ const { query } = require('../config/database');
  * Create a new product
  * POST /api/products
  * Only sellers can create products
+ *
+ * Supports two creation paths:
+ *   Path A – existing catalog type:  { product_type_id, ...rest }
+ *   Path B – custom product:         { custom_product_name, custom_shelf_life_days, ...rest }
+ *
+ * For Path B the server does an upsert on product_types (source='custom', shared catalog).
+ * Two sellers using the same custom name will share one product_type row.
  */
 const createProduct = async (req, res) => {
   const {
     product_type_id,
+    custom_product_name,
+    custom_shelf_life_days,
     days_already_used = 0,
     price,
     quantity,
@@ -27,15 +36,14 @@ const createProduct = async (req, res) => {
   const seller_id = req.user.id;
 
   try {
-    // Validate required fields
-    if (!product_type_id || !price || !quantity || !location) {
+    // Basic presence checks (belt-and-suspenders; middleware already caught most)
+    if (!price || !quantity || !location) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields: product_type_id, price, quantity, location'
+        message: 'Missing required fields: price, quantity, location'
       });
     }
 
-    // Validate location format
     if (!location.lat || !location.lng) {
       return res.status(400).json({
         success: false,
@@ -43,7 +51,6 @@ const createProduct = async (req, res) => {
       });
     }
 
-    // Validate coordinates
     if (location.lat < -90 || location.lat > 90 || location.lng < -180 || location.lng > 180) {
       return res.status(400).json({
         success: false,
@@ -51,23 +58,56 @@ const createProduct = async (req, res) => {
       });
     }
 
-    // Verify product_type exists and get shelf life
-    const productTypeResult = await query(
-      'SELECT id, name, default_shelf_life_days, default_storage_condition FROM product_types WHERE id = $1',
-      [product_type_id]
-    );
+    // ── Resolve product type ─────────────────────────────────────────────────
+    let productType;
+    let resolvedProductTypeId;
 
-    if (productTypeResult.rows.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid product_type_id. Product type not found.'
-      });
+    if (custom_product_name) {
+      // Path B: upsert a shared custom product_type row (case-insensitive dedup)
+      // ON CONFLICT targets the partial unique index on LOWER(name) WHERE source='custom'.
+      // If another seller already created this type, we reuse their row and record
+      // ourselves as a contributor (the trigger will update community_avg on overrides).
+      const upsertResult = await query(
+        `INSERT INTO product_types (
+           id, name, default_shelf_life_days, default_storage_condition,
+           source, created_by_seller_id
+         ) VALUES (
+           nextval('product_types_custom_id_seq'),
+           $1, $2, $3,
+           'custom', $4
+         )
+         ON CONFLICT (LOWER(name)) WHERE source = 'custom'
+         DO UPDATE SET updated_at = CURRENT_TIMESTAMP
+         RETURNING id, name, default_shelf_life_days, default_storage_condition, source`,
+        [
+          custom_product_name.trim(),
+          custom_shelf_life_days,
+          storage_condition || 'refrigerated',
+          seller_id
+        ]
+      );
+      productType = upsertResult.rows[0];
+      resolvedProductTypeId = productType.id;
+    } else {
+      // Path A: look up existing catalog entry
+      const productTypeResult = await query(
+        'SELECT id, name, default_shelf_life_days, default_storage_condition FROM product_types WHERE id = $1',
+        [product_type_id]
+      );
+
+      if (productTypeResult.rows.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid product_type_id. Product type not found.'
+        });
+      }
+      productType = productTypeResult.rows[0];
+      resolvedProductTypeId = productType.id;
     }
 
-    const productType = productTypeResult.rows[0];
     const total_shelf_life = productType.default_shelf_life_days;
 
-    // Validate days_already_used
+    // Validate days_already_used against the resolved shelf life
     if (days_already_used < 0) {
       return res.status(400).json({
         success: false,
@@ -82,10 +122,9 @@ const createProduct = async (req, res) => {
       });
     }
 
-    // Use provided storage condition or default from product type
+    // Storage condition: explicit value → product type default
     const finalStorageCondition = storage_condition || productType.default_storage_condition;
 
-    // Validate storage condition
     const validStorageConditions = ['pantry', 'pantry_opened', 'refrigerated', 'refrigerated_opened', 'frozen', 'frozen_opened'];
     if (!validStorageConditions.includes(finalStorageCondition)) {
       return res.status(400).json({
@@ -110,7 +149,7 @@ const createProduct = async (req, res) => {
         created_at, updated_at`,
       [
         seller_id,
-        product_type_id,
+        resolvedProductTypeId,
         days_already_used,
         price,
         quantity,
@@ -126,26 +165,23 @@ const createProduct = async (req, res) => {
 
     const newProduct = result.rows[0];
 
-    // Fetch product type details for response
     newProduct.product_type = {
       id: productType.id,
       name: productType.name,
-      default_shelf_life_days: productType.default_shelf_life_days
+      default_shelf_life_days: productType.default_shelf_life_days,
+      source: productType.source
     };
 
-    // Format location
-    newProduct.location = {
-      lat: newProduct.lat,
-      lng: newProduct.lng
-    };
+    newProduct.location = { lat: newProduct.lat, lng: newProduct.lng };
     delete newProduct.lat;
     delete newProduct.lng;
 
-    // Track product creation analytics
     if (req.analytics) {
       req.analytics.track('product_created', {
         product_id: newProduct.id,
         product_type_id: newProduct.product_type_id,
+        product_source: productType.source,
+        is_custom: productType.source === 'custom',
         price: newProduct.price,
         quantity: newProduct.quantity,
         days_already_used: newProduct.days_already_used,
