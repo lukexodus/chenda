@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, User, Store, Users } from "lucide-react";
+import { Loader2, User, Store, Users, Bike } from "lucide-react";
 import { toast } from "sonner";
 
 import { useAuthStore } from "@/lib/store";
@@ -57,9 +57,12 @@ export function RegisterForm() {
       });
 
       // Redirect based on user type
-      const redirectPath = data.type === "seller" || data.type === "both" 
-        ? "/seller/dashboard" 
-        : "/buyer";
+      let redirectPath = "/buyer";
+      if (data.type === "seller" || data.type === "both") {
+        redirectPath = "/seller/dashboard";
+      } else if (data.type === "rider") {
+        redirectPath = "/rider/dashboard";
+      }
       router.push(redirectPath);
     } catch (error) {
       console.error("Registration error:", error);
@@ -222,6 +225,23 @@ export function RegisterForm() {
                         <div className="font-medium text-sm">Both Buy & Sell</div>
                         <div className="text-xs text-[var(--fresh-text-muted)]">
                           Access all features as buyer and seller
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Rider Option */}
+                  <div className="flex items-center space-x-3 rounded-lg border border-[var(--fresh-border)] p-3 hover:bg-[var(--fresh-surface)] transition-colors">
+                    <RadioGroupItem value="rider" id="rider" />
+                    <label
+                      htmlFor="rider"
+                      className="flex flex-1 cursor-pointer items-start gap-3"
+                    >
+                      <Bike className="mt-0.5 h-5 w-5 text-[var(--fresh-primary)]" />
+                      <div className="space-y-0.5">
+                        <div className="font-medium text-sm">Deliver Products</div>
+                        <div className="text-xs text-[var(--fresh-text-muted)]">
+                          Register as a delivery rider
                         </div>
                       </div>
                     </label>
