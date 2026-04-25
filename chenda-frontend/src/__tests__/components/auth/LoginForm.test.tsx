@@ -139,6 +139,7 @@ describe("LoginForm", () => {
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalled();
+      expect(toast.success).not.toHaveBeenCalled();
     });
   });
 

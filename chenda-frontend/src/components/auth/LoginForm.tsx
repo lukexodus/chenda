@@ -40,6 +40,13 @@ export function LoginForm() {
     setIsLoading(true);
     try {
       const user = await login(data.email, data.password);
+
+      if (!user) {
+        toast.error("Login failed", {
+          description: "Please check your credentials and try again.",
+        });
+        return;
+      }
       
       // Store rememberMe preference in localStorage
       if (data.rememberMe) {
