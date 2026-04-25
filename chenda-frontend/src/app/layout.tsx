@@ -47,17 +47,14 @@ export default function RootLayout({
             "font-src 'self' https://fonts.gstatic.com",
             // Images: self + data URIs (Next.js image optimization) + OSM tile servers
             "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://nominatim.openstreetmap.org",
-            // API connections: self + backend + OSM APIs
-            "connect-src 'self' http://localhost:3001 https://nominatim.openstreetmap.org",
+            // API connections: same-origin proxy + OSM APIs
+            "connect-src 'self' https://nominatim.openstreetmap.org",
             // Map tiles from unpkg (Leaflet)
             "worker-src blob:",
-            "frame-ancestors 'none'",
             "base-uri 'self'",
             "form-action 'self'",
           ].join("; ")}
         />
-        {/* Prevent clickjacking */}
-        <meta httpEquiv="X-Frame-Options" content="DENY" />
         {/* Disable MIME type sniffing */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
       </head>

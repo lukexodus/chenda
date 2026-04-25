@@ -1,17 +1,15 @@
-[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
-[36m
-both (2)[0m
+both (2)
 - linda.dairy@email.com
 - pedro.produce@email.com
-[36m
-buyer (5)[0m
+
+buyer (5)
 - ana.garcia@email.com
 - carlos.reyes@email.com
 - maria.santos@email.com
 - roberto.cruz@email.com
 - sofia.mendoza@email.com
-[36m
-seller (26)[0m
+
+seller (26)
 - bacolod.sweetharvest@email.com
 - baguio.highlands@email.com
 - batac.heritagefoods@email.com
@@ -38,6 +36,3 @@ seller (26)[0m
 - tacloban.freshcorner@email.com
 - vigan.ilocos@email.com
 - zamboanga.harvest@email.com
-[32m
-Total emails: 33
-[0m
