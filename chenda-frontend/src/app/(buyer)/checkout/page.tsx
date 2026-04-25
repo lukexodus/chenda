@@ -33,7 +33,7 @@ export default function CheckoutPage() {
   const { items, clearCart, getTotalPrice } = useCartStore();
   const { user } = useAuthStore();
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('gcash');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('cash');
   const [deliveryNotes, setDeliveryNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -66,6 +66,14 @@ export default function CheckoutPage() {
   const selectedMethodOption = PAYMENT_METHODS.find(
     (m) => m.id === selectedPaymentMethod
   )!;
+
+  const handlePaymentMethodChange = (value: string) => {
+    const method = PAYMENT_METHODS.find((m) => m.id === value);
+    if (!method || method.disabled) {
+      return;
+    }
+    setSelectedPaymentMethod(value as PaymentMethod);
+  };
 
   const handlePlaceOrder = async () => {
     // Validate delivery address — only the text address is required;
@@ -168,7 +176,7 @@ export default function CheckoutPage() {
 
           <Alert className="border-blue-200 bg-blue-50">
             <AlertDescription className="text-sm text-blue-800">
-              GCash payment requests are created in real backend flow. For GCash, complete payment in the checkout page that opens after order creation.
+              Cash on Delivery is currently the only available payment option. GCash is temporarily unavailable.
             </AlertDescription>
           </Alert>
 
@@ -222,28 +230,47 @@ export default function CheckoutPage() {
                 <CardContent>
                   <RadioGroup
                     value={selectedPaymentMethod}
-                    onValueChange={(value) => setSelectedPaymentMethod(value as PaymentMethod)}
+                    onValueChange={handlePaymentMethodChange}
                     disabled={isSubmitting}
                   >
                     <div className="space-y-3">
-                      {PAYMENT_METHODS.map((method) => (
+                      {PAYMENT_METHODS.map((method) => {
+                        const isDisabled = isSubmitting || Boolean(method.disabled);
+
+                        return (
                         <div
                           key={method.id}
-                          className="flex items-center space-x-3 rounded-lg border p-4 hover:bg-fresh-surface transition-colors cursor-pointer"
+                          className={`flex items-center space-x-3 rounded-lg border p-4 transition-colors ${
+                            isDisabled
+                              ? 'opacity-45 cursor-not-allowed pointer-events-none'
+                              : 'hover:bg-fresh-surface cursor-pointer'
+                          }`}
                         >
-                          <RadioGroupItem value={method.id} id={method.id} />
+                          <RadioGroupItem value={method.id} id={method.id} disabled={isDisabled} />
                           <Label
                             htmlFor={method.id}
-                            className="flex-1 cursor-pointer flex items-start gap-3"
+                            className={`flex-1 flex items-start gap-3 ${
+                              isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'
+                            }`}
                           >
                             <span className="text-2xl">{method.icon}</span>
                             <div className="flex-1">
-                              <p className="font-medium text-fresh-text-primary">
+                              <p className="font-medium text-fresh-text-primary flex items-center gap-2">
                                 {method.name}
+                                {method.disabled && (
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full border border-fresh-text-muted text-fresh-text-muted uppercase tracking-wide">
+                                    Disabled
+                                  </span>
+                                )}
                               </p>
                               <p className="text-sm text-fresh-text-muted">
                                 {method.description}
                               </p>
+                              {method.disabledReason && (
+                                <p className="text-xs text-fresh-text-muted mt-1">
+                                  {method.disabledReason}
+                                </p>
+                              )}
                               <div className="flex gap-4 mt-1">
                                 <p className="text-xs text-fresh-text-muted">
                                   Fee: {method.fee}
@@ -255,7 +282,8 @@ export default function CheckoutPage() {
                             </div>
                           </Label>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </RadioGroup>
                 </CardContent>

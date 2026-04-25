@@ -83,6 +83,12 @@ export default function PaymentModal({
     setErrorMessage('');
 
     try {
+      if (paymentMethod.disabled) {
+        throw new Error(
+          paymentMethod.disabledReason || `${paymentMethod.name} is temporarily unavailable.`
+        );
+      }
+
       const paymentData: PayOrderRequest = {
         payment_method: paymentMethod.id,
         payment_details: {},

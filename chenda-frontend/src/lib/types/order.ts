@@ -102,6 +102,8 @@ export interface PaymentMethodOption {
   icon: string;
   processing_time?: string;
   fee?: string;
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
 export const PAYMENT_METHODS: PaymentMethodOption[] = [
@@ -120,6 +122,8 @@ export const PAYMENT_METHODS: PaymentMethodOption[] = [
     icon: '📱',
     processing_time: '1-2 minutes',
     fee: 'Free',
+    disabled: true,
+    disabledReason: 'Temporarily unavailable',
   },
 ];
 
