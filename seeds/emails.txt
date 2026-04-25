@@ -1,0 +1,43 @@
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[36m
+both (2)[0m
+- linda.dairy@email.com
+- pedro.produce@email.com
+[36m
+buyer (5)[0m
+- ana.garcia@email.com
+- carlos.reyes@email.com
+- maria.santos@email.com
+- roberto.cruz@email.com
+- sofia.mendoza@email.com
+[36m
+seller (26)[0m
+- bacolod.sweetharvest@email.com
+- baguio.highlands@email.com
+- batac.heritagefoods@email.com
+- batangas.agrimarket@email.com
+- butuan.valleyproduce@email.com
+- cdo.harvesthub@email.com
+- cebu.freshfinds@email.com
+- currimao.freshfarms@email.com
+- davao.organicfarms@email.com
+- dumaguete.organic@email.com
+- gensan.freshmarket@email.com
+- ilocos.heritage@email.com
+- iloilo.freshharvest@email.com
+- juan.market@email.com
+- launion.freshmart@email.com
+- legazpi.agrifresh@email.com
+- manilabaygroceries@email.com
+- naga.freshpicks@email.com
+- nena.store@email.com
+- nuevaecija.harvesthub@email.com
+- palawan.greenmarket@email.com
+- pampanga.freshhub@email.com
+- paoay.markethub@email.com
+- tacloban.freshcorner@email.com
+- vigan.ilocos@email.com
+- zamboanga.harvest@email.com
+[32m
+Total emails: 33
+[0m
