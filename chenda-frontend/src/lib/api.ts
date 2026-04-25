@@ -13,9 +13,10 @@ function notifyAuthFailure() {
   authFailureListeners.forEach((cb) => cb());
 }
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || "/api";
+
+const API_BASE_URL = API_URL ? `${API_URL}${API_PREFIX}` : API_PREFIX;
 
 /**
  * Axios instance configured for the Chenda API.
@@ -23,7 +24,7 @@ const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || "/api";
  * - Base URL points at the Express backend.
  */
 const api: AxiosInstance = axios.create({
-  baseURL: `${API_URL}${API_PREFIX}`,
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
