@@ -172,31 +172,37 @@ export function ProfileForm({ children }: ProfileFormProps) {
             {/* User Type Radio Buttons */}
             <div className="space-y-3">
               <Label>Account Type</Label>
-              <RadioGroup
-                value={formData.type}
-                onValueChange={(value) => 
-                  setFormData({ ...formData, type: value as "buyer" | "seller" | "both" })
-                }
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="buyer" id="buyer" />
-                  <Label htmlFor="buyer" className="font-normal">
-                    Buyer - I want to buy fresh products
-                  </Label>
+              {profile?.type === "rider" ? (
+                <div className="p-3 bg-muted rounded-md text-sm text-muted-foreground border">
+                  You are registered as a delivery rider. Role changing is disabled for rider accounts.
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="seller" id="seller" />
-                  <Label htmlFor="seller" className="font-normal">
-                    Seller - I want to sell fresh products
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="both" id="both" />
-                  <Label htmlFor="both" className="font-normal">
-                    Both - I want to buy and sell
-                  </Label>
-                </div>
-              </RadioGroup>
+              ) : (
+                <RadioGroup
+                  value={formData.type}
+                  onValueChange={(value) => 
+                    setFormData({ ...formData, type: value as "buyer" | "seller" | "both" })
+                  }
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="buyer" id="buyer" />
+                    <Label htmlFor="buyer" className="font-normal">
+                      Buyer - I want to buy fresh products
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="seller" id="seller" />
+                    <Label htmlFor="seller" className="font-normal">
+                      Seller - I want to sell fresh products
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="both" id="both" />
+                    <Label htmlFor="both" className="font-normal">
+                      Both - I want to buy and sell
+                    </Label>
+                  </div>
+                </RadioGroup>
+              )}
             </div>
 
             {/* Save Button */}

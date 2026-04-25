@@ -6,7 +6,7 @@ export interface UserProfile {
   id: number;
   name: string;
   email: string;
-  type: "buyer" | "seller" | "both";
+  type: "buyer" | "seller" | "both" | "rider";
   address?: string;
   latitude?: number;
   longitude?: number;
@@ -24,7 +24,7 @@ export interface UserPreferences {
 
 export interface ProfileFormData {
   name: string;
-  type: "buyer" | "seller" | "both";
+  type: "buyer" | "seller" | "both" | "rider";
 }
 
 export interface LocationUpdateData {
