@@ -132,7 +132,7 @@ export function ProfileForm({ children }: ProfileFormProps) {
 
   return (
     <Tabs defaultValue="profile" className="w-full">
-      <TabsList className="grid w-full grid-cols-4">
+      <TabsList className="flex w-full md:grid md:grid-cols-4">
         <TabsTrigger value="profile">Profile</TabsTrigger>
         <TabsTrigger value="location">Location</TabsTrigger>
         <TabsTrigger value="preferences">Preferences</TabsTrigger>

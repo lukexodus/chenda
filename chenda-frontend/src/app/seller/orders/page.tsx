@@ -448,7 +448,7 @@ export default function SellerOrdersPage() {
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as OrderStatus | 'all')}
         >
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="flex w-full md:grid md:grid-cols-5">
             <TabsTrigger value="all">All ({statusCounts.all})</TabsTrigger>
             <TabsTrigger value="pending">Pending ({statusCounts.pending})</TabsTrigger>
             <TabsTrigger value="paid">Paid ({statusCounts.paid})</TabsTrigger>

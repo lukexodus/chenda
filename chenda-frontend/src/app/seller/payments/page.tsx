@@ -146,7 +146,7 @@ export default function SellerPaymentsPage() {
       </div>
 
       <Tabs value={statusFilter} onValueChange={(v) => setStatusFilter(v as SettlementStatus)}>
-        <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
+        <TabsList className="flex w-full md:grid md:grid-cols-6">
           {(Object.keys(STATUS_LABELS) as SettlementStatus[]).map((status) => (
             <TabsTrigger key={status} value={status}>
               {STATUS_LABELS[status]}
