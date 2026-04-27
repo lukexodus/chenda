@@ -223,10 +223,13 @@ async function seed(force = false, productsOnly = false) {
     } else if (force && hasData) {
       log('\n🗑️  Clearing existing data...', 'yellow');
       
-      // Clear in reverse dependency order to satisfy foreign key constraints.
-      await client.query('TRUNCATE products CASCADE');
-      await client.query('TRUNCATE users CASCADE');
-      await client.query('TRUNCATE product_types CASCADE');
+      // Clear everything and restart identity sequences so seeded IDs are deterministic.
+      // This is important because some seed SQL references fixed user IDs (e.g., seller_id=6).
+      await client.query('TRUNCATE products, users, product_types RESTART IDENTITY CASCADE');
+
+      // Reset custom product type sequence (created by migration 010).
+      // Keep in sync with its START/MINVALUE of 10000.
+      await client.query("SELECT setval('product_types_custom_id_seq', 10000, false)");
       
       log('✓ Cleared existing data', 'green');
     }
