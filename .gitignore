@@ -54,3 +54,5 @@ server/.env.test.local
 server/.env.production.local
 
 uploads/
+
+.codex
