@@ -25,7 +25,8 @@ Product.getProductsWithMetrics = async (buyerLocation, filters = {}) => {
     max_radius_km = null,
     seller_id = null,
     product_type_id = null,
-    available_only = true
+    available_only = true,
+    keyword = null
   } = filters;
 
   // Validate buyer location
@@ -110,6 +111,12 @@ Product.getProductsWithMetrics = async (buyerLocation, filters = {}) => {
     paramCount++;
     queryText += ` AND p.product_type_id = $${paramCount}`;
     params.push(product_type_id);
+  }
+
+  if (keyword !== null && keyword.trim() !== '') {
+    paramCount++;
+    queryText += ` AND (pt.name ILIKE $${paramCount} OR pt.name_subtitle ILIKE $${paramCount} OR p.description ILIKE $${paramCount})`;
+    params.push(`%${keyword.trim()}%`);
   }
 
   queryText += ' ORDER BY distance_km ASC';

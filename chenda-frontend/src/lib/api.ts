@@ -109,6 +109,7 @@ export const searchApi = {
     location: { lat: number; lng: number };
     config?: {
       max_radius?: number;
+      keyword?: string;
       weights?: { proximity_weight: number; freshness_weight: number };
       min_freshness_score?: number;
       mode?: string;

@@ -111,6 +111,7 @@ const searchProducts =  asyncHandler(async (req, res, next) => {
     max_radius_km: config.max_radius,
     seller_id: config.seller_id || null,
     product_type_id: config.product_type_id || null,
+    keyword: config.keyword || null,
     available_only: true
   };
 

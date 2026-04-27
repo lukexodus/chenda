@@ -11,6 +11,7 @@ import AddressAutocomplete from "@/components/maps/AddressAutocomplete";
 import GeolocationButton from "@/components/maps/GeolocationButton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
 
@@ -35,6 +36,9 @@ export function SearchForm() {
   useEffect(() => {
     if (!filters.location && user?.location) {
       setLocation(user.location.lat, user.location.lng, user.address);
+      // Sync the autocomplete text with the saved profile address.
+      // This is a one-time initialization, not a reactive state loop.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAddressInput(user.address || "");
       // Trigger search immediately using the store's search action
       // (it reads filters from the store, which setLocation just updated)
@@ -87,6 +91,25 @@ export function SearchForm() {
     <Card className="p-3 sm:p-6 border-[var(--fresh-border)] shadow-[var(--shadow-small)] w-full overflow-hidden">
       {/* Location Input */}
       <div className="space-y-4">
+        <div>
+          <Label htmlFor="keyword" className="text-sm font-medium">
+            Search Keywords
+          </Label>
+          <div className="mt-2">
+            <Input
+              id="keyword"
+              type="text"
+              value={filters.keyword}
+              onChange={(e) => setFilters({ keyword: e.target.value })}
+              placeholder="Search by product name or description..."
+              disabled={loading}
+            />
+          </div>
+          <p className="mt-1 text-xs text-[var(--fresh-text-muted)]">
+            Filter results by text in the product name or description
+          </p>
+        </div>
+
         <div>
           <Label htmlFor="location" className="text-sm font-medium">
             Your Location

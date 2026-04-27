@@ -9,6 +9,7 @@ import { searchApi } from "@/lib/api";
 
 export interface SearchFilters {
   location: { lat: number; lng: number; address?: string } | null;
+  keyword: string;
   proximityWeight: number;
   freshnessWeight: number;
   maxRadius: number;
@@ -77,6 +78,7 @@ interface SearchState {
 
 const defaultFilters: SearchFilters = {
   location: null,
+  keyword: "",
   proximityWeight: 50,
   freshnessWeight: 50,
   maxRadius: 25,
@@ -153,6 +155,7 @@ export const useSearchStore = create<SearchState>()(
             },
             config: {
               max_radius: filters.maxRadius,
+              keyword: filters.keyword || undefined,
               weights: {
                 proximity_weight: filters.proximityWeight / 100,
                 freshness_weight: filters.freshnessWeight / 100,
