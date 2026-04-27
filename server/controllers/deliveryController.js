@@ -636,7 +636,7 @@ exports.getRiderDeliveryDetail = async (req, res) => {
   return res.json({
     success: true,
     delivery,
-    timeline: tracking?.timeline || [],
+    timeline: tracking?.events || [],
   });
 };
 

@@ -184,7 +184,7 @@ export function DeliveryPhaseTracker({
                 <Icon className="h-4 w-4" />
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-fresh-text-primary">{phase.label}</p>
+                <p className="truncate text-xs font-medium text-fresh-text-primary">{phase.label}</p>
                 {phase.optional && (
                   <p className="text-[11px] text-muted-foreground">optional</p>
                 )}
