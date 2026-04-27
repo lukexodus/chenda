@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { DeliveryTimeline } from "@/components/delivery/DeliveryTimeline";
 
 interface TrackingPayload {
   delivery: {
@@ -348,15 +349,12 @@ export default function RiderDeliveryDetailPage() {
         <CardHeader>
           <CardTitle>Timeline</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
-          {data.timeline.length === 0 && <p className="text-sm text-fresh-text-muted">No events yet.</p>}
-          {data.timeline.map((event, idx) => (
-            <div key={`${event.event_type}-${event.created_at}-${idx}`} className="border rounded-md p-3">
-              <p className="font-medium text-sm">{event.event_type}</p>
-              {event.event_note && <p className="text-sm text-fresh-text-muted">{event.event_note}</p>}
-              <p className="text-xs text-fresh-text-muted">{new Date(event.created_at).toLocaleString()}</p>
-            </div>
-          ))}
+        <CardContent>
+          <DeliveryTimeline
+            delivery={data.delivery}
+            events={data.timeline.map((e) => ({ event_type: e.event_type, event_note: e.event_note, created_at: e.created_at }))}
+            emptyText="No events yet."
+          />
         </CardContent>
       </Card>
     </div>

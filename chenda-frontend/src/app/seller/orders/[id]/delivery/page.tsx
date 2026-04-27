@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/lib/api";
+import { DeliveryTimeline } from "@/components/delivery/DeliveryTimeline";
 
 interface TrackingResponse {
   tracking: {
@@ -246,15 +247,8 @@ export default function SellerOrderDeliveryTrackingPage({ params: paramsPromise 
                 <CardHeader>
                   <CardTitle>Timeline</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  {tracking.events.length === 0 && <p className="text-sm text-fresh-text-muted">No timeline updates yet.</p>}
-                  {tracking.events.map((event) => (
-                    <div key={event.id} className="border rounded-md p-3">
-                      <p className="font-medium text-sm">{event.event_type}</p>
-                      {event.event_note && <p className="text-sm text-fresh-text-muted">{event.event_note}</p>}
-                      <p className="text-xs text-fresh-text-muted">{new Date(event.created_at).toLocaleString()}</p>
-                    </div>
-                  ))}
+                <CardContent>
+                  <DeliveryTimeline delivery={tracking.delivery} events={tracking.events} />
                 </CardContent>
               </Card>
 
