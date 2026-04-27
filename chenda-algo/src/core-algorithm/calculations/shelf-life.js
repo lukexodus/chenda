@@ -3,7 +3,7 @@
  * Task 2.2: Calculate remaining shelf life and freshness percentage
  * 
  * Calculations:
- * - Remaining shelf life days = total_shelf_life - days_already_used
+ * - Remaining shelf life days = total_shelf_life - (days_already_used + days_since_listed)
  * - Freshness percentage = (remaining / total) * 100
  * - Expiration date = listed_date + remaining_days
  * - Is expired = current_date > expiration_date
@@ -21,7 +21,7 @@
  * const remaining = calculateRemainingShelfLife(28, 5); // Eggs: 28 days total, 5 days used
  * console.log(remaining); // 23 days
  */
-function calculateRemainingShelfLife(totalShelfLifeDays, daysAlreadyUsed) {
+function calculateRemainingShelfLife(totalShelfLifeDays, daysAlreadyUsed, listedDate, currentDate = new Date()) {
   // Validate inputs
   if (typeof totalShelfLifeDays !== 'number' || typeof daysAlreadyUsed !== 'number') {
     throw new Error('totalShelfLifeDays and daysAlreadyUsed must be numbers');
@@ -42,8 +42,35 @@ function calculateRemainingShelfLife(totalShelfLifeDays, daysAlreadyUsed) {
   if (daysAlreadyUsed > totalShelfLifeDays) {
     throw new Error(`daysAlreadyUsed (${daysAlreadyUsed}) cannot exceed totalShelfLifeDays (${totalShelfLifeDays})`);
   }
-  
-  return totalShelfLifeDays - daysAlreadyUsed;
+
+  // Validate and parse listed date
+  let date;
+  if (listedDate instanceof Date) {
+    date = new Date(listedDate.getTime());
+  } else if (typeof listedDate === 'string') {
+    date = new Date(listedDate);
+  } else {
+    throw new Error('listedDate must be a Date object or ISO 8601 string');
+  }
+
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid date: ${listedDate}`);
+  }
+
+  const now = currentDate instanceof Date ? currentDate : new Date(currentDate);
+  if (isNaN(now.getTime())) {
+    throw new Error(`Invalid current date: ${currentDate}`);
+  }
+
+  const msSinceListed = Math.max(0, now.getTime() - date.getTime());
+  const daysSinceListed = Math.floor(msSinceListed / (24 * 60 * 60 * 1000));
+  const totalDaysUsed = daysAlreadyUsed + daysSinceListed;
+
+  if (totalDaysUsed >= totalShelfLifeDays) {
+    return 0;
+  }
+
+  return totalShelfLifeDays - totalDaysUsed;
 }
 
 /**
@@ -59,8 +86,13 @@ function calculateRemainingShelfLife(totalShelfLifeDays, daysAlreadyUsed) {
  * const freshness = calculateFreshnessPercent(28, 5); // Eggs: 28 days total, 5 used
  * console.log(freshness); // 82.14%
  */
-function calculateFreshnessPercent(totalShelfLifeDays, daysAlreadyUsed, decimals = 2) {
-  const remaining = calculateRemainingShelfLife(totalShelfLifeDays, daysAlreadyUsed);
+function calculateFreshnessPercent(totalShelfLifeDays, daysAlreadyUsed, listedDate, currentDate = new Date(), decimals = 2) {
+  const remaining = calculateRemainingShelfLife(
+    totalShelfLifeDays,
+    daysAlreadyUsed,
+    listedDate,
+    currentDate
+  );
   const percentage = (remaining / totalShelfLifeDays) * 100;
   
   return Number(percentage.toFixed(decimals));
@@ -195,12 +227,16 @@ function calculateShelfLifeMetrics(product, currentDate = new Date()) {
   // Calculate all metrics
   const remainingDays = calculateRemainingShelfLife(
     product.total_shelf_life_days,
-    product.days_already_used
+    product.days_already_used,
+    product.listed_date,
+    currentDate
   );
   
   const freshnessPercent = calculateFreshnessPercent(
     product.total_shelf_life_days,
-    product.days_already_used
+    product.days_already_used,
+    product.listed_date,
+    currentDate
   );
   
   const expirationDate = calculateExpirationDate(
@@ -312,12 +348,12 @@ function runTests() {
   console.log('=== Shelf Life Calculator Tests ===\n');
   
   console.log('TEST 1: Calculate remaining shelf life');
-  const remaining1 = calculateRemainingShelfLife(28, 5); // Eggs
+  const remaining1 = calculateRemainingShelfLife(28, 5, '2025-01-29T06:00:00Z', new Date('2025-01-30T00:00:00Z')); // Eggs
   console.log(`Eggs (28 days total, 5 days used): ${remaining1} days remaining`);
   console.log('Expected: 23 days ✓\n');
   
   console.log('TEST 2: Calculate freshness percentage');
-  const freshness1 = calculateFreshnessPercent(28, 5);
+  const freshness1 = calculateFreshnessPercent(28, 5, '2025-01-29T06:00:00Z', new Date('2025-01-30T00:00:00Z'));
   console.log(`Eggs (23/28 days): ${freshness1}% fresh`);
   console.log('Expected: 82.14% ✓\n');
   
@@ -350,13 +386,13 @@ function runTests() {
   console.log('✓\n');
   
   console.log('TEST 7: Edge case - Just listed (0 days used)');
-  const freshness2 = calculateFreshnessPercent(7, 0);
+  const freshness2 = calculateFreshnessPercent(7, 0, '2025-01-29T06:00:00Z', new Date('2025-01-30T00:00:00Z'));
   console.log(`Kefir (7 days total, 0 days used): ${freshness2}% fresh`);
   console.log('Expected: 100% ✓\n');
   
   console.log('TEST 8: Edge case - Near expiration');
-  const freshness3 = calculateFreshnessPercent(14, 13);
-  const remaining3 = calculateRemainingShelfLife(14, 13);
+  const freshness3 = calculateFreshnessPercent(14, 13, '2025-01-29T06:00:00Z', new Date('2025-01-30T00:00:00Z'));
+  const remaining3 = calculateRemainingShelfLife(14, 13, '2025-01-29T06:00:00Z', new Date('2025-01-30T00:00:00Z'));
   console.log(`Cottage cheese (14 days total, 13 days used): ${freshness3}% fresh, ${remaining3} day remaining`);
   console.log('Expected: 7.14%, 1 day ✓\n');
   

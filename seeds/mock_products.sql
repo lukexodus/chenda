@@ -503,7 +503,7 @@ SELECT
   p.storage_condition,
   p.days_already_used,
   pt.default_shelf_life_days,
-  calculate_shelf_life_percent(pt.default_shelf_life_days, p.days_already_used) as freshness_percent,
+  calculate_shelf_life_percent(p.listed_date, pt.default_shelf_life_days, p.days_already_used) as freshness_percent,
   p.status
 FROM products p
 JOIN product_types pt ON p.product_type_id = pt.id

@@ -160,7 +160,11 @@ async function testConnection() {
     // Test 8: Shelf life calculation
     log('\nTest 8: Shelf Life Calculation', 'yellow');
     const shelfLifeResult = await client.query(`
-      SELECT calculate_shelf_life_percent(14, 1) as freshness_percent;
+      SELECT calculate_shelf_life_percent(
+        CURRENT_TIMESTAMP,
+        14,
+        1
+      ) as freshness_percent;
     `);
     
     const freshness = parseFloat(shelfLifeResult.rows[0].freshness_percent);

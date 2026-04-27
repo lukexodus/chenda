@@ -70,22 +70,29 @@ $$ LANGUAGE plpgsql;
 
 -- Function: Calculate remaining shelf life percentage
 CREATE OR REPLACE FUNCTION calculate_shelf_life_percent(
+    listed_date TIMESTAMP,
     total_shelf_life INTEGER,
     days_used INTEGER
 )
 RETURNS DOUBLE PRECISION AS $$
+DECLARE
+    days_since_listed DOUBLE PRECISION;
+    total_days_used DOUBLE PRECISION;
 BEGIN
     IF total_shelf_life <= 0 THEN
         RETURN 0;
     END IF;
-    
-    IF days_used >= total_shelf_life THEN
+
+    days_since_listed := GREATEST(0, DATE_PART('day', CURRENT_TIMESTAMP - listed_date));
+    total_days_used := days_used + days_since_listed;
+
+    IF total_days_used >= total_shelf_life THEN
         RETURN 0;
     END IF;
-    
-    RETURN ((total_shelf_life - days_used)::DOUBLE PRECISION / total_shelf_life) * 100.0;
+
+    RETURN ((total_shelf_life - total_days_used)::DOUBLE PRECISION / total_shelf_life) * 100.0;
 END;
-$$ LANGUAGE plpgsql IMMUTABLE;
+$$ LANGUAGE plpgsql STABLE;
 
 -- Function: Calculate expiration date
 CREATE OR REPLACE FUNCTION calculate_expiration_date(
@@ -142,7 +149,7 @@ SELECT
     ST_X(p.location::geometry) as longitude,
     ST_Y(p.location::geometry) as latitude,
     -- Pre-calculated shelf life metrics
-    calculate_shelf_life_percent(pt.default_shelf_life_days, p.days_already_used) as freshness_percent,
+    calculate_shelf_life_percent(p.listed_date, pt.default_shelf_life_days, p.days_already_used) as freshness_percent,
     calculate_expiration_date(p.listed_date, pt.default_shelf_life_days, p.days_already_used) as expiration_date,
     (pt.default_shelf_life_days - p.days_already_used) as remaining_days,
     is_product_expired(p.listed_date, pt.default_shelf_life_days, p.days_already_used) as is_expired
