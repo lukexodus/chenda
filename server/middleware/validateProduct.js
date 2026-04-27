@@ -26,6 +26,13 @@ const validateCreateProduct = [
     .isInt({ min: 1 })
     .withMessage('custom_shelf_life_days must be a positive integer'),
 
+  body('seller_shelf_life_days')
+    .exists()
+    .withMessage('seller_shelf_life_days is required')
+    .bail()
+    .isInt({ min: 1 })
+    .withMessage('seller_shelf_life_days must be a positive integer'),
+
   // ── Cross-field: require exactly one path ───────────────────────────────────
   body().custom((_, { req }) => {
     const hasTypeId = req.body.product_type_id != null;
@@ -36,9 +43,6 @@ const validateCreateProduct = [
     }
     if (hasTypeId && hasCustom) {
       throw new Error('Provide either product_type_id or custom_product_name, not both');
-    }
-    if (hasCustom && req.body.custom_shelf_life_days == null) {
-      throw new Error('custom_shelf_life_days is required when using a custom product name');
     }
     return true;
   }),
@@ -103,6 +107,11 @@ const validateCreateProduct = [
 
 // Validation rules for updating a product
 const validateUpdateProduct = [
+  body('seller_shelf_life_days')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('seller_shelf_life_days must be a positive integer'),
+
   body('days_already_used')
     .optional()
     .isInt({ min: 0 })

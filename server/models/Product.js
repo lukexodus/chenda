@@ -65,7 +65,7 @@ Product.getProductsWithMetrics = async (buyerLocation, filters = {}) => {
       pt.name AS product_name,
       pt.name_subtitle,
       pt.category_id,
-      pt.default_shelf_life_days AS total_shelf_life_days,
+      COALESCE(p.seller_shelf_life_days, pso.override_shelf_life_days, pt.default_shelf_life_days) AS total_shelf_life_days,
       pt.default_storage_condition,
       
       -- Seller information
@@ -80,6 +80,7 @@ Product.getProductsWithMetrics = async (buyerLocation, filters = {}) => {
     FROM products p
     INNER JOIN product_types pt ON p.product_type_id = pt.id
     INNER JOIN users u ON p.seller_id = u.id
+    LEFT JOIN product_shelf_life_overrides pso ON (pso.seller_id = p.seller_id AND pso.product_type_id = p.product_type_id)
     WHERE 1=1
   `;
 
@@ -180,13 +181,14 @@ Product.findById = async (id) => {
       ST_X(p.location::geometry) AS longitude,
       pt.name AS product_name,
       pt.name_subtitle,
-      pt.default_shelf_life_days AS total_shelf_life_days,
+      COALESCE(p.seller_shelf_life_days, pso.override_shelf_life_days, pt.default_shelf_life_days) AS total_shelf_life_days,
       pt.default_storage_condition,
       u.name AS seller_name,
       u.email AS seller_email
     FROM products p
     INNER JOIN product_types pt ON p.product_type_id = pt.id
     INNER JOIN users u ON p.seller_id = u.id
+    LEFT JOIN product_shelf_life_overrides pso ON (pso.seller_id = p.seller_id AND pso.product_type_id = p.product_type_id)
     WHERE p.id = $1
   `;
 
@@ -236,6 +238,7 @@ Product.create = async (productData) => {
   const {
     seller_id,
     product_type_id,
+    seller_shelf_life_days,
     days_already_used = 0,
     price,
     quantity,
@@ -259,12 +262,12 @@ Product.create = async (productData) => {
 
   const queryText = `
     INSERT INTO products (
-      seller_id, product_type_id, days_already_used, price, quantity, unit,
+      seller_id, product_type_id, seller_shelf_life_days, days_already_used, price, quantity, unit,
       location, address, storage_condition, description, image_url
     )
-    VALUES ($1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8), 4326), $9, $10, $11, $12)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, ST_SetSRID(ST_MakePoint($8, $9), 4326), $10, $11, $12, $13)
     RETURNING 
-      id, seller_id, product_type_id, days_already_used, listed_date, price, quantity, unit,
+      id, seller_id, product_type_id, seller_shelf_life_days, days_already_used, listed_date, price, quantity, unit,
       ST_Y(location::geometry) AS latitude,
       ST_X(location::geometry) AS longitude,
       address, storage_condition, description, image_url, status, created_at, updated_at
@@ -273,6 +276,7 @@ Product.create = async (productData) => {
   const params = [
     seller_id,
     product_type_id,
+    seller_shelf_life_days,
     days_already_used,
     price,
     quantity,
@@ -292,6 +296,7 @@ Product.create = async (productData) => {
     id: row.id,
     seller_id: row.seller_id,
     product_type_id: row.product_type_id,
+    seller_shelf_life_days: row.seller_shelf_life_days,
     days_already_used: row.days_already_used,
     listed_date: row.listed_date,
     price: parseFloat(row.price),
@@ -320,7 +325,7 @@ Product.create = async (productData) => {
  */
 Product.update = async (id, updates) => {
   const allowedFields = [
-    'days_already_used', 'price', 'quantity', 'unit', 'storage_condition',
+    'seller_shelf_life_days', 'days_already_used', 'price', 'quantity', 'unit', 'storage_condition',
     'description', 'image_url', 'status', 'address'
   ];
 
@@ -417,9 +422,10 @@ Product.findBySeller = async (seller_id) => {
       ST_X(p.location::geometry) AS longitude,
       pt.name AS product_name,
       pt.name_subtitle,
-      pt.default_shelf_life_days AS total_shelf_life_days
+      COALESCE(p.seller_shelf_life_days, pso.override_shelf_life_days, pt.default_shelf_life_days) AS total_shelf_life_days
     FROM products p
     INNER JOIN product_types pt ON p.product_type_id = pt.id
+    LEFT JOIN product_shelf_life_overrides pso ON (pso.seller_id = p.seller_id AND pso.product_type_id = p.product_type_id)
     WHERE p.seller_id = $1
     ORDER BY p.created_at DESC
   `;

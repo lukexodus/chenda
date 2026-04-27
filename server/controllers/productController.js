@@ -5,6 +5,27 @@
 
 const { query } = require('../config/database');
 
+async function upsertSellerShelfLifeOverride({ sellerId, productTypeId, sellerShelfLifeDays, storageCondition }) {
+  if (!sellerId || !productTypeId || !sellerShelfLifeDays) return;
+
+  // Only regional/custom types participate in community average (the DB trigger enforces this too).
+  const typeResult = await query('SELECT source FROM product_types WHERE id = $1', [productTypeId]);
+  const source = typeResult.rows[0]?.source;
+  if (!source || !['regional', 'custom'].includes(source)) return;
+
+  await query(
+    `INSERT INTO product_shelf_life_overrides (
+      seller_id, product_type_id, override_shelf_life_days, override_storage_condition
+    ) VALUES ($1, $2, $3, $4)
+    ON CONFLICT (seller_id, product_type_id)
+    DO UPDATE SET
+      override_shelf_life_days = EXCLUDED.override_shelf_life_days,
+      override_storage_condition = EXCLUDED.override_storage_condition,
+      updated_at = CURRENT_TIMESTAMP`,
+    [sellerId, productTypeId, sellerShelfLifeDays, storageCondition || null]
+  );
+}
+
 /**
  * Create a new product
  * POST /api/products
@@ -22,6 +43,7 @@ const createProduct = async (req, res) => {
     product_type_id,
     custom_product_name,
     custom_shelf_life_days,
+    seller_shelf_life_days,
     days_already_used = 0,
     price,
     quantity,
@@ -81,7 +103,7 @@ const createProduct = async (req, res) => {
          RETURNING id, name, default_shelf_life_days, default_storage_condition, source`,
         [
           custom_product_name.trim(),
-          custom_shelf_life_days,
+          custom_shelf_life_days || seller_shelf_life_days,
           storage_condition || 'refrigerated',
           seller_id
         ]
@@ -91,7 +113,7 @@ const createProduct = async (req, res) => {
     } else {
       // Path A: look up existing catalog entry
       const productTypeResult = await query(
-        'SELECT id, name, default_shelf_life_days, default_storage_condition FROM product_types WHERE id = $1',
+        'SELECT id, name, default_shelf_life_days, default_storage_condition, source FROM product_types WHERE id = $1',
         [product_type_id]
       );
 
@@ -105,7 +127,7 @@ const createProduct = async (req, res) => {
       resolvedProductTypeId = productType.id;
     }
 
-    const total_shelf_life = productType.default_shelf_life_days;
+    const total_shelf_life = seller_shelf_life_days;
 
     // Validate days_already_used against the resolved shelf life
     if (days_already_used < 0) {
@@ -136,20 +158,21 @@ const createProduct = async (req, res) => {
     // Insert new product
     const result = await query(
       `INSERT INTO products (
-        seller_id, product_type_id, days_already_used, price, quantity, unit,
+        seller_id, product_type_id, seller_shelf_life_days, days_already_used, price, quantity, unit,
         location, address, storage_condition, description, image_url, status
       ) VALUES (
-        $1, $2, $3, $4, $5, $6,
-        ST_SetSRID(ST_MakePoint($7, $8), 4326),
-        $9, $10, $11, $12, 'active'
+        $1, $2, $3, $4, $5, $6, $7,
+        ST_SetSRID(ST_MakePoint($8, $9), 4326),
+        $10, $11, $12, $13, 'active'
       ) RETURNING 
-        id, seller_id, product_type_id, days_already_used, listed_date,
+        id, seller_id, product_type_id, seller_shelf_life_days, days_already_used, listed_date,
         price, quantity, unit, ST_X(location::geometry) as lng, ST_Y(location::geometry) as lat,
         address, storage_condition, description, image_url, status,
         created_at, updated_at`,
       [
         seller_id,
         resolvedProductTypeId,
+        seller_shelf_life_days,
         days_already_used,
         price,
         quantity,
@@ -171,6 +194,17 @@ const createProduct = async (req, res) => {
       default_shelf_life_days: productType.default_shelf_life_days,
       source: productType.source
     };
+    newProduct.total_shelf_life_days = seller_shelf_life_days;
+    newProduct.seller_shelf_life_days = seller_shelf_life_days;
+
+    // Upsert seller override to power community averages for regional/custom types.
+    // Listing shelf life remains authoritative on the product row.
+    await upsertSellerShelfLifeOverride({
+      sellerId: seller_id,
+      productTypeId: resolvedProductTypeId,
+      sellerShelfLifeDays: seller_shelf_life_days,
+      storageCondition: finalStorageCondition
+    });
 
     newProduct.location = { lat: newProduct.lat, lng: newProduct.lng };
     delete newProduct.lat;
@@ -218,6 +252,7 @@ const getProductById = async (req, res) => {
         p.id,
         p.seller_id,
         p.product_type_id,
+        p.seller_shelf_life_days,
         p.days_already_used,
         p.listed_date,
         p.price,
@@ -260,6 +295,7 @@ const getProductById = async (req, res) => {
       id: row.id,
       seller_id: row.seller_id,
       product_type_id: row.product_type_id,
+      seller_shelf_life_days: row.seller_shelf_life_days,
       days_already_used: row.days_already_used,
       listed_date: row.listed_date,
       price: parseFloat(row.price),
@@ -341,6 +377,7 @@ const getMyProducts = async (req, res) => {
         p.id,
         p.seller_id,
         p.product_type_id,
+        p.seller_shelf_life_days,
         p.days_already_used,
         p.listed_date,
         p.price,
@@ -376,6 +413,7 @@ const getMyProducts = async (req, res) => {
       id: row.id,
       seller_id: row.seller_id,
       product_type_id: row.product_type_id,
+      seller_shelf_life_days: row.seller_shelf_life_days,
       days_already_used: row.days_already_used,
       listed_date: row.listed_date,
       price: parseFloat(row.price),
@@ -429,6 +467,7 @@ const updateProduct = async (req, res) => {
   const seller_id = req.user.id;
 
   const {
+    seller_shelf_life_days,
     days_already_used,
     price,
     quantity,
@@ -444,7 +483,7 @@ const updateProduct = async (req, res) => {
   try {
     // Verify product exists and user owns it
     const checkResult = await query(
-      'SELECT seller_id, product_type_id FROM products WHERE id = $1',
+      'SELECT seller_id, product_type_id, seller_shelf_life_days, days_already_used FROM products WHERE id = $1',
       [id]
     );
 
@@ -462,33 +501,49 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    // Build dynamic update query
-    const updates = [];
-    const values = [];
-    let paramCount = 1;
+    const existing = checkResult.rows[0];
 
-    if (days_already_used !== undefined) {
-      // Validate against shelf life
-      if (days_already_used < 0) {
+    const effectiveShelfLife = seller_shelf_life_days !== undefined
+      ? seller_shelf_life_days
+      : existing.seller_shelf_life_days;
+
+    const effectiveDaysUsed = days_already_used !== undefined
+      ? days_already_used
+      : existing.days_already_used;
+
+    if (effectiveShelfLife != null) {
+      if (effectiveShelfLife <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'seller_shelf_life_days must be a positive integer'
+        });
+      }
+      if (effectiveDaysUsed < 0) {
         return res.status(400).json({
           success: false,
           message: 'days_already_used cannot be negative'
         });
       }
-
-      const productTypeId = checkResult.rows[0].product_type_id;
-      const ptResult = await query(
-        'SELECT default_shelf_life_days FROM product_types WHERE id = $1',
-        [productTypeId]
-      );
-
-      if (days_already_used >= ptResult.rows[0].default_shelf_life_days) {
+      if (effectiveDaysUsed >= effectiveShelfLife) {
         return res.status(400).json({
           success: false,
-          message: `days_already_used must be less than total shelf life (${ptResult.rows[0].default_shelf_life_days} days)`
+          message: `days_already_used (${effectiveDaysUsed}) must be less than total shelf life (${effectiveShelfLife} days)`
         });
       }
+    }
 
+    // Build dynamic update query
+    const updates = [];
+    const values = [];
+    let paramCount = 1;
+
+    if (seller_shelf_life_days !== undefined) {
+      updates.push(`seller_shelf_life_days = $${paramCount}`);
+      values.push(seller_shelf_life_days);
+      paramCount++;
+    }
+
+    if (days_already_used !== undefined) {
       updates.push(`days_already_used = $${paramCount}`);
       values.push(days_already_used);
       paramCount++;
@@ -605,7 +660,7 @@ const updateProduct = async (req, res) => {
       `UPDATE products SET ${updates.join(', ')}
        WHERE id = $${paramCount}
        RETURNING 
-         id, seller_id, product_type_id, days_already_used, listed_date,
+         id, seller_id, product_type_id, seller_shelf_life_days, days_already_used, listed_date,
          price, quantity, unit, ST_X(location::geometry) as lng, ST_Y(location::geometry) as lat,
          address, storage_condition, description, image_url, status,
          created_at, updated_at`,
@@ -625,6 +680,16 @@ const updateProduct = async (req, res) => {
     // Parse numeric fields
     updatedProduct.price = parseFloat(updatedProduct.price);
     updatedProduct.quantity = parseFloat(updatedProduct.quantity);
+
+    // Keep community shelf life stats up-to-date when seller updates listing shelf life.
+    if (seller_shelf_life_days !== undefined) {
+      await upsertSellerShelfLifeOverride({
+        sellerId: seller_id,
+        productTypeId: existing.product_type_id,
+        sellerShelfLifeDays: seller_shelf_life_days,
+        storageCondition: storage_condition || updatedProduct.storage_condition
+      });
+    }
 
     res.json({
       success: true,

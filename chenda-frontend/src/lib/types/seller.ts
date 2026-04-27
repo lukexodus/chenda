@@ -25,6 +25,8 @@ export interface SellerProduct {
   name_subtitle?: string;
   seller_id: number;
   product_type_id: number;
+  /** Seller-entered shelf life for this specific listing */
+  seller_shelf_life_days?: number;
   price: number;
   quantity: number;
   unit: string;
@@ -65,6 +67,8 @@ export interface ProductFormData {
   /** Path B: custom product not in catalog */
   custom_product_name?: string;
   custom_shelf_life_days?: number;
+  /** Authoritative shelf life chosen by seller (required) */
+  seller_shelf_life_days: number;
   price: number;
   quantity: number;
   unit: string;

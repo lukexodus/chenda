@@ -56,7 +56,9 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   // ── Custom-product mode (Path B) ─────────────────────────────────────────
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [customName, setCustomName] = useState("");
-  const [customShelfLife, setCustomShelfLife] = useState("");
+  const [sellerShelfLife, setSellerShelfLife] = useState(
+    product?.seller_shelf_life_days?.toString() || product?.total_shelf_life_days?.toString() || ""
+  );
 
   const [price, setPrice] = useState(product?.price.toString() || "");
   const [quantity, setQuantity] = useState(product?.quantity.toString() || "");
@@ -75,10 +77,16 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Effective shelf life for freshness preview: custom input or selected type
-  const effectiveShelfLife = isCustomMode
-    ? parseInt(customShelfLife) || 0
-    : selectedType?.default_shelf_life_days ?? 0;
+  // Effective shelf life for freshness preview: seller-entered (authoritative)
+  const effectiveShelfLife = parseInt(sellerShelfLife) || 0;
+
+  const getSimpleStorageLabel = (condition?: string | null) => {
+    if (!condition) return "—";
+    if (condition.startsWith("pantry")) return "Pantry";
+    if (condition.startsWith("refrigerated")) return "Refrigerated";
+    if (condition.startsWith("frozen")) return "Frozen";
+    return condition;
+  };
 
   // Handle image selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,26 +142,29 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
+    const shelfLifeNum = parseInt(sellerShelfLife);
+    if (isNaN(shelfLifeNum) || shelfLifeNum < 1) {
+      newErrors.sellerShelfLife = "Shelf life must be at least 1 day";
+    }
+
+    const daysUsedNum = parseInt(daysUsed);
+    if (isNaN(daysUsedNum) || daysUsedNum < 0) {
+      newErrors.daysUsed = "Valid days used is required";
+    }
+
     if (isCustomMode) {
       if (!customName.trim()) {
         newErrors.productType = "Product name is required";
       }
-      const shelfLifeNum = parseInt(customShelfLife);
-      if (isNaN(shelfLifeNum) || shelfLifeNum < 1) {
-        newErrors.customShelfLife = "Shelf life must be at least 1 day";
-      } else if (parseInt(daysUsed) >= shelfLifeNum) {
+      if (!newErrors.sellerShelfLife && !newErrors.daysUsed && daysUsedNum >= shelfLifeNum) {
         newErrors.daysUsed = `Days used must be less than shelf life (${shelfLifeNum} days)`;
       }
     } else {
       if (!selectedType) {
         newErrors.productType = "Product type is required";
       }
-      const daysUsedNum = parseInt(daysUsed);
-      if (isNaN(daysUsedNum) || daysUsedNum < 0) {
-        newErrors.daysUsed = "Valid days used is required";
-      }
-      if (selectedType && daysUsedNum >= selectedType.default_shelf_life_days) {
-        newErrors.daysUsed = `Days used must be less than shelf life (${selectedType.default_shelf_life_days} days)`;
+      if (!newErrors.sellerShelfLife && !newErrors.daysUsed && daysUsedNum >= shelfLifeNum) {
+        newErrors.daysUsed = `Days used must be less than shelf life (${shelfLifeNum} days)`;
       }
     }
 
@@ -196,6 +207,7 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
         quantity: parseFloat(quantity),
         unit,
         days_already_used: parseInt(daysUsed),
+        seller_shelf_life_days: parseInt(sellerShelfLife),
         description: description.trim() || undefined,
         storage_condition: storageCondition,
         image_url: finalImageUrl || undefined,
@@ -206,7 +218,8 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
         ? {
             ...commonFields,
             custom_product_name: customName.trim(),
-            custom_shelf_life_days: parseInt(customShelfLife),
+            // Optional: seed the shared custom type's initial reference shelf life
+            custom_shelf_life_days: parseInt(sellerShelfLife),
           }
         : {
             ...commonFields,
@@ -311,8 +324,8 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
                     setIsCustomMode((v) => !v);
                     setSelectedType(null);
                     setCustomName("");
-                    setCustomShelfLife("");
-                    setErrors({ ...errors, productType: "", customShelfLife: "" });
+                    setSellerShelfLife("");
+                    setErrors({ ...errors, productType: "", sellerShelfLife: "" });
                   }}
                   disabled={isSubmitting || isEdit}
                   className="text-xs text-[var(--fresh-primary)] underline-offset-2 hover:underline disabled:pointer-events-none disabled:opacity-40"
@@ -335,27 +348,8 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
                     disabled={isSubmitting}
                     className="w-full rounded-md border border-[var(--fresh-border,#E5E7EB)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--fresh-primary)]"
                   />
-                  <div className="flex items-center gap-2">
-                    <input
-                      id="customShelfLife"
-                      type="number"
-                      min="1"
-                      value={customShelfLife}
-                      onChange={(e) => {
-                        setCustomShelfLife(e.target.value);
-                        setErrors({ ...errors, customShelfLife: "" });
-                      }}
-                      placeholder="Shelf life (days)"
-                      disabled={isSubmitting}
-                      className="w-full rounded-md border border-[var(--fresh-border,#E5E7EB)] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--fresh-primary)]"
-                    />
-                    <span className="shrink-0 text-xs text-[var(--fresh-text-muted)]">days</span>
-                  </div>
-                  {errors.customShelfLife && (
-                    <p className="text-xs text-red-500">{errors.customShelfLife}</p>
-                  )}
                   <p className="text-xs text-[var(--fresh-text-muted)]">
-                    Your shelf life estimate becomes part of the community reference for this product.
+                    No USDA reference available for custom products. Your shelf life helps build the community reference over time.
                   </p>
                 </div>
               ) : (
@@ -364,6 +358,11 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
                   onSelect={(type) => {
                     setSelectedType(type);
                     setErrors({ ...errors, productType: "" });
+                    if (!isEdit) {
+                      setSellerShelfLife((prev) =>
+                        prev && parseInt(prev) > 0 ? prev : `${type.default_shelf_life_days}`
+                      );
+                    }
                     // Pre-fill the listing image from the type's canonical photo
                     // if the seller hasn't already uploaded their own image
                     if (type.image_url && !imageFile && !uploadedImageUrl) {
@@ -380,13 +379,51 @@ export function ProductForm({ product, isEdit = false }: ProductFormProps) {
               )}
               {!isCustomMode && selectedType && (
                 <p className="text-xs text-[var(--fresh-text-muted)]">
-                  Shelf life: <span className="font-medium">{selectedType.default_shelf_life_days} days</span>
+                  {selectedType.source === "usda" ? (
+                    <>
+                      <span className="font-semibold text-[var(--fresh-primary)]">USDA reference available</span>
+                      {" · "}reference: <span className="font-medium">{selectedType.default_shelf_life_days} days</span>
+                      {" · "}USDA storage:{" "}
+                      <span className="font-medium">{getSimpleStorageLabel(selectedType.default_storage_condition)}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-semibold">No USDA reference available</span>
+                      {" · "}set shelf life based on your actual handling/storage
+                    </>
+                  )}
                   {selectedType.community_avg_shelf_life_days != null && (
                     <span className="ml-1 text-[var(--fresh-primary)]">
                       · community avg: {Math.round(selectedType.community_avg_shelf_life_days)} days
                     </span>
                   )}
-                  {" · "}Storage: <span className="font-medium capitalize">{selectedType.default_storage_condition}</span>
+                </p>
+              )}
+            </div>
+
+            {/* Shelf Life */}
+            <div className="space-y-1.5">
+              <Label htmlFor="sellerShelfLife" className="text-sm font-medium">
+                Shelf Life (days) <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="sellerShelfLife"
+                type="number"
+                min="1"
+                value={sellerShelfLife}
+                onChange={(e) => {
+                  setSellerShelfLife(e.target.value);
+                  setErrors({ ...errors, sellerShelfLife: "" });
+                }}
+                placeholder="e.g. 7"
+                disabled={isSubmitting}
+                className="text-sm"
+              />
+              {errors.sellerShelfLife ? (
+                <p className="text-xs text-red-500">{errors.sellerShelfLife}</p>
+              ) : (
+                <p className="text-xs text-[var(--fresh-text-muted)]">
+                  You decide the shelf life for this listing. USDA values (when available) are reference only.
                 </p>
               )}
             </div>
