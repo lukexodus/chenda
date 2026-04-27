@@ -1,9 +1,10 @@
 -- Seed Data: Nationwide Sellers & Products (Philippines)
--- Date: 2026-03-09
+-- Date: 2026-04-28
 -- Total sellers: 23 (major cities/regions + additional provinces + Region I Ilocos Norte expansion)
 -- Total products: ~213 (mixed fruits, vegetables, meats, dairy + Regional I multi-town coverage)
 -- Note: No images used (image_url = NULL)
 -- Requires: product_types.sql and mock_users.sql to be seeded first
+-- Note: listed_date is refreshed at seed time for recency
 
 -- Disable triggers for faster insertion
 SET session_replication_role = 'replica';
@@ -181,7 +182,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    265, 1, '2026-03-08T06:00:00Z',
+    265, 1, '2026-04-27T06:00:00Z',
     80, 5, 'kg',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -191,7 +192,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    267, 2, '2026-03-07T06:30:00Z',
+    267, 2, '2026-04-26T06:30:00Z',
     55, 8, 'pcs',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -201,7 +202,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    258, 0, '2026-03-09T05:00:00Z',
+    258, 0, '2026-04-28T05:00:00Z',
     35, 20, 'pcs',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -211,7 +212,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    262, 1, '2026-03-08T07:00:00Z',
+    262, 1, '2026-04-27T07:00:00Z',
     40, 3, 'kg',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -221,7 +222,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    284, 2, '2026-03-07T08:00:00Z',
+    284, 2, '2026-04-26T08:00:00Z',
     30, 4, 'kg',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -231,7 +232,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    548, 1, '2026-03-08T09:00:00Z',
+    548, 1, '2026-04-27T09:00:00Z',
     25, 2, 'kg',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -241,7 +242,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    60, 1, '2026-03-08T10:00:00Z',
+    60, 1, '2026-04-27T10:00:00Z',
     280, 2, 'kg',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -251,7 +252,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cebu.freshfinds@email.com'),
-    295, 0, '2026-03-09T06:00:00Z',
+    295, 0, '2026-04-28T06:00:00Z',
     50, 3, 'kg',
     ST_SetSRID(ST_MakePoint(123.8854, 10.3157), 4326),
     'Carbon Market, Cebu City',
@@ -267,7 +268,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    251, 0, '2026-03-09T05:30:00Z',
+    251, 0, '2026-04-28T05:30:00Z',
     35, 10, 'kg',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -277,7 +278,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    480, 2, '2026-03-07T06:00:00Z',
+    480, 2, '2026-04-26T06:00:00Z',
     120, 6, 'pcs',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -287,7 +288,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    265, 1, '2026-03-08T06:00:00Z',
+    265, 1, '2026-04-27T06:00:00Z',
     90, 4, 'kg',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -297,7 +298,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    250, 3, '2026-03-06T07:00:00Z',
+    250, 3, '2026-04-25T07:00:00Z',
     75, 5, 'pcs',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -307,7 +308,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    267, 1, '2026-03-08T07:00:00Z',
+    267, 1, '2026-04-27T07:00:00Z',
     50, 6, 'pcs',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -317,7 +318,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    305, 2, '2026-03-07T08:00:00Z',
+    305, 2, '2026-04-26T08:00:00Z',
     45, 4, 'kg',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -327,7 +328,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    308, 1, '2026-03-08T09:00:00Z',
+    308, 1, '2026-04-27T09:00:00Z',
     30, 5, 'kg',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -337,7 +338,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'davao.organicfarms@email.com'),
-    113, 0, '2026-03-09T06:00:00Z',
+    113, 0, '2026-04-28T06:00:00Z',
     220, 10, 'pcs',
     ST_SetSRID(ST_MakePoint(125.6087, 7.0707), 4326),
     'Bankerohan Market, Davao City',
@@ -353,7 +354,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    481, 0, '2026-03-09T05:00:00Z',
+    481, 0, '2026-04-28T05:00:00Z',
     180, 2, 'kg',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -363,7 +364,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    279, 1, '2026-03-08T06:00:00Z',
+    279, 1, '2026-04-27T06:00:00Z',
     60, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -373,7 +374,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    276, 1, '2026-03-08T07:00:00Z',
+    276, 1, '2026-04-27T07:00:00Z',
     90, 3, 'heads',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -383,7 +384,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    278, 2, '2026-03-07T07:00:00Z',
+    278, 2, '2026-04-26T07:00:00Z',
     55, 6, 'heads',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -393,7 +394,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    297, 2, '2026-03-07T08:00:00Z',
+    297, 2, '2026-04-26T08:00:00Z',
     70, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -403,7 +404,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    280, 1, '2026-03-08T09:00:00Z',
+    280, 1, '2026-04-27T09:00:00Z',
     85, 4, 'heads',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -413,7 +414,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    290, 0, '2026-03-09T06:00:00Z',
+    290, 0, '2026-04-28T06:00:00Z',
     45, 5, 'heads',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -423,7 +424,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    423, 0, '2026-03-09T07:00:00Z',
+    423, 0, '2026-04-28T07:00:00Z',
     55, 4, 'bundles',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -433,7 +434,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'baguio.highlands@email.com'),
-    491, 1, '2026-03-08T10:00:00Z',
+    491, 1, '2026-04-27T10:00:00Z',
     65, 4, 'bags',
     ST_SetSRID(ST_MakePoint(120.5960, 16.4023), 4326),
     'La Trinidad, Benguet / Baguio City',
@@ -449,7 +450,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    293, 1, '2026-03-08T06:00:00Z',
+    293, 1, '2026-04-27T06:00:00Z',
     35, 3, 'kg',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -459,7 +460,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    284, 1, '2026-03-08T07:00:00Z',
+    284, 1, '2026-04-27T07:00:00Z',
     30, 4, 'kg',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -469,7 +470,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    302, 2, '2026-03-07T08:00:00Z',
+    302, 2, '2026-04-26T08:00:00Z',
     25, 5, 'pcs',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -479,7 +480,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    305, 1, '2026-03-08T09:00:00Z',
+    305, 1, '2026-04-27T09:00:00Z',
     40, 4, 'kg',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -489,7 +490,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    286, 0, '2026-03-09T06:00:00Z',
+    286, 0, '2026-04-28T06:00:00Z',
     50, 2, 'kg',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -499,7 +500,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    422, 2, '2026-03-07T10:00:00Z',
+    422, 2, '2026-04-26T10:00:00Z',
     45, 6, 'kg',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -509,7 +510,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    282, 0, '2026-03-09T05:30:00Z',
+    282, 0, '2026-04-28T05:30:00Z',
     20, 10, 'pcs',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -519,7 +520,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'iloilo.freshharvest@email.com'),
-    600, 1, '2026-03-08T11:00:00Z',
+    600, 1, '2026-04-27T11:00:00Z',
     60, 3, 'packs',
     ST_SetSRID(ST_MakePoint(122.5621, 10.7202), 4326),
     'Iloilo City Public Market, Iloilo City',
@@ -535,7 +536,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    267, 1, '2026-03-08T06:00:00Z',
+    267, 1, '2026-04-27T06:00:00Z',
     50, 8, 'pcs',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -545,7 +546,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    251, 0, '2026-03-09T05:00:00Z',
+    251, 0, '2026-04-28T05:00:00Z',
     30, 12, 'kg',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -555,7 +556,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    113, 0, '2026-03-09T06:00:00Z',
+    113, 0, '2026-04-28T06:00:00Z',
     230, 8, 'pcs',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -565,7 +566,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    21, 1, '2026-03-08T07:00:00Z',
+    21, 1, '2026-04-27T07:00:00Z',
     165, 5, 'dozen',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -575,7 +576,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    282, 0, '2026-03-09T05:30:00Z',
+    282, 0, '2026-04-28T05:30:00Z',
     18, 15, 'pcs',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -585,7 +586,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    293, 1, '2026-03-08T08:00:00Z',
+    293, 1, '2026-04-27T08:00:00Z',
     32, 3, 'kg',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -595,7 +596,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'cdo.harvesthub@email.com'),
-    265, 2, '2026-03-07T09:00:00Z',
+    265, 2, '2026-04-26T09:00:00Z',
     85, 4, 'kg',
     ST_SetSRID(ST_MakePoint(124.6319, 8.4542), 4326),
     'Cogon Market, Cagayan de Oro City',
@@ -611,7 +612,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    40, 1, '2026-03-08T06:00:00Z',
+    40, 1, '2026-04-27T06:00:00Z',
     450, 3, 'kg',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -621,7 +622,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    43, 1, '2026-03-08T07:00:00Z',
+    43, 1, '2026-04-27T07:00:00Z',
     320, 4, 'kg',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -631,7 +632,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    41, 2, '2026-03-07T08:00:00Z',
+    41, 2, '2026-04-26T08:00:00Z',
     380, 3, 'kg',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -641,7 +642,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    67, 1, '2026-03-08T09:00:00Z',
+    67, 1, '2026-04-27T09:00:00Z',
     290, 3, 'kg',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -651,7 +652,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    285, 0, '2026-03-09T06:00:00Z',
+    285, 0, '2026-04-28T06:00:00Z',
     80, 2, 'kg',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -661,7 +662,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    295, 1, '2026-03-08T10:00:00Z',
+    295, 1, '2026-04-27T10:00:00Z',
     55, 4, 'kg',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -671,7 +672,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batangas.agrimarket@email.com'),
-    282, 0, '2026-03-09T05:30:00Z',
+    282, 0, '2026-04-28T05:30:00Z',
     22, 10, 'pcs',
     ST_SetSRID(ST_MakePoint(121.0583, 13.7565), 4326),
     'Batangas City Public Market, Batangas City',
@@ -687,7 +688,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    61, 1, '2026-03-08T06:00:00Z',
+    61, 1, '2026-04-27T06:00:00Z',
     340, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -697,7 +698,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    63, 1, '2026-03-08T07:00:00Z',
+    63, 1, '2026-04-27T07:00:00Z',
     265, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -707,7 +708,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    64, 2, '2026-03-07T08:00:00Z',
+    64, 2, '2026-04-26T08:00:00Z',
     250, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -717,7 +718,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    67, 1, '2026-03-08T09:00:00Z',
+    67, 1, '2026-04-27T09:00:00Z',
     310, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -727,7 +728,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    116, 0, '2026-03-09T06:00:00Z',
+    116, 0, '2026-04-28T06:00:00Z',
     185, 8, 'packs',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -737,7 +738,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    285, 1, '2026-03-08T10:00:00Z',
+    285, 1, '2026-04-27T10:00:00Z',
     90, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -747,7 +748,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'pampanga.freshhub@email.com'),
-    548, 2, '2026-03-07T11:00:00Z',
+    548, 2, '2026-04-26T11:00:00Z',
     28, 2, 'kg',
     ST_SetSRID(ST_MakePoint(120.6899, 15.0286), 4326),
     'San Fernando City, Pampanga',
@@ -763,7 +764,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    285, 0, '2026-03-09T05:00:00Z',
+    285, 0, '2026-04-28T05:00:00Z',
     100, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -773,7 +774,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    295, 1, '2026-03-08T06:00:00Z',
+    295, 1, '2026-04-27T06:00:00Z',
     60, 6, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -783,7 +784,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    284, 2, '2026-03-07T07:00:00Z',
+    284, 2, '2026-04-26T07:00:00Z',
     28, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -793,7 +794,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    293, 1, '2026-03-08T08:00:00Z',
+    293, 1, '2026-04-27T08:00:00Z',
     35, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -803,7 +804,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    302, 1, '2026-03-08T09:00:00Z',
+    302, 1, '2026-04-27T09:00:00Z',
     22, 6, 'pcs',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -813,7 +814,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    287, 0, '2026-03-09T06:00:00Z',
+    287, 0, '2026-04-28T06:00:00Z',
     30, 6, 'bundles',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -823,7 +824,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    422, 3, '2026-03-06T10:00:00Z',
+    422, 3, '2026-04-25T10:00:00Z',
     42, 8, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -833,7 +834,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    63, 1, '2026-03-08T11:00:00Z',
+    63, 1, '2026-04-27T11:00:00Z',
     275, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -849,7 +850,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    251, 0, '2026-03-09T05:30:00Z',
+    251, 0, '2026-04-28T05:30:00Z',
     28, 15, 'kg',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -859,7 +860,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    267, 1, '2026-03-08T06:00:00Z',
+    267, 1, '2026-04-27T06:00:00Z',
     48, 7, 'pcs',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -869,7 +870,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    422, 2, '2026-03-07T07:00:00Z',
+    422, 2, '2026-04-26T07:00:00Z',
     38, 8, 'kg',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -879,7 +880,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    258, 1, '2026-03-08T08:00:00Z',
+    258, 1, '2026-04-27T08:00:00Z',
     32, 18, 'pcs',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -889,7 +890,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    293, 1, '2026-03-08T09:00:00Z',
+    293, 1, '2026-04-27T09:00:00Z',
     30, 3, 'kg',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -899,7 +900,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    265, 1, '2026-03-08T10:00:00Z',
+    265, 1, '2026-04-27T10:00:00Z',
     75, 5, 'kg',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -909,7 +910,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    480, 3, '2026-03-06T11:00:00Z',
+    480, 3, '2026-04-25T11:00:00Z',
     115, 8, 'pcs',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -919,7 +920,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'bacolod.sweetharvest@email.com'),
-    113, 0, '2026-03-09T06:00:00Z',
+    113, 0, '2026-04-28T06:00:00Z',
     195, 12, 'pcs',
     ST_SetSRID(ST_MakePoint(122.9509, 10.6769), 4326),
     'Libertad Market, Bacolod City',
@@ -935,7 +936,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    63, 1, '2026-03-08T06:00:00Z',
+    63, 1, '2026-04-27T06:00:00Z',
     270, 5, 'kg',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -945,7 +946,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    113, 0, '2026-03-09T06:00:00Z',
+    113, 0, '2026-04-28T06:00:00Z',
     210, 10, 'pcs',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -955,7 +956,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    600, 1, '2026-03-08T07:00:00Z',
+    600, 1, '2026-04-27T07:00:00Z',
     70, 4, 'packs',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -965,7 +966,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    284, 1, '2026-03-08T08:00:00Z',
+    284, 1, '2026-04-27T08:00:00Z',
     28, 4, 'kg',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -975,7 +976,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    302, 2, '2026-03-07T09:00:00Z',
+    302, 2, '2026-04-26T09:00:00Z',
     24, 6, 'pcs',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -985,7 +986,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    265, 1, '2026-03-08T10:00:00Z',
+    265, 1, '2026-04-27T10:00:00Z',
     88, 5, 'kg',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -995,7 +996,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'gensan.freshmarket@email.com'),
-    305, 2, '2026-03-07T11:00:00Z',
+    305, 2, '2026-04-26T11:00:00Z',
     38, 4, 'kg',
     ST_SetSRID(ST_MakePoint(125.1716, 6.1164), 4326),
     'General Santos City Public Market, GenSan',
@@ -1011,7 +1012,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    250, 2, '2026-03-07T06:00:00Z',
+    250, 2, '2026-04-26T06:00:00Z',
     70, 6, 'pcs',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1021,7 +1022,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    251, 0, '2026-03-09T05:00:00Z',
+    251, 0, '2026-04-28T05:00:00Z',
     28, 14, 'kg',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1031,7 +1032,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    265, 1, '2026-03-08T06:00:00Z',
+    265, 1, '2026-04-27T06:00:00Z',
     80, 5, 'kg',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1041,7 +1042,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    258, 0, '2026-03-09T06:00:00Z',
+    258, 0, '2026-04-28T06:00:00Z',
     30, 22, 'pcs',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1051,7 +1052,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    267, 2, '2026-03-07T07:00:00Z',
+    267, 2, '2026-04-26T07:00:00Z',
     45, 7, 'pcs',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1061,7 +1062,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    478, 3, '2026-03-06T08:00:00Z',
+    478, 3, '2026-04-25T08:00:00Z',
     95, 4, 'pcs',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1071,7 +1072,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'zamboanga.harvest@email.com'),
-    308, 1, '2026-03-08T09:00:00Z',
+    308, 1, '2026-04-27T09:00:00Z',
     28, 8, 'kg',
     ST_SetSRID(ST_MakePoint(122.0790, 6.9214), 4326),
     'Zamboanga City Public Market, Zamboanga del Sur',
@@ -1087,7 +1088,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    422, 1, '2026-03-08T06:00:00Z',
+    422, 1, '2026-04-27T06:00:00Z',
     44, 8, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1097,7 +1098,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    305, 1, '2026-03-08T07:00:00Z',
+    305, 1, '2026-04-27T07:00:00Z',
     42, 5, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1107,7 +1108,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    308, 2, '2026-03-07T08:00:00Z',
+    308, 2, '2026-04-26T08:00:00Z',
     25, 7, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1117,7 +1118,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    293, 1, '2026-03-08T09:00:00Z',
+    293, 1, '2026-04-27T09:00:00Z',
     30, 3, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1127,7 +1128,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    284, 2, '2026-03-07T10:00:00Z',
+    284, 2, '2026-04-26T10:00:00Z',
     27, 4, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1137,7 +1138,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    251, 0, '2026-03-09T05:30:00Z',
+    251, 0, '2026-04-28T05:30:00Z',
     26, 12, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1147,7 +1148,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'tacloban.freshcorner@email.com'),
-    286, 1, '2026-03-08T11:00:00Z',
+    286, 1, '2026-04-27T11:00:00Z',
     48, 2, 'kg',
     ST_SetSRID(ST_MakePoint(125.0016, 11.2542), 4326),
     'Tacloban City Public Market, Leyte',
@@ -1163,7 +1164,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    480, 2, '2026-03-07T06:00:00Z',
+    480, 2, '2026-04-26T06:00:00Z',
     130, 7, 'pcs',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1173,7 +1174,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    258, 0, '2026-03-09T05:00:00Z',
+    258, 0, '2026-04-28T05:00:00Z',
     30, 25, 'pcs',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1183,7 +1184,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    251, 1, '2026-03-08T06:00:00Z',
+    251, 1, '2026-04-27T06:00:00Z',
     25, 14, 'kg',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1193,7 +1194,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    495, 3, '2026-03-06T07:00:00Z',
+    495, 3, '2026-04-25T07:00:00Z',
     120, 3, 'pcs',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1203,7 +1204,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    283, 1, '2026-03-08T08:00:00Z',
+    283, 1, '2026-04-27T08:00:00Z',
     35, 4, 'kg',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1213,7 +1214,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    302, 1, '2026-03-08T09:00:00Z',
+    302, 1, '2026-04-27T09:00:00Z',
     22, 5, 'pcs',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1223,7 +1224,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    265, 2, '2026-03-07T10:00:00Z',
+    265, 2, '2026-04-26T10:00:00Z',
     85, 4, 'kg',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1233,7 +1234,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'palawan.greenmarket@email.com'),
-    497, 2, '2026-03-07T11:00:00Z',
+    497, 2, '2026-04-26T11:00:00Z',
     110, 3, 'pcs',
     ST_SetSRID(ST_MakePoint(118.7353, 9.7392), 4326),
     'Puerto Princesa City Market, Palawan',
@@ -1249,7 +1250,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    286, 0, '2026-03-09T06:00:00Z',
+    286, 0, '2026-04-28T06:00:00Z',
     55, 2, 'kg',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1259,7 +1260,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    505, 0, '2026-03-09T07:00:00Z',
+    505, 0, '2026-04-28T07:00:00Z',
     40, 3, 'bundles',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1269,7 +1270,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    506, 0, '2026-03-09T07:30:00Z',
+    506, 0, '2026-04-28T07:30:00Z',
     25, 5, 'bundles',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1279,7 +1280,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    509, 0, '2026-03-09T08:00:00Z',
+    509, 0, '2026-04-28T08:00:00Z',
     22, 5, 'bundles',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1289,7 +1290,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    548, 1, '2026-03-08T09:00:00Z',
+    548, 1, '2026-04-27T09:00:00Z',
     30, 2, 'kg',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1299,7 +1300,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    305, 2, '2026-03-07T10:00:00Z',
+    305, 2, '2026-04-26T10:00:00Z',
     38, 4, 'kg',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1309,7 +1310,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    258, 1, '2026-03-08T11:00:00Z',
+    258, 1, '2026-04-27T11:00:00Z',
     32, 15, 'pcs',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1319,7 +1320,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'naga.freshpicks@email.com'),
-    293, 1, '2026-03-08T12:00:00Z',
+    293, 1, '2026-04-27T12:00:00Z',
     30, 3, 'kg',
     ST_SetSRID(ST_MakePoint(123.1814, 13.6192), 4326),
     'Naga City, Camarines Sur',
@@ -1335,7 +1336,7 @@ INSERT INTO products (
 
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    600, 1, '2026-03-08T06:00:00Z',
+    600, 1, '2026-04-27T06:00:00Z',
     65, 4, 'packs',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1345,7 +1346,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    290, 0, '2026-03-09T06:00:00Z',
+    290, 0, '2026-04-28T06:00:00Z',
     48, 6, 'heads',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1355,7 +1356,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    288, 0, '2026-03-09T07:00:00Z',
+    288, 0, '2026-04-28T07:00:00Z',
     35, 6, 'packs',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1365,7 +1366,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    276, 1, '2026-03-08T08:00:00Z',
+    276, 1, '2026-04-27T08:00:00Z',
     88, 4, 'heads',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1375,7 +1376,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    273, 1, '2026-03-08T09:00:00Z',
+    273, 1, '2026-04-27T09:00:00Z',
     42, 3, 'kg',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1385,7 +1386,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    284, 2, '2026-03-07T10:00:00Z',
+    284, 2, '2026-04-26T10:00:00Z',
     27, 4, 'kg',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1395,7 +1396,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    283, 1, '2026-03-08T11:00:00Z',
+    283, 1, '2026-04-27T11:00:00Z',
     33, 3, 'kg',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1405,7 +1406,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    423, 0, '2026-03-09T08:00:00Z',
+    423, 0, '2026-04-28T08:00:00Z',
     52, 5, 'bundles',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1415,7 +1416,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'dumaguete.organic@email.com'),
-    21, 1, '2026-03-08T12:00:00Z',
+    21, 1, '2026-04-27T12:00:00Z',
     155, 6, 'dozen',
     ST_SetSRID(ST_MakePoint(123.3080, 9.3076), 4326),
     'Dumaguete City, Negros Oriental',
@@ -1525,7 +1526,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
-    251, 1, '2026-03-09T06:00:00Z',
+    251, 1, '2026-04-28T06:00:00Z',
     48, 10, 'kg',
     ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
     'Cabanatuan City, Nueva Ecija',
@@ -1535,7 +1536,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
-    273, 1, '2026-03-09T06:30:00Z',
+    273, 1, '2026-04-28T06:30:00Z',
     58, 7, 'kg',
     ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
     'Cabanatuan City, Nueva Ecija',
@@ -1545,7 +1546,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
-    295, 2, '2026-03-08T07:00:00Z',
+    295, 2, '2026-04-27T07:00:00Z',
     44, 8, 'kg',
     ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
     'Cabanatuan City, Nueva Ecija',
@@ -1555,7 +1556,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
-    21, 1, '2026-03-09T08:00:00Z',
+    21, 1, '2026-04-28T08:00:00Z',
     168, 6, 'dozen',
     ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
     'Cabanatuan City, Nueva Ecija',
@@ -1565,7 +1566,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
-    283, 1, '2026-03-09T08:30:00Z',
+    283, 1, '2026-04-28T08:30:00Z',
     36, 6, 'kg',
     ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
     'Cabanatuan City, Nueva Ecija',
@@ -1575,7 +1576,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'nuevaecija.harvesthub@email.com'),
-    113, 1, '2026-03-09T09:00:00Z',
+    113, 1, '2026-04-28T09:00:00Z',
     210, 5, 'kg',
     ST_SetSRID(ST_MakePoint(121.0039, 15.4865), 4326),
     'Cabanatuan City, Nueva Ecija',
@@ -1595,7 +1596,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
-    265, 1, '2026-03-09T06:00:00Z',
+    265, 1, '2026-04-28T06:00:00Z',
     85, 6, 'kg',
     ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
     'Legazpi City, Albay',
@@ -1605,7 +1606,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
-    267, 1, '2026-03-09T06:30:00Z',
+    267, 1, '2026-04-28T06:30:00Z',
     62, 9, 'pcs',
     ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
     'Legazpi City, Albay',
@@ -1615,7 +1616,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
-    296, 1, '2026-03-09T07:00:00Z',
+    296, 1, '2026-04-28T07:00:00Z',
     52, 5, 'kg',
     ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
     'Legazpi City, Albay',
@@ -1625,7 +1626,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
-    284, 2, '2026-03-08T07:30:00Z',
+    284, 2, '2026-04-27T07:30:00Z',
     38, 4, 'kg',
     ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
     'Legazpi City, Albay',
@@ -1635,7 +1636,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
-    21, 1, '2026-03-09T08:00:00Z',
+    21, 1, '2026-04-28T08:00:00Z',
     162, 5, 'dozen',
     ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
     'Legazpi City, Albay',
@@ -1645,7 +1646,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'legazpi.agrifresh@email.com'),
-    258, 1, '2026-03-09T08:30:00Z',
+    258, 1, '2026-04-28T08:30:00Z',
     40, 12, 'pcs',
     ST_SetSRID(ST_MakePoint(123.7438, 13.1391), 4326),
     'Legazpi City, Albay',
@@ -1665,7 +1666,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
-    251, 1, '2026-03-09T06:00:00Z',
+    251, 1, '2026-04-28T06:00:00Z',
     46, 9, 'kg',
     ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
     'Butuan City, Agusan del Norte',
@@ -1675,7 +1676,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
-    480, 1, '2026-03-09T06:30:00Z',
+    480, 1, '2026-04-28T06:30:00Z',
     118, 5, 'pcs',
     ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
     'Butuan City, Agusan del Norte',
@@ -1685,7 +1686,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
-    262, 1, '2026-03-09T07:00:00Z',
+    262, 1, '2026-04-28T07:00:00Z',
     74, 6, 'kg',
     ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
     'Butuan City, Agusan del Norte',
@@ -1695,7 +1696,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
-    423, 1, '2026-03-09T07:30:00Z',
+    423, 1, '2026-04-28T07:30:00Z',
     60, 6, 'bundles',
     ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
     'Butuan City, Agusan del Norte',
@@ -1705,7 +1706,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
-    60, 1, '2026-03-09T08:00:00Z',
+    60, 1, '2026-04-28T08:00:00Z',
     295, 4, 'kg',
     ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
     'Butuan City, Agusan del Norte',
@@ -1715,7 +1716,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'butuan.valleyproduce@email.com'),
-    21, 1, '2026-03-09T08:30:00Z',
+    21, 1, '2026-04-28T08:30:00Z',
     158, 5, 'dozen',
     ST_SetSRID(ST_MakePoint(125.5436, 8.9475), 4326),
     'Butuan City, Agusan del Norte',
@@ -1735,7 +1736,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    285, 0, '2026-03-09T10:00:00Z',
+    285, 0, '2026-04-28T10:00:00Z',
     75, 6, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1745,7 +1746,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    115, 1, '2026-03-09T10:30:00Z',
+    115, 1, '2026-04-28T10:30:00Z',
     185, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1755,7 +1756,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    33, 1, '2026-03-09T11:00:00Z',
+    33, 1, '2026-04-28T11:00:00Z',
     95, 5, 'containers',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1765,7 +1766,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    73, 1, '2026-03-09T11:30:00Z',
+    73, 1, '2026-04-28T11:30:00Z',
     220, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1775,7 +1776,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    256, 2, '2026-03-08T12:00:00Z',
+    256, 2, '2026-04-27T12:00:00Z',
     52, 10, 'pcs',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1785,7 +1786,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    113, 1, '2026-03-09T12:30:00Z',
+    113, 1, '2026-04-28T12:30:00Z',
     195, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1795,7 +1796,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    9, 1, '2026-03-09T13:00:00Z',
+    9, 1, '2026-04-28T13:00:00Z',
     145, 3, 'containers',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1805,7 +1806,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'ilocos.heritage@email.com'),
-    10, 1, '2026-03-09T13:30:00Z',
+    10, 1, '2026-04-28T13:30:00Z',
     138, 5, 'blocks',
     ST_SetSRID(ST_MakePoint(120.5968, 18.1977), 4326),
     'Laoag City, Ilocos Norte',
@@ -1825,7 +1826,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    251, 0, '2026-03-09T06:00:00Z',
+    251, 0, '2026-04-28T06:00:00Z',
     44, 12, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1835,7 +1836,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    113, 1, '2026-03-09T06:30:00Z',
+    113, 1, '2026-04-28T06:30:00Z',
     190, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1845,7 +1846,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    273, 1, '2026-03-09T07:00:00Z',
+    273, 1, '2026-04-28T07:00:00Z',
     54, 8, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1855,7 +1856,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    21, 0, '2026-03-09T07:30:00Z',
+    21, 0, '2026-04-28T07:30:00Z',
     152, 6, 'dozen',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1865,7 +1866,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    60, 1, '2026-03-09T08:00:00Z',
+    60, 1, '2026-04-28T08:00:00Z',
     280, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1875,7 +1876,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    33, 1, '2026-03-09T08:30:00Z',
+    33, 1, '2026-04-28T08:30:00Z',
     92, 4, 'containers',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1885,7 +1886,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    283, 1, '2026-03-09T09:00:00Z',
+    283, 1, '2026-04-28T09:00:00Z',
     38, 6, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1895,7 +1896,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    296, 1, '2026-03-09T09:30:00Z',
+    296, 1, '2026-04-28T09:30:00Z',
     48, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1905,7 +1906,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'launion.freshmart@email.com'),
-    265, 1, '2026-03-09T10:00:00Z',
+    265, 1, '2026-04-28T10:00:00Z',
     78, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.3314, 16.6133), 4326),
     'San Fernando City, La Union',
@@ -1925,7 +1926,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    21, 1, '2026-03-09T06:00:00Z',
+    21, 1, '2026-04-28T06:00:00Z',
     158, 5, 'dozen',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -1935,7 +1936,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    72, 1, '2026-03-09T06:30:00Z',
+    72, 1, '2026-04-28T06:30:00Z',
     245, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -1945,7 +1946,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    113, 1, '2026-03-09T07:00:00Z',
+    113, 1, '2026-04-28T07:00:00Z',
     200, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -1955,7 +1956,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    295, 1, '2026-03-09T07:30:00Z',
+    295, 1, '2026-04-28T07:30:00Z',
     46, 10, 'kg',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -1965,7 +1966,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    33, 1, '2026-03-09T08:00:00Z',
+    33, 1, '2026-04-28T08:00:00Z',
     88, 6, 'containers',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -1975,7 +1976,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    5, 1, '2026-03-09T08:30:00Z',
+    5, 1, '2026-04-28T08:30:00Z',
     280, 2, 'kg',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -1985,7 +1986,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'batac.heritagefoods@email.com'),
-    256, 2, '2026-03-08T09:00:00Z',
+    256, 2, '2026-04-27T09:00:00Z',
     50, 8, 'pcs',
     ST_SetSRID(ST_MakePoint(120.6919, 17.9674), 4326),
     'Batac City, Ilocos Norte',
@@ -2005,7 +2006,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    251, 1, '2026-03-09T06:00:00Z',
+    251, 1, '2026-04-28T06:00:00Z',
     45, 9, 'kg',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2015,7 +2016,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    73, 1, '2026-03-09T06:30:00Z',
+    73, 1, '2026-04-28T06:30:00Z',
     225, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2025,7 +2026,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    21, 0, '2026-03-09T07:00:00Z',
+    21, 0, '2026-04-28T07:00:00Z',
     155, 7, 'dozen',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2035,7 +2036,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    283, 2, '2026-03-08T07:30:00Z',
+    283, 2, '2026-04-27T07:30:00Z',
     35, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2045,7 +2046,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    287, 1, '2026-03-09T08:00:00Z',
+    287, 1, '2026-04-28T08:00:00Z',
     40, 8, 'bundles',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2055,7 +2056,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    113, 1, '2026-03-09T08:30:00Z',
+    113, 1, '2026-04-28T08:30:00Z',
     185, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2065,7 +2066,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'paoay.markethub@email.com'),
-    33, 1, '2026-03-09T09:00:00Z',
+    33, 1, '2026-04-28T09:00:00Z',
     85, 5, 'containers',
     ST_SetSRID(ST_MakePoint(120.5527, 17.9931), 4326),
     'Paoay, Ilocos Norte',
@@ -2085,7 +2086,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    113, 1, '2026-03-09T06:00:00Z',
+    113, 1, '2026-04-28T06:00:00Z',
     195, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2095,7 +2096,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    60, 1, '2026-03-09T06:30:00Z',
+    60, 1, '2026-04-28T06:30:00Z',
     290, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2105,7 +2106,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    21, 1, '2026-03-09T07:00:00Z',
+    21, 1, '2026-04-28T07:00:00Z',
     152, 6, 'dozen',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2115,7 +2116,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    273, 1, '2026-03-09T07:30:00Z',
+    273, 1, '2026-04-28T07:30:00Z',
     56, 6, 'kg',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2125,7 +2126,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    33, 1, '2026-03-09T08:00:00Z',
+    33, 1, '2026-04-28T08:00:00Z',
     90, 4, 'containers',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2135,7 +2136,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    296, 1, '2026-03-09T08:30:00Z',
+    296, 1, '2026-04-28T08:30:00Z',
     54, 4, 'kg',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2145,7 +2146,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'currimao.freshfarms@email.com'),
-    251, 1, '2026-03-09T09:00:00Z',
+    251, 1, '2026-04-28T09:00:00Z',
     42, 10, 'kg',
     ST_SetSRID(ST_MakePoint(120.5033, 17.8447), 4326),
     'Currimao, Ilocos Norte',
@@ -2165,7 +2166,7 @@ INSERT INTO products (
 ) VALUES
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    113, 1, '2026-03-09T06:00:00Z',
+    113, 1, '2026-04-28T06:00:00Z',
     192, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2175,7 +2176,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    72, 1, '2026-03-09T06:30:00Z',
+    72, 1, '2026-04-28T06:30:00Z',
     250, 3, 'kg',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2185,7 +2186,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    21, 1, '2026-03-09T07:00:00Z',
+    21, 1, '2026-04-28T07:00:00Z',
     160, 5, 'dozen',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2195,7 +2196,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    285, 1, '2026-03-09T07:30:00Z',
+    285, 1, '2026-04-28T07:30:00Z',
     80, 5, 'kg',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2205,7 +2206,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    295, 1, '2026-03-09T08:00:00Z',
+    295, 1, '2026-04-28T08:00:00Z',
     48, 9, 'kg',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2215,7 +2216,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    256, 2, '2026-03-08T08:30:00Z',
+    256, 2, '2026-04-27T08:30:00Z',
     54, 7, 'pcs',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2225,7 +2226,7 @@ INSERT INTO products (
   ),
   (
     (SELECT id FROM users WHERE email = 'vigan.ilocos@email.com'),
-    33, 1, '2026-03-09T09:00:00Z',
+    33, 1, '2026-04-28T09:00:00Z',
     86, 5, 'containers',
     ST_SetSRID(ST_MakePoint(120.3884, 16.6123), 4326),
     'Vigan City, Ilocos Sur',
@@ -2236,6 +2237,10 @@ INSERT INTO products (
 
 -- Re-enable triggers
 SET session_replication_role = 'origin';
+
+-- Refresh listing dates so freshness/expiry is relative to seed time
+UPDATE products
+SET listed_date = NOW() - (days_already_used || ' days')::interval;
 
 -- Update sequences
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));

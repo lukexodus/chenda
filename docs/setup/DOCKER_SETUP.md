@@ -356,6 +356,18 @@ node seeds/fetch-product-images.js --download --all
 node seeds/seed.js
 ```
 
+> **Important:** When using Docker, run the seeder inside a container (or ensure your host `.env` points to the Docker DB). If you run `node seeds/seed.js` directly on the host, it will default to `DB_HOST=localhost` and can hit your local Postgres instead of the container.
+>
+> **Safe Docker-first option:**
+> ```bash
+> docker compose run --rm \
+>   -e NODE_PATH=/app/node_modules \
+>   -v "$(pwd)":/workspace \
+>   -w /workspace/seeds \
+>   --entrypoint node \
+>   backend seed.js --force
+> ```
+
 #### Approach B: SQL pipeline (minimal)
 ```bash
 # 1. USDA product types (must be first)
