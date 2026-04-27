@@ -87,7 +87,15 @@ async function getSeedFiles(productsOnly = false) {
 
 async function runSeedFile(client, filename) {
   const filePath = path.join(__dirname, filename);
-  const sql = await fs.readFile(filePath, 'utf-8');
+  let sql = await fs.readFile(filePath, 'utf-8');
+
+  // Keep triggers enabled during seeding.
+  // Some newer columns (e.g., per-listing seller shelf life) are populated by
+  // BEFORE triggers; disabling triggers would cause NOT NULL constraint failures.
+  sql = sql.replace(
+    /SET\s+session_replication_role\s*=\s*'replica';/gi,
+    "SET session_replication_role = 'origin';"
+  );
   
   log(`\n→ Running seed file: ${filename}`, 'cyan');
   

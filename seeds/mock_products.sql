@@ -9,6 +9,7 @@ SET session_replication_role = 'replica';
 INSERT INTO products (
   seller_id,
   product_type_id,
+  seller_shelf_life_days,
   days_already_used,
   listed_date,
   price,
@@ -23,6 +24,7 @@ INSERT INTO products (
   (
     6,
     33,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 33),
     1,
     '2025-01-29T06:00:00Z',
     85,
@@ -37,6 +39,7 @@ INSERT INTO products (
   (
     6,
     21,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 21),
     5,
     '2025-01-28T07:00:00Z',
     180,
@@ -51,6 +54,7 @@ INSERT INTO products (
   (
     6,
     2,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 2),
     2,
     '2025-01-28T08:00:00Z',
     95,
@@ -65,6 +69,7 @@ INSERT INTO products (
   (
     6,
     9,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 9),
     3,
     '2025-01-27T09:00:00Z',
     150,
@@ -79,6 +84,7 @@ INSERT INTO products (
   (
     6,
     24,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 24),
     1,
     '2025-01-29T10:00:00Z',
     120,
@@ -93,6 +99,7 @@ INSERT INTO products (
   (
     6,
     10,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 10),
     7,
     '2025-01-26T11:00:00Z',
     130,
@@ -107,6 +114,7 @@ INSERT INTO products (
   (
     6,
     25,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 25),
     0,
     '2025-01-30T06:00:00Z',
     80,
@@ -121,6 +129,7 @@ INSERT INTO products (
   (
     6,
     5,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 5),
     10,
     '2025-01-25T12:00:00Z',
     250,
@@ -135,6 +144,7 @@ INSERT INTO products (
   (
     6,
     8,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 8),
     5,
     '2025-01-27T13:00:00Z',
     110,
@@ -149,6 +159,7 @@ INSERT INTO products (
   (
     6,
     16,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 16),
     8,
     '2025-01-26T14:00:00Z',
     140,
@@ -163,6 +174,7 @@ INSERT INTO products (
   (
     7,
     33,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 33),
     2,
     '2025-01-28T06:00:00Z',
     90,
@@ -177,6 +189,7 @@ INSERT INTO products (
   (
     7,
     21,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 21),
     10,
     '2025-01-25T07:00:00Z',
     170,
@@ -191,6 +204,7 @@ INSERT INTO products (
   (
     7,
     6,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 6),
     5,
     '2025-01-27T08:00:00Z',
     300,
@@ -205,6 +219,7 @@ INSERT INTO products (
   (
     7,
     7,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 7),
     3,
     '2025-01-28T09:00:00Z',
     160,
@@ -219,6 +234,7 @@ INSERT INTO products (
   (
     7,
     11,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 11),
     12,
     '2025-01-24T10:00:00Z',
     100,
@@ -233,6 +249,7 @@ INSERT INTO products (
   (
     7,
     13,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 13),
     1,
     '2025-01-29T11:00:00Z',
     180,
@@ -247,6 +264,7 @@ INSERT INTO products (
   (
     7,
     16,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 16),
     4,
     '2025-01-28T12:00:00Z',
     190,
@@ -261,6 +279,7 @@ INSERT INTO products (
   (
     7,
     25,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 25),
     3,
     '2025-01-27T13:00:00Z',
     85,
@@ -275,6 +294,7 @@ INSERT INTO products (
   (
     7,
     9,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 9),
     6,
     '2025-01-27T14:00:00Z',
     145,
@@ -289,6 +309,7 @@ INSERT INTO products (
   (
     7,
     2,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 2),
     4,
     '2025-01-27T15:00:00Z',
     100,
@@ -303,6 +324,7 @@ INSERT INTO products (
   (
     8,
     33,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 33),
     0,
     '2025-01-30T05:00:00Z',
     88,
@@ -317,6 +339,7 @@ INSERT INTO products (
   (
     8,
     21,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 21),
     7,
     '2025-01-26T06:00:00Z',
     175,
@@ -331,6 +354,7 @@ INSERT INTO products (
   (
     8,
     5,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 5),
     15,
     '2025-01-22T07:00:00Z',
     240,
@@ -345,6 +369,7 @@ INSERT INTO products (
   (
     8,
     10,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 10),
     2,
     '2025-01-29T08:00:00Z',
     135,
@@ -359,6 +384,7 @@ INSERT INTO products (
   (
     8,
     8,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 8),
     10,
     '2025-01-25T09:00:00Z',
     105,
@@ -373,6 +399,7 @@ INSERT INTO products (
   (
     9,
     33,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 33),
     1,
     '2025-01-29T05:00:00Z',
     82,
@@ -387,6 +414,7 @@ INSERT INTO products (
   (
     9,
     25,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 25),
     1,
     '2025-01-29T05:30:00Z',
     78,
@@ -401,6 +429,7 @@ INSERT INTO products (
   (
     9,
     2,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 2),
     1,
     '2025-01-29T06:00:00Z',
     92,
@@ -415,6 +444,7 @@ INSERT INTO products (
   (
     9,
     9,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 9),
     2,
     '2025-01-28T07:00:00Z',
     148,
@@ -429,6 +459,7 @@ INSERT INTO products (
   (
     9,
     16,
+    (SELECT default_shelf_life_days FROM product_types WHERE id = 16),
     3,
     '2025-01-28T08:00:00Z',
     138,
